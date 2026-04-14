@@ -89,7 +89,7 @@ export default function ChatPage() {
   const compatColor = getCompatibilityColor(match.compatibilityScore);
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 60px)', overflow: 'hidden' }} className="chat-root">
+    <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }} className="chat-root">
       {/* Chat area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Chat header */}

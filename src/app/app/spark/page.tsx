@@ -266,31 +266,31 @@ export default function SparkPage() {
   const minsLeft = Math.floor(((midnight.getTime() - now.getTime()) % 3600000) / 60000);
 
   return (
-    <div style={{ padding: '32px', maxWidth: 780, margin: '0 auto' }}>
+    <div style={{ padding: '20px 16px 32px', maxWidth: 780, margin: '0 auto' }}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-          <div style={{ width: 38, height: 38, borderRadius: 12, background: 'linear-gradient(135deg, rgba(251,146,60,0.3), rgba(244,63,94,0.3))', border: '1px solid rgba(251,146,60,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Flame size={20} color="#fb923c" />
+          <div style={{ width: 36, height: 36, borderRadius: 11, background: 'linear-gradient(135deg, rgba(251,146,60,0.3), rgba(244,63,94,0.3))', border: '1px solid rgba(251,146,60,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Flame size={18} color="#fb923c" />
           </div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em' }}>Daily Spark</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em' }}>Daily Spark</h1>
         </div>
-        <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>
+        <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.4)' }}>
           One question per match, every day. Answers reveal only when both of you reply.
         </p>
       </div>
 
       {/* Stats bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }} className="spark-stats">
         {[
           { icon: '🔥', label: 'Best Streak', value: `${totalStreak} days`, sub: 'with Sophie' },
           { icon: '⏳', label: 'Resets in', value: `${hoursLeft}h ${minsLeft}m`, sub: 'new questions at midnight' },
           { icon: '✅', label: 'Revealed Today', value: `${revealed.length}/${TODAY_SPARKS.length}`, sub: 'both answered' },
         ].map(s => (
-          <div key={s.label} className="glass" style={{ borderRadius: 16, padding: '14px 18px', textAlign: 'center' }}>
-            <div style={{ fontSize: 22, marginBottom: 4 }}>{s.icon}</div>
-            <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 2 }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: 'rgba(240,240,255,0.35)', lineHeight: 1.4 }}>{s.sub}</div>
+          <div key={s.label} className="glass" style={{ borderRadius: 14, padding: '12px 14px', textAlign: 'center' }}>
+            <div style={{ fontSize: 20, marginBottom: 3 }}>{s.icon}</div>
+            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 2 }}>{s.value}</div>
+            <div style={{ fontSize: 10, color: 'rgba(240,240,255,0.35)', lineHeight: 1.4 }}>{s.sub}</div>
           </div>
         ))}
       </div>
@@ -360,7 +360,7 @@ export default function SparkPage() {
       )}
 
       {/* Upgrade prompt */}
-      <div style={{ marginTop: 28, background: 'linear-gradient(135deg, rgba(251,146,60,0.08), rgba(244,63,94,0.06))', border: '1px solid rgba(251,146,60,0.18)', borderRadius: 20, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ marginTop: 24, background: 'linear-gradient(135deg, rgba(251,146,60,0.08), rgba(244,63,94,0.06))', border: '1px solid rgba(251,146,60,0.18)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(251,146,60,0.15)', border: '1px solid rgba(251,146,60,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Star size={20} color="#fb923c" />
         </div>

@@ -21,7 +21,11 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Support dynamic viewport height on iOS */
+  height: 100%;
+}
 
 body {
   background: var(--bg);
@@ -31,6 +35,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
+  /* Prevent body scroll when app layout handles it */
+  overscroll-behavior: none;
+}
+
+/* Ensure smooth momentum scrolling on iOS */
+.app-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 /* Scrollbar */
@@ -444,6 +457,41 @@ body {
   inset: 0;
   background: linear-gradient(to top, rgba(7,7,15,0.97) 0%, rgba(7,7,15,0.6) 45%, transparent 70%);
   border-radius: inherit;
+}
+
+/* Mobile touch target minimum */
+@media (max-width: 1023px) {
+  button, a[href] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Allow smaller decorative elements to override */
+  .tag, .step-dot, .notif-dot {
+    min-height: unset;
+    min-width: unset;
+  }
+
+  /* Spark stats: single row but allow wrap gracefully */
+  .spark-stats {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Matches: single column on mobile */
+@media (max-width: 1023px) {
+  .matches-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 380px) {
+  /* On very small phones, collapse spark stats to 1 wide + 2 below */
+  .spark-stats {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .spark-stats > *:first-child {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Shimmer skeleton */

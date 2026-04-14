@@ -155,16 +155,16 @@ export default function MatchesPage() {
   });
 
   return (
-    <div style={{ padding: '32px', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ padding: '20px 16px 32px', maxWidth: 1100, margin: '0 auto' }}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Your Matches</h1>
+      <div style={{ marginBottom: 20 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Your Matches</h1>
         <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>{MATCHES.length} compatible matches · {MATCHES.filter(m => m.isNew).length} new</p>
       </div>
 
       {/* Search + Filter */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
-        <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
+        <div style={{ position: 'relative' }}>
           <input
             className="input-field"
             placeholder="Search matches…"
@@ -174,12 +174,12 @@ export default function MatchesPage() {
           />
           <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,240,255,0.3)' }} />
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }}>
           {([['all', 'All'], ['new', 'New ✨'], ['high-compat', 'High Match'], ['replied', 'Active']] as [FilterType, string][]).map(([val, label]) => (
             <button
               key={val}
               onClick={() => setFilter(val)}
-              style={{ padding: '10px 16px', borderRadius: 10, border: `1.5px solid ${filter === val ? 'rgba(139,92,246,0.5)' : 'rgba(255,255,255,0.08)'}`, background: filter === val ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.03)', color: filter === val ? '#c4b5fd' : 'rgba(240,240,255,0.55)', fontSize: 13, fontWeight: filter === val ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', whiteSpace: 'nowrap' }}
+              style={{ flexShrink: 0, padding: '9px 14px', borderRadius: 10, border: `1.5px solid ${filter === val ? 'rgba(139,92,246,0.5)' : 'rgba(255,255,255,0.08)'}`, background: filter === val ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.03)', color: filter === val ? '#c4b5fd' : 'rgba(240,240,255,0.55)', fontSize: 13, fontWeight: filter === val ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', whiteSpace: 'nowrap' }}
             >
               {label}
             </button>
@@ -188,7 +188,7 @@ export default function MatchesPage() {
       </div>
 
       {/* Stats bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 28 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
         {[
           { icon: Heart, label: 'Total Matches', value: MATCHES.length, color: '#fb7185' },
           { icon: Star, label: 'Avg Compatibility', value: '91%', color: '#a78bfa' },
@@ -211,7 +211,7 @@ export default function MatchesPage() {
 
       {/* Grid */}
       {filtered.length > 0 ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
+        <div className="matches-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 14 }}>
           {filtered.map(match => (
             <MatchCard
               key={match.id}
