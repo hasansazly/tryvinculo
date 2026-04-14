@@ -20,6 +20,62 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Matchmaking Backend API
+
+The project now includes a full backend matchmaking engine under `src/server/matchmaking` and API routes under `src/app/api/matchmaking`.
+
+### 1) Run matchmaking pipeline
+
+`POST /api/matchmaking/recommendations`
+
+Body:
+
+```json
+{
+  "userId": "user-1",
+  "limit": 10
+}
+```
+
+Returns ranked recommendations with:
+- compatibility score
+- per-dimension breakdown
+- human-readable reasons
+- `whySignals` trust/explainability trace
+- confidence level
+
+### 2) Read latest recommendations
+
+`GET /api/matchmaking/recommendations?userId=user-1&limit=10`
+
+### 3) Ingest behavioral signals
+
+`POST /api/matchmaking/signals`
+
+Body:
+
+```json
+{
+  "actorUserId": "user-1",
+  "targetUserId": "p-1",
+  "idempotencyKey": "evt-user-1-p-1-like-2026-04-14T19:00:00Z",
+  "type": "like",
+  "metadata": {
+    "source": "discover"
+  }
+}
+```
+
+Supported signal types:
+- `profile_view`
+- `like`
+- `pass`
+- `message_sent`
+- `message_received`
+- `spark_answered`
+- `date_planned`
+- `report`
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
