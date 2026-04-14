@@ -76,6 +76,48 @@ Supported signal types:
 - `date_planned`
 - `report`
 
+## SMS (Twilio) Integration
+
+Twilio SMS is now supported through a dedicated API route:
+
+- `POST /api/sms/send`
+
+### Required environment variables
+
+```bash
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_PHONE_NUMBER=+15551234567
+# optional alternative sender setup:
+# TWILIO_MESSAGING_SERVICE_SID=MGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+### Send SMS directly
+
+```json
+{
+  "to": "+15551234567",
+  "body": "Your Kindred date plan is set for Friday at 7:30 PM."
+}
+```
+
+### Trigger SMS from matchmaking signal
+
+When posting a `date_planned` signal to `/api/matchmaking/signals`, include:
+
+```json
+{
+  "actorUserId": "user-1",
+  "targetUserId": "p-1",
+  "idempotencyKey": "evt-date-plan-001",
+  "type": "date_planned",
+  "metadata": {
+    "smsTo": "+15551234567",
+    "smsBody": "Date plan confirmed: Friday 7:30 PM at Blue Bottle."
+  }
+}
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
