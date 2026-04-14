@@ -22,7 +22,7 @@ function CompatBar({ label, score }: { label: string; score: number }) {
   const color = getCompatibilityColor(score);
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', width: 90, flexShrink: 0 }}>{label}</span>
+      <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', minWidth: 70, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
       <div style={{ flex: 1, height: 5, borderRadius: 3, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${score}%`, borderRadius: 3, background: color, transition: 'width 0.6s ease' }} />
       </div>

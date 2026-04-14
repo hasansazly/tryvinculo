@@ -43,6 +43,9 @@ body {
   min-height: 100dvh;
   /* Prevent body scroll when app layout handles it */
   overscroll-behavior: none;
+  /* Prevent words from breaking out of containers */
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Ensure smooth momentum scrolling on iOS */

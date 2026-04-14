@@ -69,10 +69,10 @@ export default function CouplesPage() {
   const [showMemoryForm, setShowMemoryForm] = useState(false);
 
   return (
-    <div style={{ padding: '32px', maxWidth: 900, margin: '0 auto' }}>
+    <div className="couples-page" style={{ padding: '32px', maxWidth: 900, margin: '0 auto' }}>
 
       {/* Couples Hero */}
-      <div style={{ position: 'relative', borderRadius: 28, overflow: 'hidden', marginBottom: 24, background: 'linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(219,39,119,0.2) 50%, rgba(251,191,36,0.1) 100%)', border: '1px solid rgba(139,92,246,0.2)', padding: '32px 36px' }}>
+      <div className="couples-hero" style={{ position: 'relative', borderRadius: 28, overflow: 'hidden', marginBottom: 24, background: 'linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(219,39,119,0.2) 50%, rgba(251,191,36,0.1) 100%)', border: '1px solid rgba(139,92,246,0.2)', padding: '32px 36px' }}>
         <div className="orb" style={{ width: 300, height: 300, background: 'rgba(139,92,246,0.12)', top: -100, right: -50, zIndex: 0 }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20, flexWrap: 'wrap' }}>
@@ -120,7 +120,7 @@ export default function CouplesPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 0, marginBottom: 24, background: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 4 }}>
+      <div className="couples-tabs" style={{ display: 'flex', gap: 0, marginBottom: 24, background: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 4, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
         {([['home', '🏠 Home'], ['memories', '📸 Memories'], ['grow', '🌱 Grow'], ['dates', '☕ Date Ideas']] as [string, string][]).map(([tab, label]) => (
           <button key={tab} onClick={() => setActiveTab(tab as typeof activeTab)} style={{ flex: 1, padding: '10px', borderRadius: 10, border: 'none', background: activeTab === tab ? 'rgba(139,92,246,0.15)' : 'transparent', color: activeTab === tab ? '#c4b5fd' : 'rgba(240,240,255,0.4)', fontSize: 13, fontWeight: activeTab === tab ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', borderStyle: 'solid', borderWidth: 1, borderColor: activeTab === tab ? 'rgba(139,92,246,0.25)' : 'transparent' }}>
             {label}
@@ -222,7 +222,7 @@ export default function CouplesPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[['Values', 92, '+4'], ['Communication', 91, '+7'], ['Lifestyle', 88, '+3'], ['Emotional depth', 95, '+11'], ['Humor', 89, '+6']].map(([label, score, change]) => (
                   <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', width: 100, flexShrink: 0 }}>{label}</span>
+                    <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', width: 80, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
                     <div style={{ flex: 1, height: 5, background: 'rgba(255,255,255,0.07)', borderRadius: 3, overflow: 'hidden' }}>
                       <div style={{ height: '100%', width: `${score}%`, background: 'linear-gradient(90deg, #34d399, #059669)', borderRadius: 3 }} />
                     </div>
@@ -360,7 +360,7 @@ export default function CouplesPage() {
       {activeTab === 'dates' && (
         <div>
           <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)', marginBottom: 20 }}>AI-curated for where you are in your relationship.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+          <div className="dates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
             {DATE_IDEAS_COUPLES.map(idea => (
               <div key={idea.title} className="glass card-lift" style={{ borderRadius: 18, padding: '20px', cursor: 'pointer' }}>
                 <div style={{ fontSize: 36, marginBottom: 12 }}>{idea.emoji}</div>
@@ -381,6 +381,12 @@ export default function CouplesPage() {
       <style>{`
         @media (max-width: 800px) {
           .couples-grid { grid-template-columns: 1fr !important; }
+          .dates-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 768px) {
+          .couples-page { padding: 20px 16px 32px !important; }
+          .couples-hero { padding: 20px !important; }
+          .couples-tabs button { min-width: 80px; white-space: nowrap; }
         }
       `}</style>
     </div>

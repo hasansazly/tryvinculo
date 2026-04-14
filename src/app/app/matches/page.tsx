@@ -91,7 +91,7 @@ function MatchCard({ match, onClick }: { match: Match; onClick: () => void }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 14 }}>
         {Object.entries(match.compatibilityBreakdown).slice(0, 3).map(([key, val]) => (
           <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 11, color: 'rgba(240,240,255,0.35)', width: 80, flexShrink: 0, textTransform: 'capitalize' }}>{key}</span>
+            <span style={{ fontSize: 11, color: 'rgba(240,240,255,0.35)', minWidth: 60, flexShrink: 0, textTransform: 'capitalize', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{key}</span>
             <div style={{ flex: 1, height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
               <div style={{ height: '100%', width: `${val}%`, background: getCompatibilityColor(val), borderRadius: 2 }} />
             </div>

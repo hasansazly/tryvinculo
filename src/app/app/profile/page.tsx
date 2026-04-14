@@ -195,10 +195,10 @@ export default function ProfilePage() {
                 const color = getCompatibilityColor(dim.score);
                 return (
                   <div key={dim.label}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                      <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, gap: 8, flexWrap: 'wrap' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
                         <span style={{ fontSize: 14, fontWeight: 600 }}>{dim.label}</span>
-                        <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)', marginLeft: 10 }}>{dim.desc}</span>
+                        <span className="aura-desc" style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)', marginLeft: 8, display: 'inline' }}>{dim.desc}</span>
                       </div>
                       <span style={{ fontSize: 14, fontWeight: 700, color, flexShrink: 0 }}>{dim.score}</span>
                     </div>
@@ -267,6 +267,7 @@ export default function ProfilePage() {
         @media (max-width: 768px) {
           .profile-page { padding: 20px 16px 32px !important; }
           .profile-header-row { flex-wrap: wrap; gap: 12px; }
+          .aura-desc { display: block !important; margin-left: 0 !important; margin-top: 2px; }
         }
       `}</style>
     </div>
