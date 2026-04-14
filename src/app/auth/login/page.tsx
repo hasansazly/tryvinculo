@@ -87,7 +87,7 @@ export default function LoginPage() {
           </p>
 
           {/* Social logins */}
-          <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+          <div className="auth-social-row" style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
             {[
               { name: 'Google', icon: '🔵' },
               { name: 'Apple', icon: '🍎' },
@@ -184,8 +184,11 @@ export default function LoginPage() {
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
           .auth-form-shell { padding: 24px 16px !important; }
+          .auth-form-shell { max-width: 100% !important; }
+          .auth-social-row { flex-direction: column; }
+          .auth-social-row > button { width: 100%; }
         }
       `}</style>
     </div>

@@ -491,7 +491,7 @@ export default function OnboardingPage() {
         </p>
       </div>
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
           .onboarding-card { padding: 28px 20px !important; }
           .onboarding-two-col { grid-template-columns: 1fr !important; }
           .onboarding-interest-row > button { flex: 1 1 calc(50% - 5px) !important; }

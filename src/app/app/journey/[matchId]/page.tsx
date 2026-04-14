@@ -373,8 +373,8 @@ export default function JourneyPage() {
       )}
 
       <style>{`
-        @media (max-width: 768px) {
-          .journey-page { padding: 20px 16px 32px !important; }
+        @media (max-width: 767px) {
+          .journey-page { padding: 24px 16px 32px !important; }
           .journey-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>

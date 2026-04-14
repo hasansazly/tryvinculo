@@ -234,8 +234,8 @@ export default function SettingsPage() {
       </button>
 
       <style>{`
-        @media (max-width: 768px) {
-          .settings-page { padding: 20px 16px 32px !important; }
+        @media (max-width: 767px) {
+          .settings-page { padding: 24px 16px 32px !important; }
           .settings-interest-row button { flex: 1 1 calc(50% - 4px) !important; }
           .settings-sub-grid { grid-template-columns: 1fr !important; }
         }

@@ -26,6 +26,7 @@ html {
   scroll-behavior: smooth;
   height: 100%;
   overflow-x: hidden;
+  max-width: 100vw;
 }
 
 img {
@@ -40,6 +41,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  max-width: 100vw;
   min-height: 100vh;
   min-height: 100dvh;
   /* Prevent body scroll when app layout handles it */
@@ -469,10 +471,16 @@ body {
 }
 
 /* Mobile touch target minimum */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   button, a[href] {
     min-height: 44px;
     min-width: 44px;
+  }
+  input,
+  select,
+  textarea,
+  .input-field {
+    min-height: 44px;
   }
   /* Allow smaller decorative elements to override */
   .tag, .step-dot, .notif-dot {
@@ -487,7 +495,7 @@ body {
 }
 
 /* Matches: single column on mobile */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .matches-grid {
     grid-template-columns: 1fr !important;
   }

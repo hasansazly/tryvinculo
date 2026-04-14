@@ -273,7 +273,7 @@ export default function LandingPage() {
                 Kindred goes beyond surface-level matching. Our AI analyzes personality, attachment style, values, and communication patterns to find people who truly fit.
               </p>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <div className="hero-cta-group" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
                 <Link href="/auth/signup" className="btn-primary" style={{ fontSize: 16, padding: '15px 32px' }}>
                   Find Your Match
                   <ArrowRight size={18} />
@@ -299,9 +299,9 @@ export default function LandingPage() {
             </div>
 
             {/* Right — app mockup */}
-            <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+            <div className="hero-phone-wrap" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
               {/* Phone frame */}
-              <div style={{
+              <div className="hero-phone-frame" style={{
                 width: 280, height: 560,
                 background: 'rgba(15,15,26,0.9)',
                 borderRadius: 40,
@@ -370,7 +370,7 @@ export default function LandingPage() {
               </div>
 
               {/* Floating cards */}
-              <div style={{ position: 'absolute', left: -60, top: '15%', width: 180 }} className="glass rounded-xl p-3">
+              <div style={{ position: 'absolute', left: -60, top: '15%', width: 180 }} className="glass rounded-xl p-3 hero-floating-card">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                   <Brain size={14} color="#a78bfa" />
                   <span style={{ fontSize: 11, fontWeight: 600, color: '#a78bfa' }}>AI Insight</span>
@@ -378,7 +378,7 @@ export default function LandingPage() {
                 <p style={{ fontSize: 11, color: 'rgba(240,240,255,0.55)', lineHeight: 1.5 }}>You both have secure attachment styles and share creativity as a core value.</p>
               </div>
 
-              <div style={{ position: 'absolute', right: -50, bottom: '20%', width: 160 }} className="glass rounded-xl p-3" >
+              <div style={{ position: 'absolute', right: -50, bottom: '20%', width: 160 }} className="glass rounded-xl p-3 hero-floating-card" >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <div style={{ width: 28, height: 28, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
                     <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
@@ -559,6 +559,7 @@ export default function LandingPage() {
             ].map(plan => (
               <div
                 key={plan.name}
+                className={`pricing-item ${plan.highlight ? 'pricing-item-featured' : ''}`}
                 style={{
                   borderRadius: 22,
                   padding: plan.highlight ? '2px' : undefined,
@@ -664,20 +665,26 @@ export default function LandingPage() {
 
       {/* Responsive styles */}
       <style>{`
-        @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; text-align: center; }
-          .hero-grid > div:last-child { display: none; }
+        @media (max-width: 767px) {
+          .hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; text-align: center; }
+          .hero-phone-wrap { margin-top: 24px; }
+          .hero-phone-frame { width: min(280px, 100%) !important; max-width: 280px !important; }
+          .hero-floating-card { display: none !important; }
+          .hero-cta-group { flex-direction: column !important; }
+          .hero-cta-group > a { width: 100% !important; }
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .features-grid { grid-template-columns: 1fr !important; }
           .steps-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .testimonials-grid { grid-template-columns: 1fr !important; }
-          .pricing-grid { grid-template-columns: 1fr !important; }
+          .pricing-grid { display: flex !important; flex-direction: column; }
+          .pricing-item { order: 2; }
+          .pricing-item-featured { order: 1; }
         }
         @media (max-width: 600px) {
           .stats-grid { grid-template-columns: 1fr !important; }
           .steps-grid { grid-template-columns: 1fr !important; }
         }
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
           .hamburger-btn { display: flex !important; }
           .hidden-mobile { display: none !important; }
           .mobile-menu { display: flex !important; }

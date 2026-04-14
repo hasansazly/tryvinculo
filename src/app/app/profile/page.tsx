@@ -27,7 +27,7 @@ export default function ProfilePage() {
         <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em' }}>Your Profile</h1>
         <button
           onClick={() => router.push('/app/settings')}
-          className="btn-ghost"
+          className="btn-ghost profile-edit-btn"
           style={{ padding: '9px 18px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}
         >
           <Edit3 size={14} />
@@ -125,7 +125,7 @@ export default function ProfilePage() {
           {/* Photos */}
           <div className="glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Photos</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+            <div className="profile-photos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
               {user.photos.map((src, i) => (
                 <div key={i} style={{ aspectRatio: '1', borderRadius: 12, overflow: 'hidden' }}>
                   <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -264,12 +264,11 @@ export default function ProfilePage() {
         </div>
       )}
       <style>{`
-        @media (max-width: 768px) {
-          .profile-page { padding: 20px 16px 32px !important; }
+        @media (max-width: 767px) {
+          .profile-page { padding: 24px 16px 32px !important; }
           .profile-header-row { flex-wrap: wrap; gap: 12px; }
-          .profile-tabs { flex-wrap: wrap; }
-          .profile-tabs button { flex: 1 1 calc(50% - 2px); }
-          .profile-details-grid { grid-template-columns: 1fr !important; }
+          .profile-edit-btn { width: 100%; justify-content: center; }
+          .profile-photos-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .profile-stats-grid { grid-template-columns: 1fr !important; }
           .aura-desc { display: block !important; margin-left: 0 !important; margin-top: 2px; }
         }

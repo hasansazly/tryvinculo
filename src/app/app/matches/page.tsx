@@ -174,7 +174,7 @@ export default function MatchesPage() {
           />
           <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,240,255,0.3)' }} />
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingBottom: 2 }}>
+        <div className="matches-filter-row" style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }}>
           {([['all', 'All'], ['new', 'New ✨'], ['high-compat', 'High Match'], ['replied', 'Active']] as [FilterType, string][]).map(([val, label]) => (
             <button
               key={val}
@@ -227,8 +227,19 @@ export default function MatchesPage() {
         </div>
       )}
       <style>{`
-        @media (max-width: 768px) {
-          .matches-stats-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 767px) {
+          .matches-stats-grid {
+            display: flex !important;
+            overflow-x: auto;
+            gap: 10px;
+          }
+          .matches-stats-grid > * {
+            min-width: 190px;
+          }
+          .matches-filter-row {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+          }
         }
       `}</style>
     </div>

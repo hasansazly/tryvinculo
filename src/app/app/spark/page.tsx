@@ -122,7 +122,7 @@ function RevealedCard({ spark }: { spark: SparkEntry }) {
   );
 }
 
-function WaitingCard({ spark }: { spark: SparkEntry }) {
+function WaitingCard({ spark, pinLockCta = false }: { spark: SparkEntry; pinLockCta?: boolean }) {
   const [answer, setAnswer] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -212,7 +212,7 @@ function WaitingCard({ spark }: { spark: SparkEntry }) {
               rows={4}
               maxLength={500}
               className="input-field"
-              style={{ resize: 'none', lineHeight: 1.65, width: '100%', marginBottom: 10 }}
+              style={{ resize: 'none', lineHeight: 1.65, width: '100%', minHeight: 120, marginBottom: 10 }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
               <span style={{ fontSize: 11, color: 'rgba(240,240,255,0.25)' }}>{answer.length}/500</span>
@@ -237,7 +237,7 @@ function WaitingCard({ spark }: { spark: SparkEntry }) {
             <button
               onClick={handleSubmit}
               disabled={!answer.trim()}
-              className="btn-primary"
+              className={`btn-primary ${pinLockCta ? 'spark-lock-cta' : ''}`}
               style={{ width: '100%', justifyContent: 'center', fontSize: 14, padding: '13px', opacity: answer.trim() ? 1 : 0.4 }}
             >
               <Send size={15} />
@@ -324,14 +324,14 @@ export default function SparkPage() {
       </div>
 
       {tab === 'today' && (
-        <div>
+        <div className="spark-today-pane">
           {/* Pending (waiting for both) */}
           {pending.length > 0 && (
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(240,240,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 14 }}>
                 Waiting for answers ({pending.length})
               </div>
-              {pending.map(spark => <WaitingCard key={spark.matchId} spark={spark} />)}
+              {pending.map((spark, idx) => <WaitingCard key={spark.matchId} spark={spark} pinLockCta={idx === 0} />)}
             </div>
           )}
 
@@ -371,10 +371,18 @@ export default function SparkPage() {
         <button className="btn-primary" style={{ fontSize: 12, padding: '9px 16px', flexShrink: 0 }}>Upgrade</button>
       </div>
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
           .spark-answers-grid { grid-template-columns: 1fr !important; }
           .spark-answers-grid > div:first-child { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
-          .spark-tabs { flex-wrap: wrap; }
+          .spark-tabs { width: 100%; }
+          .spark-today-pane { padding-bottom: 86px; }
+          .spark-lock-cta {
+            position: fixed;
+            left: 16px;
+            right: 16px;
+            bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 8px);
+            z-index: 999;
+          }
         }
       `}</style>
     </div>

@@ -40,7 +40,7 @@ export default function MessagesPage() {
             <div
               key={match.id}
               onClick={() => router.push(`/app/messages/${match.id}`)}
-              style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 16, cursor: 'pointer', background: hasUnread ? 'rgba(139,92,246,0.06)' : 'transparent', border: hasUnread ? '1px solid rgba(139,92,246,0.12)' : '1px solid transparent', transition: 'all 0.18s' }}
+              style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 16px', minHeight: 64, borderRadius: 16, cursor: 'pointer', background: hasUnread ? 'rgba(139,92,246,0.06)' : 'transparent', border: hasUnread ? '1px solid rgba(139,92,246,0.12)' : '1px solid transparent', transition: 'all 0.18s' }}
               onMouseEnter={e => { if (!hasUnread) { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; } }}
               onMouseLeave={e => { if (!hasUnread) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; } }}
             >
@@ -81,8 +81,8 @@ export default function MessagesPage() {
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
-          .messages-list-page { padding: 20px 16px 32px !important; }
+        @media (max-width: 767px) {
+          .messages-list-page { padding: 24px 16px 32px !important; }
         }
       `}</style>
 

@@ -86,7 +86,7 @@ function MobileProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperL
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {/* Photo card */}
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', maxHeight: '62vh', background: '#1a1a2e', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', maxHeight: '60vh', background: '#1a1a2e', overflow: 'hidden' }}>
         {profile.photos.map((src, i) => (
           <img
             key={i}
@@ -153,7 +153,7 @@ function MobileProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperL
       </div>
 
       {/* Action buttons */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20, padding: '18px 24px' }}>
+      <div className="discover-mobile-actions" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20, padding: '18px 24px' }}>
         <button className="action-btn action-pass" onClick={onPass} title="Pass" style={{ width: 56, height: 56 }}>
           <X size={22} />
         </button>
@@ -166,7 +166,7 @@ function MobileProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperL
       </div>
 
       {/* Detail section — scrollable */}
-      <div style={{ padding: '0 16px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '0 16px 130px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* Compat ring + breakdown */}
         <div className="glass" style={{ borderRadius: 20, padding: '18px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
@@ -545,6 +545,17 @@ export default function DiscoverPage() {
         @media (min-width: 768px) {
           .discover-mobile { display: none; }
           .discover-desktop { display: block; }
+        }
+        @media (max-width: 767px) {
+          .discover-mobile-actions {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+            z-index: 999;
+            background: linear-gradient(to top, rgba(7,7,15,0.95), rgba(7,7,15,0.65));
+            backdrop-filter: blur(8px);
+          }
         }
       `}</style>
     </>

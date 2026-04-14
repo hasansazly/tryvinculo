@@ -92,6 +92,11 @@ function MobileBottomNav() {
       className="md:hidden"
       style={{
         flexShrink: 0,
+        position: 'fixed',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1000,
         background: 'rgba(7,7,15,0.97)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
@@ -111,6 +116,7 @@ function MobileBottomNav() {
             href={item.href}
             style={{
               flex: 1,
+              minHeight: 56,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -203,20 +209,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             borderBottom: '1px solid rgba(255,255,255,0.06)',
-            padding: '0 20px',
+            padding: '0 16px',
             paddingTop: 'env(safe-area-inset-top, 0px)',
-            height: 'calc(52px + env(safe-area-inset-top, 0px))',
+            height: 52,
             display: 'flex',
-            alignItems: 'flex-end',
-            paddingBottom: 12,
+            alignItems: 'center',
             justifyContent: 'space-between',
           }}
         >
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
             <div style={{ width: 26, height: 26, borderRadius: 7, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Heart size={12} color="white" fill="white" />
             </div>
-            <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: '-0.04em' }}>kindred</span>
           </Link>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -231,13 +235,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Page content — scrolls within */}
-        <main style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+        <main className="app-main-scroll" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
           {children}
         </main>
 
         {/* Mobile bottom nav */}
         <MobileBottomNav />
       </div>
+      <style>{`
+        @media (max-width: 767px) {
+          .app-main-scroll {
+            padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

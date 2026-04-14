@@ -379,12 +379,12 @@ export default function CouplesPage() {
       )}
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
           .couples-grid { grid-template-columns: 1fr !important; }
           .dates-grid { grid-template-columns: 1fr !important; }
         }
-        @media (max-width: 768px) {
-          .couples-page { padding: 20px 16px 32px !important; }
+        @media (max-width: 767px) {
+          .couples-page { padding: 24px 16px 32px !important; }
           .couples-hero { padding: 20px !important; }
           .couples-tabs button { min-width: 80px; white-space: nowrap; }
         }
