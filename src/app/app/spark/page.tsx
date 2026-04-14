@@ -74,7 +74,7 @@ function RevealedCard({ spark }: { spark: SparkEntry }) {
       </div>
 
       {/* Answers */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+      <div className="spark-answers-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
         {/* My answer */}
         <div style={{ padding: '18px 22px', borderRight: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ fontSize: 11, fontWeight: 600, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>You</div>
@@ -266,7 +266,7 @@ export default function SparkPage() {
   const minsLeft = Math.floor(((midnight.getTime() - now.getTime()) % 3600000) / 60000);
 
   return (
-    <div style={{ padding: '20px 16px 32px', maxWidth: 780, margin: '0 auto' }}>
+    <div style={{ padding: '20px 16px 32px', maxWidth: 780, width: '100%', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -315,7 +315,7 @@ export default function SparkPage() {
       )}
 
       {/* Tab switcher */}
-      <div style={{ display: 'flex', gap: 0, marginBottom: 20, background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: 4 }}>
+      <div className="spark-tabs" style={{ display: 'flex', gap: 0, marginBottom: 20, background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: 4 }}>
         {([['today', `Today (${TODAY_SPARKS.length})`], ['archive', 'Archive']] as [string, string][]).map(([t, label]) => (
           <button key={t} onClick={() => setTab(t as typeof tab)} style={{ flex: 1, padding: '9px', borderRadius: 9, border: 'none', background: tab === t ? 'rgba(251,146,60,0.15)' : 'transparent', color: tab === t ? '#fb923c' : 'rgba(240,240,255,0.4)', fontSize: 13, fontWeight: tab === t ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', borderStyle: 'solid', borderWidth: 1, borderColor: tab === t ? 'rgba(251,146,60,0.25)' : 'transparent' }}>
             {label}
@@ -370,6 +370,13 @@ export default function SparkPage() {
         </div>
         <button className="btn-primary" style={{ fontSize: 12, padding: '9px 16px', flexShrink: 0 }}>Upgrade</button>
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .spark-answers-grid { grid-template-columns: 1fr !important; }
+          .spark-answers-grid > div:first-child { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
+          .spark-tabs { flex-wrap: wrap; }
+        }
+      `}</style>
     </div>
   );
 }

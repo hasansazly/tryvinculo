@@ -46,7 +46,7 @@ export default function SignupPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#07070f', display: 'flex' }}>
       {/* Left panel */}
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="hidden lg:flex">
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="hidden md:flex">
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(219,39,119,0.18) 0%, rgba(124,58,237,0.15) 60%, rgba(7,7,15,0) 100%)' }} />
         <div className="orb" style={{ width: 500, height: 500, background: 'rgba(219,39,119,0.12)', top: -80, right: -80 }} />
         <div className="orb" style={{ width: 400, height: 400, background: 'rgba(124,58,237,0.12)', bottom: 0, left: -60 }} />
@@ -96,7 +96,7 @@ export default function SignupPage() {
       </div>
 
       {/* Right panel — form */}
-      <div style={{ width: '100%', maxWidth: 520, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 40px' }}>
+      <div className="auth-form-shell" style={{ width: '100%', maxWidth: 520, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 40px' }}>
         <div style={{ width: '100%' }}>
           {/* Mobile logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 40 }} className="lg:hidden">
@@ -230,7 +230,12 @@ export default function SignupPage() {
         </div>
       </div>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 768px) {
+          .auth-form-shell { padding: 24px 16px !important; }
+        }
+      `}</style>
     </div>
   );
 }

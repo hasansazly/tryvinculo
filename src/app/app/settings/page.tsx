@@ -74,7 +74,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="settings-page" style={{ padding: '32px', maxWidth: 680, margin: '0 auto' }}>
+    <div className="settings-page" style={{ padding: '32px', maxWidth: 680, width: '100%', margin: '0 auto' }}>
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Settings</h1>
         <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>Manage your preferences and account</p>
@@ -95,7 +95,7 @@ export default function SettingsPage() {
           {/* Interested in */}
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', marginBottom: 10 }}>Interested in</div>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div className="settings-interest-row" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {['Men', 'Women', 'Everyone'].map(opt => (
                 <button
                   key={opt}
@@ -236,6 +236,7 @@ export default function SettingsPage() {
       <style>{`
         @media (max-width: 768px) {
           .settings-page { padding: 20px 16px 32px !important; }
+          .settings-interest-row button { flex: 1 1 calc(50% - 4px) !important; }
           .settings-sub-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
@@ -250,4 +251,3 @@ function Compass({ size, color }: { size: number; color: string }) {
     </svg>
   );
 }
-

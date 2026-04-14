@@ -664,7 +664,7 @@ export default function LandingPage() {
 
       {/* Responsive styles */}
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
           .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; text-align: center; }
           .hero-grid > div:last-child { display: none; }
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }

@@ -490,7 +490,7 @@ export default function DiscoverPage() {
       </div>
 
       {/* Desktop layout */}
-      <div className="discover-desktop" style={{ padding: '32px 32px 48px', maxWidth: 1100, margin: '0 auto' }}>
+      <div className="discover-desktop" style={{ padding: '32px 32px 48px', maxWidth: 1100, width: '100%', margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
           <div>
             <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Today&apos;s Matches</h1>
@@ -542,7 +542,7 @@ export default function DiscoverPage() {
       <style>{`
         .discover-mobile { display: block; }
         .discover-desktop { display: none; }
-        @media (min-width: 1024px) {
+        @media (min-width: 768px) {
           .discover-mobile { display: none; }
           .discover-desktop { display: block; }
         }

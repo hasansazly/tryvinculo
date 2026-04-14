@@ -69,7 +69,7 @@ export default function CouplesPage() {
   const [showMemoryForm, setShowMemoryForm] = useState(false);
 
   return (
-    <div className="couples-page" style={{ padding: '32px', maxWidth: 900, margin: '0 auto' }}>
+    <div className="couples-page" style={{ padding: '32px', maxWidth: 900, width: '100%', margin: '0 auto' }}>
 
       {/* Couples Hero */}
       <div className="couples-hero" style={{ position: 'relative', borderRadius: 28, overflow: 'hidden', marginBottom: 24, background: 'linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(219,39,119,0.2) 50%, rgba(251,191,36,0.1) 100%)', border: '1px solid rgba(139,92,246,0.2)', padding: '32px 36px' }}>
@@ -379,7 +379,7 @@ export default function CouplesPage() {
       )}
 
       <style>{`
-        @media (max-width: 800px) {
+        @media (max-width: 768px) {
           .couples-grid { grid-template-columns: 1fr !important; }
           .dates-grid { grid-template-columns: 1fr !important; }
         }

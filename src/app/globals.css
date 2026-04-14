@@ -20,6 +20,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:where(main, section, article, aside, nav, div) { min-width: 0; }
 
 html {
   scroll-behavior: smooth;
@@ -468,7 +469,7 @@ body {
 }
 
 /* Mobile touch target minimum */
-@media (max-width: 1023px) {
+@media (max-width: 768px) {
   button, a[href] {
     min-height: 44px;
     min-width: 44px;
@@ -486,7 +487,7 @@ body {
 }
 
 /* Matches: single column on mobile */
-@media (max-width: 1023px) {
+@media (max-width: 768px) {
   .matches-grid {
     grid-template-columns: 1fr !important;
   }

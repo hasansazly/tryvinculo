@@ -201,7 +201,7 @@ export default function OnboardingPage() {
         <StepIndicator current={step} total={TOTAL_STEPS} />
 
         {/* Card */}
-        <div className="glass" style={{ borderRadius: 24, padding: '36px 40px' }}>
+        <div className="glass onboarding-card" style={{ borderRadius: 24, padding: '36px 40px' }}>
           {error && (
             <div style={{ background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.25)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#fda4af', marginBottom: 20 }}>
               {error}
@@ -230,7 +230,7 @@ export default function OnboardingPage() {
                   <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', display: 'block', marginBottom: 8 }}>First name</label>
                   <input className="input-field" placeholder="Your first name" value={data.name} onChange={e => update('name', e.target.value)} />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="onboarding-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div>
                     <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', display: 'block', marginBottom: 8 }}>Age</label>
                     <input className="input-field" type="number" placeholder="26" min="18" max="80" value={data.age} onChange={e => update('age', e.target.value)} />
@@ -424,7 +424,7 @@ export default function OnboardingPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                 <div>
                   <label style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.6)', display: 'block', marginBottom: 12 }}>Interested in</label>
-                  <div style={{ display: 'flex', gap: 10 }}>
+                  <div className="onboarding-interest-row" style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                     {INTERESTED_IN.map(o => {
                       const sel = data.interestedIn.includes(o.value);
                       return (
@@ -470,7 +470,7 @@ export default function OnboardingPage() {
           )}
 
           {/* Navigation */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32 }}>
+          <div className="onboarding-nav" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32 }}>
             <button onClick={back} className="btn-ghost" style={{ padding: '11px 20px', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
               <ArrowLeft size={16} />
               Back
@@ -490,6 +490,15 @@ export default function OnboardingPage() {
           Step {step} of {TOTAL_STEPS} — Your data is encrypted and never sold.
         </p>
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .onboarding-card { padding: 28px 20px !important; }
+          .onboarding-two-col { grid-template-columns: 1fr !important; }
+          .onboarding-interest-row > button { flex: 1 1 calc(50% - 5px) !important; }
+          .onboarding-nav { flex-wrap: wrap; gap: 12px; }
+          .onboarding-nav > button { flex: 1 1 auto; justify-content: center; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -155,7 +155,7 @@ export default function MatchesPage() {
   });
 
   return (
-    <div style={{ padding: '20px 16px 32px', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ padding: '20px 16px 32px', maxWidth: 1100, width: '100%', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Your Matches</h1>
@@ -174,7 +174,7 @@ export default function MatchesPage() {
           />
           <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,240,255,0.3)' }} />
         </div>
-        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingBottom: 2 }}>
           {([['all', 'All'], ['new', 'New ✨'], ['high-compat', 'High Match'], ['replied', 'Active']] as [FilterType, string][]).map(([val, label]) => (
             <button
               key={val}
@@ -188,7 +188,7 @@ export default function MatchesPage() {
       </div>
 
       {/* Stats bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
+      <div className="matches-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
         {[
           { icon: Heart, label: 'Total Matches', value: MATCHES.length, color: '#fb7185' },
           { icon: Star, label: 'Avg Compatibility', value: '91%', color: '#a78bfa' },
@@ -226,6 +226,11 @@ export default function MatchesPage() {
           <p style={{ fontSize: 16, color: 'rgba(240,240,255,0.4)' }}>No matches found for this filter.</p>
         </div>
       )}
+      <style>{`
+        @media (max-width: 768px) {
+          .matches-stats-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

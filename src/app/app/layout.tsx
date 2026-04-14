@@ -89,7 +89,7 @@ function MobileBottomNav() {
   const pathname = usePathname();
   return (
     <div
-      className="lg:hidden"
+      className="md:hidden"
       style={{
         flexShrink: 0,
         background: 'rgba(7,7,15,0.97)',
@@ -178,7 +178,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div style={{ height: '100dvh', background: '#07070f', display: 'flex', overflow: 'hidden' }}>
       {/* Desktop sidebar */}
       <div
-        className="hidden lg:flex lg:flex-col"
+        className="hidden md:flex md:flex-col"
         style={{
           width: 260,
           flexShrink: 0,
@@ -196,7 +196,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100dvh', overflow: 'hidden' }}>
         {/* Mobile top bar */}
         <div
-          className="lg:hidden"
+          className="md:hidden"
           style={{
             flexShrink: 0,
             background: 'rgba(7,7,15,0.95)',

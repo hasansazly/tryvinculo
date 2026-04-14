@@ -16,7 +16,7 @@ export default function MessagesPage() {
     });
 
   return (
-    <div className="messages-list-page" style={{ padding: '32px', maxWidth: 780, margin: '0 auto' }}>
+    <div className="messages-list-page" style={{ padding: '32px', maxWidth: 780, width: '100%', margin: '0 auto' }}>
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Messages</h1>
         <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>{conversations.length} active conversations</p>

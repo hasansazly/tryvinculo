@@ -114,7 +114,7 @@ export default function JourneyPage() {
   const compatColor = getCompatibilityColor(match.compatibilityScore);
 
   return (
-    <div className="journey-page" style={{ padding: '32px', maxWidth: 860, margin: '0 auto' }}>
+    <div className="journey-page" style={{ padding: '32px', maxWidth: 860, width: '100%', margin: '0 auto' }}>
       {/* Back */}
       <button onClick={() => router.back()} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(240,240,255,0.5)', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 20, fontFamily: 'inherit', padding: 0 }}>
         <ArrowLeft size={16} /> Back
@@ -373,7 +373,7 @@ export default function JourneyPage() {
       )}
 
       <style>{`
-        @media (max-width: 800px) {
+        @media (max-width: 768px) {
           .journey-page { padding: 20px 16px 32px !important; }
           .journey-grid { grid-template-columns: 1fr !important; }
         }

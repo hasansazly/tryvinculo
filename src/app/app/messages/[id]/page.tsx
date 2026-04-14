@@ -329,7 +329,7 @@ export default function ChatPage() {
       )}
 
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
           .ai-panel { display: none !important; }
         }
       `}</style>

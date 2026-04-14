@@ -21,7 +21,7 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="profile-page" style={{ padding: '32px', maxWidth: 800, margin: '0 auto' }}>
+    <div className="profile-page" style={{ padding: '32px', maxWidth: 800, width: '100%', margin: '0 auto' }}>
       {/* Header */}
       <div className="profile-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em' }}>Your Profile</h1>
@@ -101,7 +101,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 0, marginBottom: 20, background: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 4 }}>
+      <div className="profile-tabs" style={{ display: 'flex', gap: 0, marginBottom: 20, background: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 4 }}>
         {([['profile', 'Profile'], ['aura', '✨ Aura Analysis'], ['stats', '📊 Stats']] as [string, string][]).map(([tab, label]) => (
           <button
             key={tab}
@@ -160,7 +160,7 @@ export default function ProfilePage() {
           {/* Details */}
           <div className="glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Life details</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div className="profile-details-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
                 { label: 'Height', value: user.height },
                 { label: 'Relationship Goal', value: user.relationshipGoal },
@@ -224,7 +224,7 @@ export default function ProfilePage() {
 
       {activeTab === 'stats' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+          <div className="profile-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
             {[
               { label: 'Profile Views', value: '243', icon: '👁️', change: '+12% this week' },
               { label: 'Matches', value: '12', icon: '💫', change: '+3 this week' },
@@ -267,6 +267,10 @@ export default function ProfilePage() {
         @media (max-width: 768px) {
           .profile-page { padding: 20px 16px 32px !important; }
           .profile-header-row { flex-wrap: wrap; gap: 12px; }
+          .profile-tabs { flex-wrap: wrap; }
+          .profile-tabs button { flex: 1 1 calc(50% - 2px); }
+          .profile-details-grid { grid-template-columns: 1fr !important; }
+          .profile-stats-grid { grid-template-columns: 1fr !important; }
           .aura-desc { display: block !important; margin-left: 0 !important; margin-top: 2px; }
         }
       `}</style>
