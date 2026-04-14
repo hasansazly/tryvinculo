@@ -539,6 +539,58 @@ export default function DiscoverPage() {
         />
       )}
 
+      {/* Kindred Stories */}
+      <div className="kindred-stories" style={{ padding: '32px 32px 48px', maxWidth: 1100, width: '100%', margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
+          <div>
+            <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 4 }}>Kindred Stories ✨</h2>
+            <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.4)' }}>Real couples who found each other here.</p>
+          </div>
+        </div>
+        <div className="stories-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+          {[
+            {
+              names: 'James & Priya',
+              photos: ['https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80', 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80'],
+              compat: 93,
+              together: '8 months',
+              story: '"We matched at 93% and I thought it was just an algorithm. Our first Spark question made me realize she thought about the world the same way I did. We got engaged last month."',
+            },
+            {
+              names: 'Alex & Sam',
+              photos: ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&q=80'],
+              compat: 91,
+              together: '14 months',
+              story: '"I\'d given up on apps. Kindred was different because it felt like it actually read me. The AI Coach told me not to overthink the first message. Best advice I\'ve ever gotten."',
+            },
+            {
+              names: 'Marcus & Elena',
+              photos: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80', 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80'],
+              compat: 97,
+              together: '6 months',
+              story: '"97% compatibility felt unreal. The Spark questions made us go deep before we even met. By date one it felt like we\'d known each other for years. We moved in together at month five."',
+            },
+          ].map(s => (
+            <div key={s.names} className="glass card-lift" style={{ borderRadius: 20, padding: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                <div style={{ display: 'flex' }}>
+                  {s.photos.map((src, i) => (
+                    <div key={i} style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', border: '2px solid #07070f', marginLeft: i > 0 ? -10 : 0 }}>
+                      <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700 }}>{s.names}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(240,240,255,0.4)' }}>Together {s.together} · {s.compat}% match</div>
+                </div>
+              </div>
+              <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.6)', lineHeight: 1.7, fontStyle: 'italic' }}>{s.story}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <style>{`
         .discover-mobile { display: block; }
         .discover-desktop { display: none; }
@@ -556,6 +608,8 @@ export default function DiscoverPage() {
             background: linear-gradient(to top, rgba(7,7,15,0.95), rgba(7,7,15,0.65));
             backdrop-filter: blur(8px);
           }
+          .kindred-stories { padding: 24px 16px 32px !important; }
+          .stories-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </>

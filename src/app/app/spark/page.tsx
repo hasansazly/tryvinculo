@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Flame, Clock, ChevronRight, Send, Eye, EyeOff, Lock, Sparkles,
-  Star, ArrowRight, Brain, CheckCircle, RotateCcw, Heart,
+  Flame, Clock, Send, Eye, EyeOff, Lock, Sparkles,
+  Star, ArrowRight, Brain, CheckCircle, Heart, BookOpen,
 } from 'lucide-react';
 import { TODAY_SPARKS, PAST_SPARKS, CATEGORY_COLORS } from '@/lib/sparkData';
 import type { SparkEntry } from '@/lib/sparkData';
@@ -359,8 +359,24 @@ export default function SparkPage() {
         </div>
       )}
 
+      {/* AI Coach + Academy promo cards */}
+      <div className="spark-promo-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 24 }}>
+        <div onClick={() => router.push('/app/coach')} className="card-lift" style={{ borderRadius: 18, padding: '18px', cursor: 'pointer', background: 'rgba(167,139,250,0.1)', border: '1px solid rgba(167,139,250,0.2)' }}>
+          <Brain size={22} color="#a78bfa" style={{ marginBottom: 10 }} />
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>AI Coach</div>
+          <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', lineHeight: 1.4, marginBottom: 10 }}>Pre-date prep, debrief, match intelligence.</div>
+          <span style={{ fontSize: 12, color: '#a78bfa', fontWeight: 600 }}>Open →</span>
+        </div>
+        <div onClick={() => router.push('/app/academy')} className="card-lift" style={{ borderRadius: 18, padding: '18px', cursor: 'pointer', background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.2)' }}>
+          <BookOpen size={22} color="#60a5fa" style={{ marginBottom: 10 }} />
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Academy</div>
+          <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', lineHeight: 1.4, marginBottom: 10 }}>Attachment, communication, love languages.</div>
+          <span style={{ fontSize: 12, color: '#60a5fa', fontWeight: 600 }}>Learn →</span>
+        </div>
+      </div>
+
       {/* Upgrade prompt */}
-      <div style={{ marginTop: 24, background: 'linear-gradient(135deg, rgba(251,146,60,0.08), rgba(244,63,94,0.06))', border: '1px solid rgba(251,146,60,0.18)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+      <div style={{ marginTop: 16, background: 'linear-gradient(135deg, rgba(251,146,60,0.08), rgba(244,63,94,0.06))', border: '1px solid rgba(251,146,60,0.18)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(251,146,60,0.15)', border: '1px solid rgba(251,146,60,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Star size={20} color="#fb923c" />
         </div>
@@ -376,6 +392,7 @@ export default function SparkPage() {
           .spark-answers-grid > div:first-child { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.06); }
           .spark-tabs { width: 100%; }
           .spark-today-pane { padding-bottom: 86px; }
+          .spark-promo-grid { grid-template-columns: 1fr 1fr !important; }
           .spark-lock-cta {
             position: fixed;
             left: 16px;

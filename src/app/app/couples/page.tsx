@@ -64,7 +64,7 @@ function Users2({ size, color }: { size: number; color: string }) {
 export default function CouplesPage() {
   const [dailyAnswer, setDailyAnswer] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'home' | 'memories' | 'grow' | 'dates'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'memories' | 'grow' | 'dates' | 'intel'>('home');
   const [newMemory, setNewMemory] = useState('');
   const [showMemoryForm, setShowMemoryForm] = useState(false);
 
@@ -121,7 +121,7 @@ export default function CouplesPage() {
 
       {/* Tabs */}
       <div className="couples-tabs" style={{ display: 'flex', gap: 0, marginBottom: 24, background: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 4, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-        {([['home', '🏠 Home'], ['memories', '📸 Memories'], ['grow', '🌱 Grow'], ['dates', '☕ Date Ideas']] as [string, string][]).map(([tab, label]) => (
+        {([['home', '🏠 Home'], ['memories', '📸 Memories'], ['grow', '🌱 Grow'], ['dates', '☕ Dates'], ['intel', '🧠 Intel']] as [string, string][]).map(([tab, label]) => (
           <button key={tab} onClick={() => setActiveTab(tab as typeof activeTab)} style={{ flex: 1, padding: '10px', borderRadius: 10, border: 'none', background: activeTab === tab ? 'rgba(139,92,246,0.15)' : 'transparent', color: activeTab === tab ? '#c4b5fd' : 'rgba(240,240,255,0.4)', fontSize: 13, fontWeight: activeTab === tab ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', borderStyle: 'solid', borderWidth: 1, borderColor: activeTab === tab ? 'rgba(139,92,246,0.25)' : 'transparent' }}>
             {label}
           </button>
@@ -374,6 +374,62 @@ export default function CouplesPage() {
                 </button>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* INTELLIGENCE TAB */}
+      {activeTab === 'intel' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Weekly Report */}
+          <div style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(219,39,119,0.1))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 22, padding: '22px 24px' }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Week of Apr 14 — AI Report</div>
+            <p style={{ fontSize: 15, color: 'rgba(240,240,255,0.85)', lineHeight: 1.8, marginBottom: 18 }}>
+              This was your best week since you started tracking. You answered the daily question every day, Sophie initiated 3 of your 5 conversations, and you planned your next date proactively. Your communication score reached an all-time high of 91.
+            </p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {[
+                { label: 'Best moment', value: 'Daily Q streak ×12', color: '#fb923c' },
+                { label: 'Growth area', value: 'Shared experiences', color: '#fbbf24' },
+                { label: 'Trend', value: '↑ Communication +7', color: '#34d399' },
+              ].map(item => (
+                <div key={item.label} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '8px 14px' }}>
+                  <div style={{ fontSize: 10, color: 'rgba(240,240,255,0.35)', marginBottom: 2 }}>{item.label}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: item.color }}>{item.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pattern analysis */}
+          <div className="glass" style={{ borderRadius: 22, padding: '22px 24px' }}>
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Relationship Patterns</div>
+            <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)', marginBottom: 18, lineHeight: 1.6 }}>AI-detected patterns from your interactions and Spark answers.</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {[
+                { icon: '✅', label: 'You initiate more dates', desc: 'Sophie responds enthusiastically every time. Healthy balance.', color: '#34d399' },
+                { icon: '⚠️', label: 'Late-night messages cluster', desc: "Most of your deeper conversations happen after 10pm. Consider daytime check-ins too.", color: '#fbbf24' },
+                { icon: '✅', label: 'Conflict resolution speed', desc: "When you've disagreed, resolution happened within 2 hours. Above average.", color: '#34d399' },
+                { icon: '💡', label: 'Sophie uses future language', desc: "She references 'us' and future plans often — strong signal of investment.", color: '#a78bfa' },
+              ].map(p => (
+                <div key={p.label} style={{ display: 'flex', gap: 12 }}>
+                  <div style={{ fontSize: 20, flexShrink: 0 }}>{p.icon}</div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: p.color, marginBottom: 3 }}>{p.label}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.5)', lineHeight: 1.5 }}>{p.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* This week's focus */}
+          <div style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.18)', borderRadius: 20, padding: '20px 22px' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#a78bfa', marginBottom: 10 }}>🎯 This week&apos;s focus</div>
+            <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.7)', lineHeight: 1.75 }}>
+              Your shared experiences score (74) is the only dimension below 80. You&apos;ve been excellent at emotional depth and conversation. This week: do something active together. The sunrise hike date idea would directly move this score.
+            </p>
+            <button className="btn-primary" style={{ marginTop: 14, fontSize: 13, padding: '10px 20px' }}>Plan this weekend</button>
           </div>
         </div>
       )}

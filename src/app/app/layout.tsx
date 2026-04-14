@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Heart, Compass, Users, MessageCircle, User, Settings, Bell, Sparkles, LogOut, Flame } from 'lucide-react';
+import { Heart, Compass, Users, MessageCircle, User, Settings, Bell, Sparkles, LogOut, Flame, Brain, BookOpen } from 'lucide-react';
 import { CURRENT_USER } from '@/lib/mockData';
 
 const NAV = [
@@ -15,7 +15,9 @@ const NAV = [
 
 const SIDEBAR_NAV = [
   ...NAV,
-  { href: '/app/settings', icon: Settings, label: 'Settings', notif: 0, isSpark: false },
+  { href: '/app/coach',    icon: Brain,    label: 'AI Coach',  notif: 1, isSpark: false },
+  { href: '/app/academy',  icon: BookOpen, label: 'Academy',   notif: 0, isSpark: false },
+  { href: '/app/settings', icon: Settings, label: 'Settings',  notif: 0, isSpark: false },
 ];
 
 function Sidebar() {

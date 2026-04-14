@@ -209,6 +209,22 @@ export default function MatchesPage() {
         })}
       </div>
 
+      {/* We're Official CTA */}
+      <div style={{ marginBottom: 20, background: 'linear-gradient(135deg, rgba(244,63,94,0.1), rgba(124,58,237,0.12))', border: '1px solid rgba(244,63,94,0.2)', borderRadius: 20, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex' }}>
+          {['https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80'].map((src, i) => (
+            <div key={i} style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', border: '2px solid #07070f', marginLeft: i > 0 ? -12 : 0 }}>
+              <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+          ))}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>Ready to make it official? 💍</div>
+          <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.5)' }}>You and Sophie have 94% compatibility and 47 messages. Kindred thinks you&apos;re ready.</div>
+        </div>
+        <button onClick={() => {}} className="btn-primary" style={{ fontSize: 12, padding: '9px 16px', flexShrink: 0, background: 'linear-gradient(135deg, #f43f5e, #7c3aed)' }}>Go Official</button>
+      </div>
+
       {/* Grid */}
       {filtered.length > 0 ? (
         <div className="matches-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 14 }}>
