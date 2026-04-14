@@ -177,7 +177,7 @@ export default function LandingPage() {
           </Link>
 
           {/* Nav links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }} className="nav-desktop-links">
+          <div style={{ alignItems: 'center', gap: 32 }} className="nav-desktop-links">
             {NAV_LINKS.map(l => (
               <a key={l.label} href={l.href} style={{
                 color: 'rgba(240,240,255,0.6)', fontSize: 14, fontWeight: 500,
@@ -665,6 +665,7 @@ export default function LandingPage() {
 
       {/* Responsive styles */}
       <style>{`
+        .nav-desktop-links { display: flex; }
         @media (max-width: 767px) {
           .nav-desktop-links { display: none !important; }
           .hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; text-align: center; }
