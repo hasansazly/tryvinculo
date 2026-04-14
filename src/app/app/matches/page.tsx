@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Brain, Star, ChevronRight, Filter, Search, Sparkles, CheckCircle, GitBranch, Flame } from 'lucide-react';
 import { MATCHES } from '@/lib/mockData';
 import { getCompatibilityColor, getCompatibilityLabel, formatRelativeTime } from '@/lib/utils';
 import type { Match } from '@/lib/types';
 import { useAiV2 } from '@/hooks/useAiV2';
+import { runAndGetRecommendations, toMatches } from '@/lib/matchmakingClient';
 
 type FilterType = 'all' | 'new' | 'high-compat' | 'replied';
 
@@ -176,8 +177,24 @@ export default function MatchesPage() {
   const { enabled: aiV2Enabled } = useAiV2('user-1');
   const [filter, setFilter] = useState<FilterType>('all');
   const [search, setSearch] = useState('');
+  const [liveMatches, setLiveMatches] = useState<Match[]>(MATCHES);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = MATCHES.filter(m => {
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const recs = await runAndGetRecommendations('user-1', 20);
+      if (cancelled) return;
+      const mapped = toMatches(recs);
+      setLiveMatches(mapped.length ? mapped : MATCHES);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const filtered = liveMatches.filter(m => {
     if (search && !m.profile.name.toLowerCase().includes(search.toLowerCase())) return false;
     if (filter === 'new') return m.isNew;
     if (filter === 'high-compat') return m.compatibilityScore >= 90;
@@ -190,7 +207,9 @@ export default function MatchesPage() {
       {/* Header */}
       <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Your Matches</h1>
-        <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>{MATCHES.length} compatible matches · {MATCHES.filter(m => m.isNew).length} new</p>
+        <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>
+          {loading ? 'Refreshing recommendations…' : `${liveMatches.length} compatible matches · ${liveMatches.filter(m => m.isNew).length} new`}
+        </p>
       </div>
 
       {/* Search + Filter */}
@@ -221,9 +240,9 @@ export default function MatchesPage() {
       {/* Stats bar */}
       <div className="matches-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
         {[
-          { icon: Heart, label: 'Total Matches', value: MATCHES.length, color: '#fb7185' },
+          { icon: Heart, label: 'Total Matches', value: liveMatches.length, color: '#fb7185' },
           { icon: Star, label: 'Avg Compatibility', value: '91%', color: '#a78bfa' },
-          { icon: MessageCircle, label: 'Active Chats', value: MATCHES.filter(m => m.conversation?.length).length, color: '#34d399' },
+          { icon: MessageCircle, label: 'Active Chats', value: liveMatches.filter(m => m.conversation?.length).length, color: '#34d399' },
         ].map(s => {
           const Icon = s.icon;
           return (

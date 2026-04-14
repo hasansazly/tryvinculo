@@ -1,22 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heart, X, Star, Brain, MapPin, Briefcase, CheckCircle, Sparkles, ArrowRight, ChevronDown } from 'lucide-react';
-import { PROFILES } from '@/lib/mockData';
 import { getCompatibilityColor, getCompatibilityLabel } from '@/lib/utils';
 import type { UserProfile } from '@/lib/types';
-
-const DAILY_MATCHES = PROFILES;
-
-const COMPAT_BREAKDOWN = [
-  { key: 'Values', score: 92 },
-  { key: 'Communication', score: 88 },
-  { key: 'Lifestyle', score: 91 },
-  { key: 'Goals', score: 95 },
-  { key: 'Emotional', score: 89 },
-  { key: 'Interests', score: 84 },
-];
+import { ingestSignal, runAndGetRecommendations, toDiscoverProfiles } from '@/lib/matchmakingClient';
 
 function CompatBar({ label, score }: { label: string; score: number }) {
   const color = getCompatibilityColor(score);
@@ -76,6 +65,7 @@ function MobileProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperL
   profile: UserProfile;
   compat: number;
   aiReason: string;
+  breakdown: { key: string; score: number }[];
   onLike: () => void;
   onPass: () => void;
   onSuperLike: () => void;
@@ -186,7 +176,7 @@ function MobileProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperL
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {COMPAT_BREAKDOWN.map(b => <CompatBar key={b.key} label={b.key} score={b.score} />)}
+            {breakdown.map(b => <CompatBar key={b.key} label={b.key} score={b.score} />)}
           </div>
         </div>
 
@@ -252,6 +242,7 @@ function DesktopProfileCard({ profile, compat, aiReason, onLike, onPass, onSuper
   profile: UserProfile;
   compat: number;
   aiReason: string;
+  breakdown: { key: string; score: number }[];
   onLike: () => void;
   onPass: () => void;
   onSuperLike: () => void;
@@ -337,7 +328,7 @@ function DesktopProfileCard({ profile, compat, aiReason, onLike, onPass, onSuper
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {COMPAT_BREAKDOWN.map(b => <CompatBar key={b.key} label={b.key} score={b.score} />)}
+            {breakdown.map(b => <CompatBar key={b.key} label={b.key} score={b.score} />)}
           </div>
         </div>
 
@@ -390,23 +381,47 @@ export default function DiscoverPage() {
   const [liked, setLiked] = useState<string[]>([]);
   const [passed, setPassed] = useState<string[]>([]);
   const [showMatch, setShowMatch] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [discoverCards, setDiscoverCards] = useState<Array<{
+    profile: UserProfile;
+    compatibilityScore: number;
+    breakdown: {
+      values: number;
+      communication: number;
+      lifestyle: number;
+      interests: number;
+      goals: number;
+      emotional: number;
+    };
+    aiReason: string;
+  }>>([]);
 
-  const activeProfiles = DAILY_MATCHES.filter(p => !passed.includes(p.id));
-  const current = activeProfiles[currentIdx] || null;
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const recs = await runAndGetRecommendations('user-1', 12);
+      if (cancelled) return;
+      setDiscoverCards(toDiscoverProfiles(recs));
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const COMPAT_SCORES: Record<string, number> = { 'p-1': 94, 'p-2': 87, 'p-3': 85, 'p-4': 91, 'p-5': 88 };
-  const AI_REASONS: Record<string, string> = {
-    'p-1': "Both of you prioritize meaningful growth and creative pursuits. Sophie's visual thinking pairs beautifully with your analytical depth. You share a love of discovery — whether it's a hidden coffee shop or a new hiking trail.",
-    'p-2': "Maya's adventurous spirit and scientific mind pair well with your curiosity. You both value honesty deeply and show commitment through action. Shared outdoor interests lay strong groundwork for activity-based bonding.",
-    'p-3': "You share core values of ambition and growth, and both approach life with intellectual curiosity. Zara's directness complements your warmth. Your relationship goals align — both seeking something real, not performative.",
-    'p-4': "Priya's nurturing nature and your warm personality create a rare emotional match. You both value intentionality — her in design, you in cooking. A shared love of hosting people suggests exceptional long-term compatibility.",
-    'p-5': "Luna's intellectual depth and curiosity resonate with your own. You both value authentic conversation and find meaning in learning together. Your secure attachment style could help her grow into a more secure connection.",
-  };
+  const activeCards = discoverCards.filter(card => !passed.includes(card.profile.id));
+  const current = activeCards[currentIdx] || null;
 
   function handleLike() {
     if (!current) return;
-    setLiked(prev => [...prev, current.id]);
-    if (Math.random() > 0.5 || current.id === 'p-1') {
+    setLiked(prev => [...prev, current.profile.id]);
+    void ingestSignal({
+      actorUserId: 'user-1',
+      targetUserId: current.profile.id,
+      type: 'like',
+      metadata: { source: 'discover' },
+    });
+    if (current.compatibilityScore >= 88) {
       setShowMatch(true);
     } else {
       nextProfile();
@@ -415,13 +430,25 @@ export default function DiscoverPage() {
 
   function handlePass() {
     if (!current) return;
-    setPassed(prev => [...prev, current.id]);
+    setPassed(prev => [...prev, current.profile.id]);
+    void ingestSignal({
+      actorUserId: 'user-1',
+      targetUserId: current.profile.id,
+      type: 'pass',
+      metadata: { source: 'discover' },
+    });
     nextProfile();
   }
 
   function handleSuperLike() {
     if (!current) return;
-    setLiked(prev => [...prev, current.id]);
+    setLiked(prev => [...prev, current.profile.id]);
+    void ingestSignal({
+      actorUserId: 'user-1',
+      targetUserId: current.profile.id,
+      type: 'like',
+      metadata: { source: 'discover', superLike: true },
+    });
     setShowMatch(true);
   }
 
@@ -429,8 +456,18 @@ export default function DiscoverPage() {
     setCurrentIdx(i => i + 1);
   }
 
-  const compat = current ? (COMPAT_SCORES[current.id] || 80) : 0;
-  const aiReason = current ? (AI_REASONS[current.id] || '') : '';
+  const compat = current?.compatibilityScore ?? 0;
+  const aiReason = current?.aiReason ?? '';
+  const compatBreakdown = current
+    ? ([
+        { key: 'Values', score: current.breakdown.values },
+        { key: 'Communication', score: current.breakdown.communication },
+        { key: 'Lifestyle', score: current.breakdown.lifestyle },
+        { key: 'Goals', score: current.breakdown.goals },
+        { key: 'Emotional', score: current.breakdown.emotional },
+        { key: 'Interests', score: current.breakdown.interests },
+      ] as const)
+    : [];
 
   const emptyState = (
     <div style={{ textAlign: 'center', padding: '80px 24px' }}>
@@ -447,7 +484,9 @@ export default function DiscoverPage() {
       <div className="discover-mobile">
         {/* Profile selector strip */}
         <div style={{ display: 'flex', gap: 10, padding: '14px 16px 10px', overflowX: 'auto' }}>
-          {DAILY_MATCHES.map((p, i) => (
+          {activeCards.map((card, i) => {
+            const p = card.profile;
+            return (
             <button
               key={p.id}
               onClick={() => setCurrentIdx(i)}
@@ -471,17 +510,21 @@ export default function DiscoverPage() {
                 </div>
               )}
             </button>
-          ))}
+            );
+          })}
           <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
             <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.3)', whiteSpace: 'nowrap' }}>Resets 6h</span>
           </div>
         </div>
 
-        {current ? (
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '48px 16px', color: 'rgba(240,240,255,0.5)', fontSize: 14 }}>Loading your matches…</div>
+        ) : current ? (
           <MobileProfileCard
-            profile={current}
+            profile={current.profile}
             compat={compat}
             aiReason={aiReason}
+            breakdown={compatBreakdown}
             onLike={handleLike}
             onPass={handlePass}
             onSuperLike={handleSuperLike}
@@ -494,10 +537,12 @@ export default function DiscoverPage() {
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
           <div>
             <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Today&apos;s Matches</h1>
-            <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>5 curated daily matches · Resets in 6h 23m</p>
+            <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>{activeCards.length} curated daily matches · Resets in 6h 23m</p>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', paddingTop: 4 }}>
-            {DAILY_MATCHES.map((p, i) => (
+            {activeCards.map((card, i) => {
+              const p = card.profile;
+              return (
               <button
                 key={p.id}
                 onClick={() => setCurrentIdx(i)}
@@ -515,15 +560,19 @@ export default function DiscoverPage() {
                   </div>
                 )}
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {current ? (
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '72px 16px', color: 'rgba(240,240,255,0.5)', fontSize: 14 }}>Loading your matches…</div>
+        ) : current ? (
           <DesktopProfileCard
-            profile={current}
+            profile={current.profile}
             compat={compat}
             aiReason={aiReason}
+            breakdown={compatBreakdown}
             onLike={handleLike}
             onPass={handlePass}
             onSuperLike={handleSuperLike}
@@ -533,7 +582,7 @@ export default function DiscoverPage() {
 
       {showMatch && current && (
         <MatchSuccessModal
-          profile={current}
+          profile={current.profile}
           onMessage={() => { setShowMatch(false); router.push('/app/messages'); }}
           onClose={() => { setShowMatch(false); nextProfile(); }}
         />
