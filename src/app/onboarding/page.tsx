@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Heart, ArrowRight, ArrowLeft, Camera, User, MapPin, Briefcase, CheckCircle, Sparkles, Brain } from 'lucide-react';
+import { Heart, ArrowRight, ArrowLeft, Camera, MapPin, CheckCircle, Sparkles, Brain } from 'lucide-react';
 import { INTERESTS, VALUES } from '@/lib/utils';
+import { ONBOARDING_QUESTION_SET } from '@/lib/onboardingQuestionSet';
 
 const TOTAL_STEPS = 7;
+const TOTAL_ONBOARDING_QUESTIONS = ONBOARDING_QUESTION_SET.length;
 
 interface OnboardingState {
   name: string;
@@ -300,7 +302,7 @@ export default function OnboardingPage() {
               <div style={{ marginBottom: 24 }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(139,92,246,0.8)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Step 3 of 7</div>
                 <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 6 }}>What do you love?</h2>
-                <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)' }}>Pick at least 3. These fuel our compatibility engine.</p>
+                <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)' }}>Pick at least 3. This helps us surface fewer, better matches.</p>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                 <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.35)' }}>Selected: {data.interests.length}/10 max</span>
@@ -360,7 +362,7 @@ export default function OnboardingPage() {
               <div style={{ marginBottom: 24 }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(139,92,246,0.8)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Step 6 of 7</div>
                 <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 6 }}>How you connect</h2>
-                <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)' }}>This is where our AI goes deep. These signals power the compatibility engine.</p>
+                <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)' }}>Short prompts about pace, communication, and emotional style to reduce guesswork.</p>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
@@ -460,9 +462,9 @@ export default function OnboardingPage() {
                 {/* Completion teaser */}
                 <div style={{ background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.2)', borderRadius: 14, padding: '16px 20px', display: 'flex', gap: 14, alignItems: 'center' }}>
                   <Sparkles size={20} color="#34d399" style={{ flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#6ee7b7', marginBottom: 2 }}>Your Aura Profile is almost ready!</div>
-                    <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)' }}>Our AI will analyze your profile and generate your first 5 daily matches within minutes.</div>
+                    <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#6ee7b7', marginBottom: 2 }}>Your compatibility profile is almost ready!</div>
+                    <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)' }}>Built from {TOTAL_ONBOARDING_QUESTIONS} short prompts across intent, communication, pace, values, and emotional fit.</div>
                   </div>
                 </div>
               </div>
