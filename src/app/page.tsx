@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import {
   Heart, Sparkles, Shield, MessageCircle, Star,
-  Brain, Zap, Users, CheckCircle, ArrowRight, Lock, Menu, X, CircleDashed, ScanLine,
+  Brain, Zap, Users, CheckCircle, ArrowRight, Menu, X, CircleDashed, ScanLine,
 } from 'lucide-react';
 
 const NAV_LINKS = [
@@ -228,7 +228,7 @@ export default function LandingPage() {
               </h1>
 
               <p style={{ fontSize: 18, lineHeight: 1.65, color: 'rgba(240,240,255,0.55)', marginBottom: 36, maxWidth: 460 }}>
-                Most apps waste your time with guesswork. Vinculo helps you avoid confusion and emotional burnout by showing why a match fits before you invest.
+                See why someone fits before you invest your time or emotional energy.
               </p>
 
               <div className="hero-cta-group" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
@@ -236,23 +236,6 @@ export default function LandingPage() {
                   Start with Clarity
                   <ArrowRight size={18} />
                 </Link>
-                <Link href="#how-it-works" className="btn-ghost" style={{ fontSize: 15 }}>
-                  See How It Works
-                </Link>
-              </div>
-
-              {/* Trust signals */}
-              <div style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
-                {[
-                  { icon: Lock, label: 'Privacy first' },
-                  { icon: CheckCircle, label: 'Verified profiles' },
-                  { icon: Star, label: '4.9 rating' },
-                ].map(({ icon: Icon, label }) => (
-                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(240,240,255,0.4)', fontSize: 13 }}>
-                    <Icon size={14} color="rgba(139,92,246,0.8)" />
-                    {label}
-                  </div>
-                ))}
               </div>
             </div>
 
@@ -270,10 +253,7 @@ export default function LandingPage() {
                   {[
                     ['Values', 94],
                     ['Communication', 91],
-                    ['Lifestyle', 88],
                     ['Goals', 95],
-                    ['Emotional', 90],
-                    ['Interests', 86],
                   ].map(([label, value]) => (
                     <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <span style={{ width: 100, fontSize: 12, color: 'rgba(240,240,255,0.52)' }}>{label}</span>
@@ -283,12 +263,6 @@ export default function LandingPage() {
                       <span style={{ width: 30, textAlign: 'right', fontSize: 11, fontWeight: 700, color: '#a78bfa' }}>{value}%</span>
                     </div>
                   ))}
-                </div>
-                <div style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 12, padding: '10px 12px' }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: '#a78bfa', marginBottom: 5 }}>Why this match works</div>
-                  <p style={{ fontSize: 12, color: 'rgba(240,240,255,0.58)', lineHeight: 1.6 }}>
-                    Strong alignment on values and relationship intent, with balanced communication styles that reduce early-stage friction.
-                  </p>
                 </div>
               </div>
             </div>
