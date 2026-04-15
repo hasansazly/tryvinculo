@@ -61,7 +61,7 @@ function MatchSuccessModal({ profile, onMessage, onClose }: { profile: UserProfi
 }
 
 // ── Mobile card (full-screen photo + scrollable detail) ──────────────────────
-function MobileProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperLike }: {
+function MobileProfileCard({ profile, compat, aiReason, breakdown, onLike, onPass, onSuperLike }: {
   profile: UserProfile;
   compat: number;
   aiReason: string;
@@ -238,7 +238,7 @@ function MobileProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperL
 }
 
 // ── Desktop card (two-column layout) ────────────────────────────────────────
-function DesktopProfileCard({ profile, compat, aiReason, onLike, onPass, onSuperLike }: {
+function DesktopProfileCard({ profile, compat, aiReason, breakdown, onLike, onPass, onSuperLike }: {
   profile: UserProfile;
   compat: number;
   aiReason: string;
@@ -458,15 +458,15 @@ export default function DiscoverPage() {
 
   const compat = current?.compatibilityScore ?? 0;
   const aiReason = current?.aiReason ?? '';
-  const compatBreakdown = current
-    ? ([
+  const compatBreakdown: { key: string; score: number }[] = current
+    ? [
         { key: 'Values', score: current.breakdown.values },
         { key: 'Communication', score: current.breakdown.communication },
         { key: 'Lifestyle', score: current.breakdown.lifestyle },
         { key: 'Goals', score: current.breakdown.goals },
         { key: 'Emotional', score: current.breakdown.emotional },
         { key: 'Interests', score: current.breakdown.interests },
-      ] as const)
+      ]
     : [];
 
   const emptyState = (
