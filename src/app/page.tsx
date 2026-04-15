@@ -90,6 +90,25 @@ const STEPS = [
   },
 ];
 
+const TRUST_FEATURES = [
+  {
+    title: 'Profile verification',
+    desc: 'Verified accounts are clearly labeled so identity checks are visible, not hidden.',
+  },
+  {
+    title: 'Clearer intentions',
+    desc: 'Relationship goals are shown upfront to reduce mixed expectations.',
+  },
+  {
+    title: 'Consistency signals',
+    desc: 'You can see profile depth and behavior cues that support more informed decisions.',
+  },
+  {
+    title: 'Reporting and controls',
+    desc: 'If something feels off, reporting and blocking are always one tap away.',
+  },
+];
+
 const TESTIMONIALS = [
   {
     name: 'Natalie R.',
@@ -380,6 +399,32 @@ export default function LandingPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Trust ── */}
+      <section style={{ padding: '0 24px 90px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div className="glass" style={{ borderRadius: 24, padding: '30px 28px', border: '1px solid rgba(52,211,153,0.2)' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.2)', borderRadius: 999, padding: '5px 12px', marginBottom: 14 }}>
+              <Shield size={12} color="#6ee7b7" />
+              <span style={{ fontSize: 11, color: '#86efac', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Trust Signals</span>
+            </div>
+            <h3 style={{ fontSize: 'clamp(26px, 3.4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 12 }}>
+              Dating feels better when trust is visible.
+            </h3>
+            <p style={{ fontSize: 16, color: 'rgba(240,240,255,0.5)', lineHeight: 1.65, maxWidth: 760, marginBottom: 20 }}>
+              Vinculo helps you make clearer decisions with practical trust design, not promises of certainty.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }} className="connection-grid">
+              {TRUST_FEATURES.map(feature => (
+                <div key={feature.title} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{feature.title}</div>
+                  <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>{feature.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

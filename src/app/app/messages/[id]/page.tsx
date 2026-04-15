@@ -491,7 +491,7 @@ export default function ChatPage() {
           {/* Safety note */}
           <div style={{ padding: '0 18px 18px' }}>
             <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '12px 14px' }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 4 }}>🛡️ Safety score</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 4 }}>🛡️ Trust signals</div>
               <div style={{ fontSize: 11, color: 'rgba(52,211,153,0.8)' }}>✓ No red flags detected in this conversation.</div>
             </div>
           </div>
