@@ -302,11 +302,11 @@ export default function JourneyPage() {
             </div>
           </div>
 
-          {/* Kindred Moments */}
+          {/* Vinculo Moments */}
           <div className="glass" style={{ borderRadius: 22, padding: '22px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 3 }}>Kindred Moments</div>
+                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 3 }}>Vinculo Moments</div>
                 <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>Send a "thinking of you" pulse · 2 left today</div>
               </div>
               <div style={{ fontSize: 22 }}>🫀</div>

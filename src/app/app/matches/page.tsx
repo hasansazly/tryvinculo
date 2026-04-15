@@ -270,7 +270,7 @@ export default function MatchesPage() {
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>Ready to make it official? 💍</div>
-          <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.5)' }}>You and Sophie have 94% compatibility and 47 messages. Kindred thinks you&apos;re ready.</div>
+          <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.5)' }}>You and Sophie have 94% compatibility and 47 messages. Vinculo thinks you&apos;re ready.</div>
         </div>
         <button onClick={() => {}} className="btn-primary" style={{ fontSize: 12, padding: '9px 16px', flexShrink: 0, background: 'linear-gradient(135deg, #f43f5e, #7c3aed)' }}>Go Official</button>
       </div>

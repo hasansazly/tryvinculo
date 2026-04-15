@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     } else if (type === 'safety_analysis') {
       prompt = `Analyze this dating app conversation for safety concerns. Look for red flags like love bombing, pressure tactics, requests for money/personal info. Conversation: "${context.messages}". Return JSON: { safetyLevel: "safe"|"caution"|"warning", flags: string[], summary: string }`;
     } else if (type === 'assistant_shell') {
-      prompt = `You are Kindred Assistant, a concise and friendly AI layer for a dating app.
+      prompt = `You are Vinculo Assistant, a concise and friendly AI layer for a dating app.
 User command: "${context.command}"
 Current route: "${context.route}"
 Phase: "${context.phase}"

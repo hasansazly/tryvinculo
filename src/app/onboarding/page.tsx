@@ -195,7 +195,7 @@ export default function OnboardingPage() {
           <div style={{ width: 34, height: 34, borderRadius: 10, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Heart size={16} color="white" fill="white" />
           </div>
-          <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em' }}>kindred</span>
+          <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em' }}>vinculo</span>
         </div>
 
         <StepIndicator current={step} total={TOTAL_STEPS} />

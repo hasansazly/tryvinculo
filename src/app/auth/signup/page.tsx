@@ -55,7 +55,7 @@ export default function SignupPage() {
           <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Heart size={18} color="white" fill="white" />
           </div>
-          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em' }}>kindred</span>
+          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em' }}>vinculo</span>
         </div>
 
         <div style={{ position: 'relative', zIndex: 1 }}>
@@ -103,7 +103,7 @@ export default function SignupPage() {
             <div style={{ width: 34, height: 34, borderRadius: 9, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Heart size={16} color="white" fill="white" />
             </div>
-            <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em' }}>kindred</span>
+            <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em' }}>vinculo</span>
           </div>
 
           {/* Step indicator */}
@@ -199,7 +199,7 @@ export default function SignupPage() {
                   {agreed && <CheckCircle size={13} color="#a78bfa" />}
                 </div>
                 <span style={{ fontSize: 13, color: 'rgba(240,240,255,0.45)', lineHeight: 1.6 }}>
-                  I agree to Kindred&apos;s{' '}
+                  I agree to Vinculo&apos;s{' '}
                   <a href="#" style={{ color: '#a78bfa', textDecoration: 'none' }}>Terms of Service</a>
                   {' '}and{' '}
                   <a href="#" style={{ color: '#a78bfa', textDecoration: 'none' }}>Privacy Policy</a>.

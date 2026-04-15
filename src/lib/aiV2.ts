@@ -1,9 +1,9 @@
 export type AiV2Phase = 1 | 2 | 3;
 
 export const AI_V2_STORAGE = {
-  override: 'kindred_ai_v2_override',
-  cohort: 'kindred_ai_v2_cohort',
-  memory: 'kindred_ai_v2_memory',
+  override: 'vinculo_ai_v2_override',
+  cohort: 'vinculo_ai_v2_cohort',
+  memory: 'vinculo_ai_v2_memory',
 } as const;
 
 export function stableHashToUnit(input: string): number {

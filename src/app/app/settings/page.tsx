@@ -86,7 +86,7 @@ export default function SettingsPage() {
           {/* Show me toggle */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 2 }}>Show me on Kindred</div>
+              <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 2 }}>Show me on Vinculo</div>
               <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>Turn off to hide your profile from discovery</div>
             </div>
             <div className={`toggle ${showMe ? 'on' : ''}`} onClick={() => setShowMe(!showMe)} role="switch" aria-checked={showMe} />

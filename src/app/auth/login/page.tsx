@@ -38,7 +38,7 @@ export default function LoginPage() {
           <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Heart size={18} color="white" fill="white" />
           </div>
-          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em' }}>kindred</span>
+          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em' }}>vinculo</span>
         </div>
 
         {/* Testimonial */}
@@ -55,7 +55,7 @@ export default function LoginPage() {
               <div style={{ marginLeft: 'auto', fontSize: 20 }}>💫</div>
             </div>
             <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.6)', lineHeight: 1.6 }}>
-              &ldquo;We got engaged last month. Kindred showed me things about our compatibility I never could have seen on my own.&rdquo;
+              &ldquo;We got engaged last month. Vinculo showed me things about our compatibility I never could have seen on my own.&rdquo;
             </div>
             <div style={{ marginTop: 12, display: 'flex', gap: 6 }}>
               {['Values', 'Goals', 'Communication'].map(t => (
@@ -77,7 +77,7 @@ export default function LoginPage() {
             <div style={{ width: 34, height: 34, borderRadius: 9, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Heart size={16} color="white" fill="white" />
             </div>
-            <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em' }}>kindred</span>
+            <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em' }}>vinculo</span>
           </div>
 
           <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 8 }}>Sign in</h1>

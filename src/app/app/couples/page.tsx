@@ -264,7 +264,7 @@ export default function CouplesPage() {
                 <span style={{ fontSize: 13, fontWeight: 700, color: '#a78bfa' }}>Your Story So Far</span>
               </div>
               <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.6)', lineHeight: 1.75, fontStyle: 'italic' }}>
-                &ldquo;You matched on March 21st with a 94% compatibility — one of the highest scores Kindred has ever generated. The first thing Sophie noticed was your sourdough. The first thing you noticed was her honesty in the onboarding quiz. In 23 days you&apos;ve exchanged 340 messages, answered 12 Spark questions, and gone on 3 dates. Your communication score has grown faster than 97% of couples on Kindred.&rdquo;
+                &ldquo;You matched on March 21st with a 94% compatibility — one of the highest scores Vinculo has ever generated. The first thing Sophie noticed was your sourdough. The first thing you noticed was her honesty in the onboarding quiz. In 23 days you&apos;ve exchanged 340 messages, answered 12 Spark questions, and gone on 3 dates. Your communication score has grown faster than 97% of couples on Vinculo.&rdquo;
               </p>
               <div style={{ marginTop: 14, fontSize: 11, color: 'rgba(240,240,255,0.25)', fontStyle: 'normal' }}>AI-generated from your real activity. Updates weekly.</div>
             </div>

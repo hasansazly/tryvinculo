@@ -91,7 +91,7 @@ export default function AcademyPage() {
           <div style={{ width: 36, height: 36, borderRadius: 11, background: 'linear-gradient(135deg, rgba(96,165,250,0.3), rgba(167,139,250,0.3))', border: '1px solid rgba(96,165,250,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <BookOpen size={18} color="#60a5fa" />
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em' }}>Kindred Academy</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em' }}>Vinculo Academy</h1>
         </div>
         <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.4)' }}>The science and skill of connection. Real research, practical application.</p>
       </div>

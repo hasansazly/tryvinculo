@@ -41,7 +41,7 @@ function MatchSuccessModal({ profile, onMessage, onClose }: { profile: UserProfi
         <div style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 14, padding: '14px 16px', marginBottom: 20, textAlign: 'left' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <Sparkles size={12} color="#a78bfa" />
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#a78bfa' }}>Kindred suggests</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: '#a78bfa' }}>Vinculo suggests</span>
           </div>
           <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.65)', lineHeight: 1.5 }}>
             &ldquo;Your sourdough struggles sound very relatable — mine took 6 attempts before a recognizable loaf. What are you naming yours?&rdquo;
@@ -184,7 +184,7 @@ function MobileProfileCard({ profile, compat, aiReason, breakdown, onLike, onPas
         <div className="glass" style={{ borderRadius: 20, padding: '16px 18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <Brain size={14} color="#a78bfa" />
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#a78bfa' }}>Why Kindred matched you</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#a78bfa' }}>Why Vinculo matched you</span>
           </div>
           <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.6)', lineHeight: 1.7 }}>{aiReason}</p>
         </div>
@@ -335,7 +335,7 @@ function DesktopProfileCard({ profile, compat, aiReason, breakdown, onLike, onPa
         <div className="glass" style={{ borderRadius: 20, padding: '18px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <Brain size={15} color="#a78bfa" />
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#a78bfa' }}>Why Kindred matched you</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#a78bfa' }}>Why Vinculo matched you</span>
           </div>
           <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.6)', lineHeight: 1.7 }}>{aiReason}</p>
         </div>
@@ -588,11 +588,11 @@ export default function DiscoverPage() {
         />
       )}
 
-      {/* Kindred Stories */}
-      <div className="kindred-stories" style={{ padding: '32px 32px 48px', maxWidth: 1100, width: '100%', margin: '0 auto' }}>
+      {/* Vinculo Stories */}
+      <div className="vinculo-stories" style={{ padding: '32px 32px 48px', maxWidth: 1100, width: '100%', margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 4 }}>Kindred Stories ✨</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 4 }}>Vinculo Stories ✨</h2>
             <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.4)' }}>Real couples who found each other here.</p>
           </div>
         </div>
@@ -610,7 +610,7 @@ export default function DiscoverPage() {
               photos: ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&q=80'],
               compat: 91,
               together: '14 months',
-              story: '"I\'d given up on apps. Kindred was different because it felt like it actually read me. The AI Coach told me not to overthink the first message. Best advice I\'ve ever gotten."',
+              story: '"I\'d given up on apps. Vinculo was different because it felt like it actually read me. The AI Coach told me not to overthink the first message. Best advice I\'ve ever gotten."',
             },
             {
               names: 'Marcus & Elena',
@@ -657,7 +657,7 @@ export default function DiscoverPage() {
             background: linear-gradient(to top, rgba(7,7,15,0.95), rgba(7,7,15,0.65));
             backdrop-filter: blur(8px);
           }
-          .kindred-stories { padding: 24px 16px 32px !important; }
+          .vinculo-stories { padding: 24px 16px 32px !important; }
           .stories-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>

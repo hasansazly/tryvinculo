@@ -4,15 +4,15 @@ import ViewportFix from './ViewportFix';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Kindred — AI Dating for Real Connections',
-    template: '%s | Kindred',
+    default: 'Vinculo — AI Dating for Real Connections',
+    template: '%s | Vinculo',
   },
   description:
-    'Kindred uses deep AI analysis to match you with people who genuinely complement your personality, values, and life goals. No endless swiping — just curated daily matches with transparent compatibility explanations.',
+    'Vinculo uses deep AI analysis to match you with people who genuinely complement your personality, values, and life goals. No endless swiping — just curated daily matches with transparent compatibility explanations.',
   keywords: ['AI dating', 'dating app', 'compatibility', 'meaningful connections', 'AI matchmaking'],
-  authors: [{ name: 'Kindred' }],
+  authors: [{ name: 'Vinculo' }],
   openGraph: {
-    title: 'Kindred — AI Dating for Real Connections',
+    title: 'Vinculo — AI Dating for Real Connections',
     description: 'Deep AI compatibility. Curated daily matches. Real connections.',
     type: 'website',
   },

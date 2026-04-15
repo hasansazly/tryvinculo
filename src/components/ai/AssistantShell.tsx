@@ -120,7 +120,7 @@ export default function AssistantShell() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Brain size={15} color="#a78bfa" />
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd' }}>Kindred Assistant</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd' }}>Vinculo Assistant</span>
             </div>
             <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'rgba(240,240,255,0.45)', cursor: 'pointer', display: 'flex', padding: 0 }}>
               <X size={16} />
@@ -232,7 +232,7 @@ export default function AssistantShell() {
 
       <button
         onClick={() => setOpen(v => !v)}
-        aria-label="Open Kindred Assistant"
+        aria-label="Open Vinculo Assistant"
         style={{
           position: 'fixed',
           right: 16,

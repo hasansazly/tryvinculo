@@ -356,7 +356,7 @@ export default function SparkPage() {
           <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
           <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Your Sparks arrive at midnight</h3>
           <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)', lineHeight: 1.7, maxWidth: 380, margin: '0 auto 20px' }}>
-            Every day, Kindred generates one AI-curated question for each of your active matches — tailored to your compatibility profile. Both of you answer independently. Neither can see the other&apos;s response until both have replied.
+            Every day, Vinculo generates one AI-curated question for each of your active matches — tailored to your compatibility profile. Both of you answer independently. Neither can see the other&apos;s response until both have replied.
           </p>
           <div style={{ display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap', margin: '0 auto' }}>
             {['Answer privately', 'Both reply to reveal', 'Go deeper in chat'].map((step, i) => (

@@ -97,7 +97,7 @@ TWILIO_PHONE_NUMBER=+15551234567
 ```json
 {
   "to": "+15551234567",
-  "body": "Your Kindred date plan is set for Friday at 7:30 PM."
+  "body": "Your Vinculo date plan is set for Friday at 7:30 PM."
 }
 ```
 

@@ -129,7 +129,7 @@ export const PAST_SPARKS: SparkEntry[] = [
 export const CONNECTION_STAGES = [
   { stage: 1, label: 'Matched',      desc: 'You both liked each other',                icon: '💫', unlocks: 'Messaging' },
   { stage: 2, label: 'Talking',      desc: '5+ messages exchanged',                    icon: '💬', unlocks: 'Daily Spark questions' },
-  { stage: 3, label: 'Connected',    desc: '7 days of conversation',                   icon: '🌱', unlocks: 'Kindred Moments (thinking of you)' },
+  { stage: 3, label: 'Connected',    desc: '7 days of conversation',                   icon: '🌱', unlocks: 'Vinculo Moments (thinking of you)' },
   { stage: 4, label: 'Pre-Date',     desc: 'You\'ve agreed to meet',                   icon: '☕', unlocks: 'Pre-Date Question Card' },
   { stage: 5, label: 'Met',          desc: 'First date happened',                      icon: '✨', unlocks: 'Chemistry Check-in + Date Vault' },
   { stage: 6, label: 'Growing',      desc: 'Multiple dates, strong chemistry',         icon: '🔥', unlocks: 'AI Relationship Insights' },

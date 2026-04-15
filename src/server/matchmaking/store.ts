@@ -8,7 +8,7 @@ import type {
 } from './types';
 
 declare global {
-  var __kindredMatchStore:
+  var __vinculoMatchStore:
     | {
         signals: MatchmakingSignal[];
         recs: Map<string, MatchmakingCandidateScore[]>;
@@ -18,14 +18,14 @@ declare global {
 }
 
 function getState() {
-  if (!globalThis.__kindredMatchStore) {
-    globalThis.__kindredMatchStore = {
+  if (!globalThis.__vinculoMatchStore) {
+    globalThis.__vinculoMatchStore = {
       signals: [],
       recs: new Map<string, MatchmakingCandidateScore[]>(),
       runs: [],
     };
   }
-  return globalThis.__kindredMatchStore;
+  return globalThis.__vinculoMatchStore;
 }
 
 const ALL_USERS: UserProfile[] = [CURRENT_USER, ...PROFILES];

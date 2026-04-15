@@ -29,7 +29,7 @@ function Sidebar() {
         <div style={{ width: 32, height: 32, borderRadius: 9, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 16px rgba(124,58,237,0.35)' }}>
           <Heart size={15} color="white" fill="white" />
         </div>
-        <span style={{ fontWeight: 700, fontSize: 19, letterSpacing: '-0.03em' }}>kindred</span>
+        <span style={{ fontWeight: 700, fontSize: 19, letterSpacing: '-0.03em' }}>vinculo</span>
       </Link>
 
       <div style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 14, padding: '12px 14px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
