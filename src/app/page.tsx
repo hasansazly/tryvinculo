@@ -66,8 +66,8 @@ const PROBLEM_COMPARE = [
 const STEPS = [
   {
     step: '01',
-    title: 'Build Your Aura Profile',
-    desc: 'Go beyond photos. Answer our 10-minute personality deep-dive that reveals your communication style, values, and relationship patterns.',
+    title: 'Build your compatibility profile',
+    desc: 'Go beyond photos. Complete a short profile that captures your communication style, values, and relationship intent.',
     icon: Users,
   },
   {
@@ -502,7 +502,7 @@ export default function LandingPage() {
                 name: 'Intelligence',
                 price: '$39',
                 period: 'per month',
-                features: ['Unlimited matches', 'Everything in Spark', 'Advanced compatibility report', 'Dedicated AI coach', 'Date intention tools', 'VIP support'],
+                features: ['Expanded curated recommendations', 'Everything in Clarity', 'Advanced compatibility report', 'Dedicated AI coach', 'Date intention tools', 'VIP support'],
                 cta: 'Go Deep',
                 href: '/auth/signup',
                 highlight: false,
