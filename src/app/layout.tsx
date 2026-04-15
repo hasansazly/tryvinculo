@@ -4,16 +4,16 @@ import ViewportFix from './ViewportFix';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Vinculo — AI Dating for Real Connections',
+    default: 'Vinculo — Intentional Dating with Clarity',
     template: '%s | Vinculo',
   },
   description:
-    'Vinculo uses deep AI analysis to match you with people who genuinely complement your personality, values, and life goals. No endless swiping — just curated daily matches with transparent compatibility explanations.',
-  keywords: ['AI dating', 'dating app', 'compatibility', 'meaningful connections', 'AI matchmaking'],
+    'Vinculo helps you understand why a match may fit before you invest your time or emotional energy. No endless swiping — just curated daily matches with clear compatibility context.',
+  keywords: ['intentional dating', 'dating app', 'compatibility', 'meaningful connections', 'curated matches'],
   authors: [{ name: 'Vinculo' }],
   openGraph: {
-    title: 'Vinculo — AI Dating for Real Connections',
-    description: 'Deep AI compatibility. Curated daily matches. Real connections.',
+    title: 'Vinculo — Intentional Dating with Clarity',
+    description: 'Compatibility designed for real intent. Curated daily matches. Real connections.',
     type: 'website',
   },
 };

@@ -16,26 +16,26 @@ const NAV_LINKS = [
 const FEATURES = [
   {
     icon: ScanLine,
-    title: 'Match Clarity',
+    title: 'Why This Match Fits',
     desc: 'See why this match fits before you invest your time or emotional energy.',
     color: 'violet',
   },
   {
     icon: Zap,
-    title: 'Daily Five Matches',
-    desc: 'Get five curated introductions each day so quality stays higher than noise.',
+    title: 'Curated Daily Matches',
+    desc: 'Get a focused set of curated introductions each day so quality stays higher than noise.',
     color: 'amber',
   },
   {
     icon: Brain,
-    title: 'Conversation Guide',
-    desc: 'Get guided prompts that help conversations stay clear, natural, and moving forward.',
+    title: 'Conversation Guidance',
+    desc: 'Get natural support when you need it, so starting and continuing a conversation feels easier.',
     color: 'rose',
   },
   {
     icon: Shield,
     title: 'Trust Signals',
-    desc: 'Use clear trust signals to spot pressure patterns early and date with confidence.',
+    desc: 'See helpful context like verification, consistency, and respect cues before investing further.',
     color: 'rose',
   },
 ];
@@ -72,8 +72,8 @@ const STEPS = [
   },
   {
     step: '02',
-    title: 'Meet Better Matches Daily',
-    desc: 'We send a limited number of aligned matches each day to keep quality high.',
+    title: 'See what actually aligns',
+    desc: 'We compare the signals that matter most — communication style, relationship intent, values, lifestyle, and pace — so every introduction comes with a clear reason it may fit.',
     icon: Brain,
   },
   {
@@ -115,7 +115,7 @@ const TESTIMONIALS = [
     age: 29,
     city: 'New York',
     initials: 'NR',
-    text: 'I finally knew why a match made sense before the first message. That changed everything about how I date.',
+    text: 'I didn’t have to guess what he wanted. The match explanation made the first conversation feel easy and clear.',
     stars: 5,
     verified: true,
   },
@@ -124,7 +124,7 @@ const TESTIMONIALS = [
     age: 32,
     city: 'Los Angeles',
     initials: 'MT',
-    text: 'Vinculo gave me confidence instead of confusion. Fewer matches, better conversations, and no emotional whiplash.',
+    text: 'This felt calmer than other apps. Fewer matches, better reasons, and way less emotional noise.',
     stars: 5,
     verified: true,
   },
@@ -242,12 +242,12 @@ export default function LandingPage() {
             {/* Left */}
             <div>
               <h1 style={{ fontSize: 'clamp(42px, 5vw, 68px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.03em', marginBottom: 24 }}>
-                Don&apos;t just get a match
-                <br /> <span className="gradient-text">understand the match.</span>
+                Don&apos;t just get a match,
+                <br /> <span className="gradient-text">understand it.</span>
               </h1>
 
               <p style={{ fontSize: 18, lineHeight: 1.65, color: 'rgba(240,240,255,0.55)', marginBottom: 36, maxWidth: 460 }}>
-                Fewer, better matches with clear reasons, so you can invest your time and emotions with confidence.
+                Date with less guesswork: fewer, better matches, clearer reasons to connect, and less emotional burnout.
               </p>
 
               <div className="hero-cta-group" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
@@ -332,19 +332,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Connection Momentum ── */}
+      {/* ── Connection Track ── */}
       <section style={{ padding: '20px 24px 90px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div className="glass" style={{ borderRadius: 24, padding: '30px 28px', border: '1px solid rgba(139,92,246,0.25)' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 999, padding: '5px 12px', marginBottom: 14 }}>
               <CircleDashed size={12} color="#a78bfa" />
-              <span style={{ fontSize: 11, color: '#c4b5fd', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>New: Connection Momentum</span>
+              <span style={{ fontSize: 11, color: '#c4b5fd', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>New: Connection Track</span>
             </div>
             <h3 style={{ fontSize: 'clamp(26px, 3.4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 12 }}>
               Keep promising matches moving with purpose.
             </h3>
             <p style={{ fontSize: 16, color: 'rgba(240,240,255,0.5)', lineHeight: 1.65, maxWidth: 760, marginBottom: 20 }}>
-              Connection Momentum gives each match a lightweight shared cadence so conversations keep moving with purpose.
+              Connection Track gives each match a lightweight shared cadence so conversations keep moving with purpose.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }} className="connection-grid">
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
@@ -376,7 +376,7 @@ export default function LandingPage() {
               Built for calm, confident decisions.
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)', maxWidth: 500, margin: '0 auto', lineHeight: 1.65 }}>
-              Match Clarity leads the experience. Everything else exists to make your next choice clearer.
+              Why This Match Fits leads the experience. Everything else exists to make your next choice clearer.
             </p>
           </div>
 
@@ -390,7 +390,7 @@ export default function LandingPage() {
                 green: { bg: 'rgba(52,211,153,0.1)', border: 'rgba(52,211,153,0.2)', icon: '#6ee7b7' },
               }[f.color];
               return (
-                <div key={f.title} className="glass card-lift" style={{ borderRadius: 20, padding: 28, border: f.title === 'Match Clarity' ? '1px solid rgba(139,92,246,0.35)' : undefined }}>
+                <div key={f.title} className="glass card-lift" style={{ borderRadius: 20, padding: 28, border: f.title === 'Why This Match Fits' ? '1px solid rgba(139,92,246,0.35)' : undefined }}>
                   <div style={{ width: 48, height: 48, borderRadius: 14, background: colors?.bg, border: `1px solid ${colors?.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                     <Icon size={22} color={colors?.icon} />
                   </div>
@@ -517,7 +517,7 @@ export default function LandingPage() {
                 name: 'Free',
                 price: '$0',
                 period: 'forever',
-                features: ['3 daily matches', 'Core compatibility view', 'Standard messaging', 'Profile setup'],
+                features: ['3 curated daily matches', 'Core compatibility view', 'Standard messaging', 'Profile setup'],
                 cta: 'Start Free',
                 href: '/auth/signup',
                 highlight: false,
@@ -526,7 +526,7 @@ export default function LandingPage() {
                 name: 'Clarity',
                 price: '$19',
                 period: 'per month',
-                features: ['5 daily matches', 'Full match explanation', 'Conversation Guide', 'Connection Momentum', 'Trust Signals', 'Priority matching'],
+                features: ['5 curated daily matches', 'Full match explanation', 'Conversation Guidance', 'Connection Track', 'Trust Signals', 'Priority matching'],
                 cta: 'Start 7-Day Free Trial',
                 href: '/auth/signup',
                 highlight: true,
@@ -613,7 +613,7 @@ export default function LandingPage() {
                 Your person is out there.<br />Let&apos;s find them.
               </h2>
               <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.5)', marginBottom: 36, lineHeight: 1.65 }}>
-                Join 200,000+ people choosing more intentional, compatibility-first dating.
+                Join people who want something calmer, clearer, and more intentional than endless swiping.
               </p>
               <Link href="/auth/signup" className="btn-primary" style={{ fontSize: 17, padding: '16px 40px' }}>
                 Start for Free — No Card Required
