@@ -44,7 +44,7 @@ const FEATURES = [
   {
     icon: Shield,
     title: 'Trust Signals',
-    desc: 'See helpful context like verification, consistency, and respect cues before investing further.',
+    desc: 'See helpful context like verification, consistency, and respect cues before investing further. These signals are designed to support better decisions, not promise certainty. You stay in control with clear reporting and blocking tools.',
     color: 'rose',
   },
 ];
@@ -387,6 +387,9 @@ export default function LandingPage() {
             <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)', maxWidth: 500, margin: '0 auto', lineHeight: 1.65 }}>
               Why This Match Fits leads the experience. Everything else exists to make your next choice clearer.
             </p>
+            <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.38)', maxWidth: 620, margin: '12px auto 0', lineHeight: 1.65 }}>
+              Built on attachment theory and Big Five psychology, translated into practical match clarity.
+            </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }} className="features-grid">
@@ -592,7 +595,16 @@ export default function LandingPage() {
                   <Link
                     href={plan.href}
                     className={plan.highlight ? 'btn-primary' : 'btn-ghost'}
-                    style={{ width: '100%', justifyContent: 'center', display: 'flex' }}
+                    style={{
+                      width: '100%',
+                      justifyContent: 'center',
+                      display: 'flex',
+                      ...(plan.name === 'Free'
+                        ? { opacity: 0.85 }
+                        : plan.name === 'Intelligence'
+                          ? { borderColor: 'rgba(167,139,250,0.35)', color: '#c4b5fd' }
+                          : {}),
+                    }}
                   >
                     {plan.name === 'Clarity' ? 'Start Free Trial' : plan.name === 'Intelligence' ? 'Choose Intelligence' : 'Start Free'}
                   </Link>
@@ -670,14 +682,11 @@ export default function LandingPage() {
           .problem-grid { grid-template-columns: 1fr !important; }
           .connection-grid { grid-template-columns: 1fr !important; }
           .features-grid { grid-template-columns: 1fr !important; }
-          .steps-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .steps-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
           .testimonials-grid { grid-template-columns: 1fr !important; }
           .pricing-grid { display: flex !important; flex-direction: column; }
           .pricing-item { order: 2; }
           .pricing-item-featured { order: 1; }
-        }
-        @media (max-width: 600px) {
-          .steps-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 767px) {
           .hamburger-btn { display: flex !important; }
