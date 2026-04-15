@@ -60,13 +60,13 @@ const PROBLEM_COMPARE = [
 const STEPS = [
   {
     step: '01',
-    title: 'Build your compatibility profile',
+    title: 'Build Your Compatibility Profile',
     desc: 'Go beyond photos. Complete a short profile that captures your communication style, values, and relationship intent.',
     icon: Users,
   },
   {
     step: '02',
-    title: 'AI Runs the Analysis',
+    title: 'See Why You Match',
     desc: 'Our model analyzes thousands of compatibility signals — not just who you say you are, but who you show up as.',
     icon: Brain,
   },
@@ -78,7 +78,7 @@ const STEPS = [
   },
   {
     step: '04',
-    title: 'Connect Authentically',
+    title: 'Move Toward a Real Date',
     desc: 'Chat with AI coaching support. When it feels right, let our Date Planner craft the perfect first meeting.',
     icon: Heart,
   },
