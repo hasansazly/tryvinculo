@@ -10,7 +10,7 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSignup(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setSuccess(null);
@@ -19,6 +19,9 @@ export default function SignupPage() {
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
 
     if (signUpError) {
@@ -37,7 +40,7 @@ export default function SignupPage() {
         <h1 className="text-2xl font-semibold tracking-tight mb-2">Create your account</h1>
         <p className="text-sm text-slate-400 mb-6">Sign up with your email and password.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSignup} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm text-slate-300 mb-1">
               Email
@@ -84,4 +87,3 @@ export default function SignupPage() {
     </main>
   );
 }
-
