@@ -1,12 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import {
-  Heart, Sparkles, Shield, MessageCircle, Star, ChevronRight,
-  Brain, Zap, Users, CheckCircle, ArrowRight, Lock, BarChart2,
-  Camera, Coffee, Mountain, Music, Menu, X,
+  Heart, Sparkles, Shield, MessageCircle, Star,
+  Brain, Zap, Users, CheckCircle, ArrowRight, Lock, Menu, X, CircleDashed, ScanLine,
 } from 'lucide-react';
 
 const NAV_LINKS = [
@@ -18,40 +16,57 @@ const NAV_LINKS = [
 
 const FEATURES = [
   {
-    icon: Brain,
-    title: 'Aura Intelligence',
-    desc: 'Our AI builds a deep personality model from your responses — not just interests, but communication style, attachment patterns, and values hierarchy.',
+    icon: CircleDashed,
+    title: 'Connection Track',
+    desc: 'A shared ritual for each match: daily micro-questions, a weekly compatibility pulse, and a pre-date intention check that keeps momentum between chats.',
     color: 'violet',
   },
   {
-    icon: BarChart2,
-    title: 'Transparent Compatibility',
-    desc: 'We don\'t just say "you\'re a match" — we show a full breakdown across 6 dimensions so you understand exactly why two people fit.',
+    icon: ScanLine,
+    title: 'Transparent Match Clarity',
+    desc: 'Don’t just get a score. See exactly what drives compatibility across values, communication, lifestyle, goals, and emotional fit.',
+    color: 'violet',
+  },
+  {
+    icon: Zap,
+    title: 'Daily Five, Not Endless Swipe',
+    desc: 'Every day you get five intentional introductions. Less noise, less burnout, more focus on people who are actually aligned.',
     color: 'rose',
   },
   {
     icon: MessageCircle,
     title: 'AI Conversation Coach',
-    desc: 'Real-time suggestions that help you start genuine conversations — not cheesy pick-up lines, but thoughtful, authentic icebreakers.',
+    desc: 'Get grounded reply suggestions that sound like you, not a script. Keep conversations clear, warm, and intentional.',
     color: 'amber',
   },
   {
     icon: Shield,
     title: 'Safety Score',
-    desc: 'Behavioral AI monitors for red flags in communication patterns. You get context clues so you can always make informed decisions.',
-    color: 'green',
-  },
-  {
-    icon: Zap,
-    title: 'Daily 5 Matches',
-    desc: 'No infinite scrolling. Every morning you get 5 deeply curated matches. Quality over quantity — always.',
-    color: 'violet',
-  },
-  {
-    icon: Coffee,
-    title: 'AI Date Planner',
-    desc: 'Once you\'re ready, our AI generates personalized first-date ideas based on your shared interests, city, and vibe.',
+    desc: 'Behavioral signal checks surface pressure patterns and red flags early so users can decide with confidence.',
     color: 'rose',
+  },
+];
+
+const PROBLEM_COMPARE = [
+  {
+    title: 'What Most Dating Apps Do',
+    points: [
+      'Reward endless swiping and short-term dopamine.',
+      'Show a match, but give no clear reason why.',
+      'Push volume over emotional quality.',
+      'Leave momentum to chance between messages.',
+    ],
+    tone: 'muted' as const,
+  },
+  {
+    title: 'What Kindred Does',
+    points: [
+      'Prioritizes depth over volume with daily intentional matches.',
+      'Explains each match with transparent compatibility signals.',
+      'Uses Connection Track to build shared momentum before dates.',
+      'Supports safer, clearer conversations with AI coaching.',
+    ],
+    tone: 'bright' as const,
   },
 ];
 
@@ -101,44 +116,7 @@ const TESTIMONIALS = [
     stars: 5,
     verified: true,
   },
-  {
-    name: 'Aisha K.',
-    age: 27,
-    city: 'Chicago',
-    photo: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200&q=80',
-    text: 'As someone who\'s naturally guarded, the safety score feature made me feel protected. And only 5 matches a day meant I actually paid attention to each one instead of mindlessly swiping.',
-    stars: 5,
-    verified: true,
-  },
 ];
-
-const STATS = [
-  { value: '94%', label: 'of users report better quality conversations' },
-  { value: '3.2×', label: 'more likely to go on a second date vs. other apps' },
-  { value: '89%', label: 'say matches feel genuinely compatible' },
-  { value: '47k+', label: 'meaningful relationships started' },
-];
-
-function FloatingCard({ className, delay = 0 }: { className?: string; delay?: number }) {
-  return (
-    <div
-      className={`glass rounded-2xl p-4 ${className}`}
-      style={{ animation: `float ${4 + delay}s ease-in-out ${delay}s infinite` }}
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-rose-500 flex-shrink-0" />
-        <div className="space-y-1.5">
-          <div className="h-2.5 rounded-full bg-white/20 w-20" />
-          <div className="h-2 rounded-full bg-white/10 w-14" />
-        </div>
-        <div className="ml-auto flex items-center gap-1 text-xs text-green-400 font-medium">
-          <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-          94%
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
@@ -257,25 +235,18 @@ export default function LandingPage() {
 
             {/* Left */}
             <div>
-              {/* Pill badge */}
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 999, padding: '6px 14px', marginBottom: 28 }}>
-                <Sparkles size={13} color="#a78bfa" />
-                <span style={{ fontSize: 12, fontWeight: 600, color: '#c4b5fd', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Powered by Deep AI</span>
-              </div>
-
               <h1 style={{ fontSize: 'clamp(42px, 5vw, 68px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.03em', marginBottom: 24 }}>
-                Dating that{' '}
-                <span className="gradient-text">actually</span>
-                <br />understands you.
+                Don&apos;t just get a match
+                <br /> <span className="gradient-text">understand it.</span>
               </h1>
 
               <p style={{ fontSize: 18, lineHeight: 1.65, color: 'rgba(240,240,255,0.55)', marginBottom: 36, maxWidth: 460 }}>
-                Kindred goes beyond surface-level matching. Our AI analyzes personality, attachment style, values, and communication patterns to find people who truly fit.
+                Most apps waste your time and emotional energy on random swipes. Kindred gives you clear compatibility logic, guided momentum, and intentional next steps.
               </p>
 
               <div className="hero-cta-group" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
                 <Link href="/auth/signup" className="btn-primary" style={{ fontSize: 16, padding: '15px 32px' }}>
-                  Find Your Match
+                  Start with Clarity
                   <ArrowRight size={18} />
                 </Link>
                 <Link href="#how-it-works" className="btn-ghost" style={{ fontSize: 15 }}>
@@ -394,15 +365,32 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Stats ── */}
-      <section style={{ padding: '80px 24px', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 32 }} className="stats-grid">
-          {STATS.map(s => (
-            <div key={s.value} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 42, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 8 }} className="gradient-text">{s.value}</div>
-              <div style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)', lineHeight: 1.5 }}>{s.label}</div>
-            </div>
-          ))}
+      {/* ── Problem ── */}
+      <section style={{ padding: '90px 24px', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 52 }}>
+            <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 14 }}>
+              The real problem isn&apos;t finding people.
+            </h2>
+            <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)', maxWidth: 640, margin: '0 auto', lineHeight: 1.65 }}>
+              It&apos;s knowing who is worth your emotional attention before you spend it.
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }} className="problem-grid">
+            {PROBLEM_COMPARE.map(col => (
+              <div key={col.title} className="glass" style={{ borderRadius: 20, padding: 28, border: col.tone === 'bright' ? '1px solid rgba(139,92,246,0.28)' : undefined }}>
+                <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: col.tone === 'bright' ? '#c4b5fd' : '#f0f0ff' }}>{col.title}</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {col.points.map(point => (
+                    <div key={point} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                      <CheckCircle size={14} color={col.tone === 'bright' ? '#a78bfa' : 'rgba(240,240,255,0.3)'} style={{ marginTop: 3, flexShrink: 0 }} />
+                      <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.62)', lineHeight: 1.6 }}>{point}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -415,10 +403,10 @@ export default function LandingPage() {
               <span style={{ fontSize: 12, fontWeight: 600, color: '#fb7185', letterSpacing: '0.05em', textTransform: 'uppercase' }}>What Sets Us Apart</span>
             </div>
             <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 16 }}>
-              Everything you need,<br />nothing you don&apos;t.
+              Built for calm, confident decisions.
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)', maxWidth: 500, margin: '0 auto', lineHeight: 1.65 }}>
-              Built for people who are serious about finding a real connection — not another dopamine loop.
+              Connection Track leads the experience. Everything else exists to make your next choice clearer.
             </p>
           </div>
 
@@ -491,7 +479,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)' }}>Don&apos;t take our word for it.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }} className="testimonials-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }} className="testimonials-grid">
             {TESTIMONIALS.map(t => (
               <div key={t.name} className="glass card-lift" style={{ borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column', gap: 20 }}>
                 {/* Stars */}
@@ -524,7 +512,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
             <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 16 }}>Simple, fair pricing.</h2>
-            <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)' }}>Start free. Upgrade when you&apos;re ready.</p>
+            <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)' }}>Start with clarity. Upgrade when you want deeper guidance.</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 900, margin: '0 auto' }} className="pricing-grid">
@@ -533,7 +521,7 @@ export default function LandingPage() {
                 name: 'Free',
                 price: '$0',
                 period: 'forever',
-                features: ['3 daily matches', 'Basic compatibility score', 'Standard messaging', 'Profile creation'],
+                features: ['3 daily matches', 'Core compatibility view', 'Standard messaging', 'Profile setup'],
                 cta: 'Start Free',
                 href: '/auth/signup',
                 highlight: false,
@@ -542,7 +530,7 @@ export default function LandingPage() {
                 name: 'Spark',
                 price: '$19',
                 period: 'per month',
-                features: ['5 daily matches', 'Full compatibility breakdown', 'AI Conversation Coach', 'AI Date Planner', 'Safety Score', 'Priority matching'],
+                features: ['5 daily matches', 'Full match explanation', 'AI Conversation Coach', 'Connection Track', 'Safety Score', 'Priority matching'],
                 cta: 'Start 7-Day Free Trial',
                 href: '/auth/signup',
                 highlight: true,
@@ -551,7 +539,7 @@ export default function LandingPage() {
                 name: 'Deep',
                 price: '$39',
                 period: 'per month',
-                features: ['Unlimited matches', 'Everything in Spark', 'Advanced personality report', 'Dedicated AI coach', 'See who liked you', 'VIP support'],
+                features: ['Unlimited matches', 'Everything in Spark', 'Advanced compatibility report', 'Dedicated AI coach', 'Date intention tools', 'VIP support'],
                 cta: 'Go Deep',
                 href: '/auth/signup',
                 highlight: false,
@@ -674,7 +662,7 @@ export default function LandingPage() {
           .hero-floating-card { display: none !important; }
           .hero-cta-group { flex-direction: column !important; }
           .hero-cta-group > a { width: 100% !important; }
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .problem-grid { grid-template-columns: 1fr !important; }
           .features-grid { grid-template-columns: 1fr !important; }
           .steps-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .testimonials-grid { grid-template-columns: 1fr !important; }
@@ -683,7 +671,6 @@ export default function LandingPage() {
           .pricing-item-featured { order: 1; }
         }
         @media (max-width: 600px) {
-          .stats-grid { grid-template-columns: 1fr !important; }
           .steps-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 767px) {
