@@ -16,20 +16,26 @@ const NAV_LINKS = [
 const FEATURES = [
   {
     icon: ScanLine,
-    title: 'See the fit',
-    desc: 'Compatibility Clarity shows exactly why a match makes sense before you invest your time.',
+    title: 'Compatibility Clarity',
+    desc: 'See exactly why a match fits before you invest time or emotional energy.',
     color: 'violet',
   },
   {
     icon: Zap,
-    title: 'Move with momentum',
-    desc: 'Daily Five and Connection Track keep strong matches moving toward a real meeting.',
+    title: 'Daily Five',
+    desc: 'Get five intentional introductions each day so depth stays higher than noise.',
     color: 'amber',
   },
   {
+    icon: Brain,
+    title: 'AI Conversation Coach',
+    desc: 'Get concise guidance that helps conversations stay clear, human, and forward-moving.',
+    color: 'rose',
+  },
+  {
     icon: Shield,
-    title: 'Date with confidence',
-    desc: 'Conversation Coach and Safety Signals help you communicate clearly and avoid avoidable risk.',
+    title: 'Safety Score',
+    desc: 'Spot pressure patterns early so you can date with context and confidence.',
     color: 'rose',
   },
 ];
@@ -38,20 +44,20 @@ const PROBLEM_COMPARE = [
   {
     title: 'Every other app',
     points: [
-      'Reward endless swiping and short-term dopamine.',
-      'Show a match, but give no clear reason why.',
-      'Push volume over emotional quality.',
-      'Leave momentum to chance between messages.',
+      'Delivers matches without meaningful context.',
+      'Optimizes for swiping, not understanding.',
+      'Prioritizes volume over emotional quality.',
+      'Leaves momentum to chance after matching.',
     ],
     tone: 'muted' as const,
   },
   {
     title: 'Vinculo',
     points: [
-      'Prioritizes depth over volume with daily intentional matches.',
-      'Explains each match with transparent compatibility signals.',
-      'Uses Connection Track to build shared momentum before dates.',
-      'Supports safer, clearer conversations without chaos.',
+      'Explains each match with visible compatibility logic.',
+      'Keeps focus high with curated daily introductions.',
+      'Builds shared momentum before the first date.',
+      'Supports safer, clearer conversations throughout.',
     ],
     tone: 'bright' as const,
   },
@@ -66,7 +72,7 @@ const STEPS = [
   },
   {
     step: '02',
-    title: 'See Why You Match',
+    title: 'See how you match',
     desc: 'Our model analyzes thousands of compatibility signals — not just who you say you are, but who you show up as.',
     icon: Brain,
   },
@@ -78,7 +84,7 @@ const STEPS = [
   },
   {
     step: '04',
-    title: 'Move Toward a Real Date',
+    title: 'Move toward a real date',
     desc: 'Chat with AI coaching support. When it feels right, let our Date Planner craft the perfect first meeting.',
     icon: Heart,
   },
@@ -230,6 +236,17 @@ export default function LandingPage() {
                   Start with Clarity
                   <ArrowRight size={18} />
                 </Link>
+                <a href="#how-it-works" style={{ fontSize: 14, fontWeight: 500, color: 'rgba(240,240,255,0.48)', textDecoration: 'none' }}>
+                  See How It Works
+                </a>
+              </div>
+
+              <div style={{ marginTop: 20, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', fontSize: 12, color: 'rgba(240,240,255,0.35)', fontWeight: 500 }}>
+                <span>Privacy first</span>
+                <span>·</span>
+                <span>Verified profiles</span>
+                <span>·</span>
+                <span>4.9 rating</span>
               </div>
             </div>
 
@@ -258,6 +275,9 @@ export default function LandingPage() {
                     </div>
                   ))}
                 </div>
+                <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.52)', lineHeight: 1.5 }}>
+                  Why this match works: high alignment on values, communication style, and relationship intent.
+                </div>
               </div>
             </div>
           </div>
@@ -275,7 +295,7 @@ export default function LandingPage() {
               Vinculo helps you decide where to invest your emotional energy before it gets wasted.
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }} className="problem-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }} className="problem-grid">
             {PROBLEM_COMPARE.map(col => (
               <div key={col.title} className="glass" style={{ borderRadius: 20, padding: 28, border: col.tone === 'bright' ? '1px solid rgba(139,92,246,0.28)' : undefined }}>
                 <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: col.tone === 'bright' ? '#c4b5fd' : '#f0f0ff' }}>{col.title}</h3>
@@ -302,7 +322,7 @@ export default function LandingPage() {
               <span style={{ fontSize: 11, color: '#c4b5fd', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>New: Connection Track v1</span>
             </div>
             <h3 style={{ fontSize: 'clamp(26px, 3.4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 12 }}>
-              Keep good matches moving.
+              Keep promising matches moving with purpose.
             </h3>
             <p style={{ fontSize: 16, color: 'rgba(240,240,255,0.5)', lineHeight: 1.65, maxWidth: 760, marginBottom: 20 }}>
               Connection Track gives each match a lightweight shared cadence so conversations keep moving with purpose.
@@ -310,15 +330,15 @@ export default function LandingPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }} className="connection-grid">
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Daily micro-question</div>
-                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>Each matched person answers one short reflection prompt privately each day.</p>
+                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>One short prompt each day keeps momentum alive.</p>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Weekly compatibility pulse</div>
-                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>Both users see how their answers align over time, not just at first glance.</p>
+                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>See how your alignment evolves over time.</p>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Pre-date intention check</div>
-                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>Before meeting, both people set a simple intention to reduce anxiety, ghosting, and mixed signals.</p>
+                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>Set expectations before meeting to reduce anxiety and mixed signals.</p>
               </div>
             </div>
           </div>
@@ -351,7 +371,7 @@ export default function LandingPage() {
                 green: { bg: 'rgba(52,211,153,0.1)', border: 'rgba(52,211,153,0.2)', icon: '#6ee7b7' },
               }[f.color];
               return (
-                <div key={f.title} className="glass card-lift" style={{ borderRadius: 20, padding: 28 }}>
+                <div key={f.title} className="glass card-lift" style={{ borderRadius: 20, padding: 28, border: f.title === 'Compatibility Clarity' ? '1px solid rgba(139,92,246,0.35)' : undefined }}>
                   <div style={{ width: 48, height: 48, borderRadius: 14, background: colors?.bg, border: `1px solid ${colors?.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                     <Icon size={22} color={colors?.icon} />
                   </div>
@@ -520,7 +540,7 @@ export default function LandingPage() {
                     className={plan.highlight ? 'btn-primary' : 'btn-ghost'}
                     style={{ width: '100%', justifyContent: 'center', display: 'flex' }}
                   >
-                    {plan.cta}
+                    {plan.name === 'Clarity' ? 'Start Free Trial' : plan.name === 'Intelligence' ? 'Choose Intelligence' : 'Start Free'}
                   </Link>
                 </div>
               </div>
@@ -548,7 +568,7 @@ export default function LandingPage() {
                 Your person is out there.<br />Let&apos;s find them.
               </h2>
               <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.5)', marginBottom: 36, lineHeight: 1.65 }}>
-                Join 200,000+ people who found meaningful connections through genuine AI compatibility — not algorithms built to maximize screen time.
+                Join 200,000+ people choosing more intentional, compatibility-first dating.
               </p>
               <Link href="/auth/signup" className="btn-primary" style={{ fontSize: 17, padding: '16px 40px' }}>
                 Start for Free — No Card Required
