@@ -13,6 +13,15 @@ const NAV_LINKS = [
   { label: 'Sign in', href: '/auth/login' },
 ];
 
+const FOOTER_LINKS = [
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
+  { label: 'Safety', href: '/safety' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Careers', href: '/careers' },
+  { label: 'Contact', href: '/contact' },
+];
+
 const FEATURES = [
   {
     icon: ScanLine,
@@ -634,13 +643,13 @@ export default function LandingPage() {
             <span style={{ fontWeight: 700, fontSize: 18, letterSpacing: '-0.03em' }}>vinculo</span>
           </div>
           <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
-            {['Privacy', 'Terms', 'Safety', 'Blog', 'Careers', 'Contact'].map(l => (
-              <a key={l} href="#" style={{ fontSize: 13, color: 'rgba(240,240,255,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}
+            {FOOTER_LINKS.map(l => (
+              <Link key={l.label} href={l.href} style={{ fontSize: 13, color: 'rgba(240,240,255,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'rgba(240,240,255,0.7)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(240,240,255,0.35)')}
               >
-                {l}
-              </a>
+                {l.label}
+              </Link>
             ))}
           </div>
           <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.25)' }}>© 2026 Vinculo. Made with ♥</div>

@@ -200,9 +200,9 @@ export default function SignupPage() {
                 </div>
                 <span style={{ fontSize: 13, color: 'rgba(240,240,255,0.45)', lineHeight: 1.6 }}>
                   I agree to Vinculo&apos;s{' '}
-                  <a href="#" style={{ color: '#a78bfa', textDecoration: 'none' }}>Terms of Service</a>
+                  <Link href="/terms" style={{ color: '#a78bfa', textDecoration: 'none' }}>Terms of Service</Link>
                   {' '}and{' '}
-                  <a href="#" style={{ color: '#a78bfa', textDecoration: 'none' }}>Privacy Policy</a>.
+                  <Link href="/privacy" style={{ color: '#a78bfa', textDecoration: 'none' }}>Privacy Policy</Link>.
                 </span>
               </label>
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Heart, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react';
+import { Heart, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -134,7 +134,7 @@ export default function LoginPage() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                 <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)' }}>Password</label>
-                <a href="#" style={{ fontSize: 12, color: '#a78bfa', textDecoration: 'none' }}>Forgot password?</a>
+                <a href="/auth/forgot-password" style={{ fontSize: 12, color: '#a78bfa', textDecoration: 'none' }}>Forgot password?</a>
               </div>
               <div style={{ position: 'relative' }}>
                 <input
@@ -175,9 +175,9 @@ export default function LoginPage() {
 
           <p style={{ fontSize: 12, color: 'rgba(240,240,255,0.25)', textAlign: 'center', marginTop: 28, lineHeight: 1.7 }}>
             By signing in, you agree to our{' '}
-            <a href="#" style={{ color: 'rgba(240,240,255,0.45)', textDecoration: 'none' }}>Terms of Service</a>
+            <Link href="/terms" style={{ color: 'rgba(240,240,255,0.45)', textDecoration: 'none' }}>Terms of Service</Link>
             {' '}and{' '}
-            <a href="#" style={{ color: 'rgba(240,240,255,0.45)', textDecoration: 'none' }}>Privacy Policy</a>.
+            <Link href="/privacy" style={{ color: 'rgba(240,240,255,0.45)', textDecoration: 'none' }}>Privacy Policy</Link>.
           </p>
         </div>
       </div>
