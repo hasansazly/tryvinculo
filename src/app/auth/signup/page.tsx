@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Heart, Eye, EyeOff, ArrowRight, CheckCircle, Brain, Sparkles, Shield } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '../../../../utils/supabase/client';
 
 const PERKS = [
   { icon: Brain, text: 'AI-powered deep compatibility' },
@@ -21,11 +22,16 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [codeMode, setCodeMode] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
 
   async function handleStep1(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    setSuccess('');
     if (!email) { setError('Email is required.'); return; }
     if (!/\S+@\S+\.\S+/.test(email)) { setError('Enter a valid email.'); return; }
     setStep(2);
@@ -34,12 +40,70 @@ export default function SignupPage() {
   async function handleStep2(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    setSuccess('');
     if (!name.trim()) { setError('Name is required.'); return; }
     if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
     if (!agreed) { setError('You must agree to the Terms.'); return; }
     setLoading(true);
     await new Promise(r => setTimeout(r, 1400));
     setLoading(false);
+    router.push('/onboarding');
+  }
+
+  async function handleSendCode() {
+    setError('');
+    setSuccess('');
+    if (!email) {
+      setError('Email is required.');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError('Enter a valid email.');
+      return;
+    }
+
+    setLoading(true);
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: true,
+      },
+    });
+    setLoading(false);
+
+    if (otpError) {
+      setError(otpError.message);
+      return;
+    }
+
+    setCodeMode(true);
+    setOtpSent(true);
+    setSuccess('Verification code sent. Check your email.');
+  }
+
+  async function handleVerifyCode(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!email || !otpCode) {
+      setError('Please enter your email and verification code.');
+      return;
+    }
+
+    setLoading(true);
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email,
+      token: otpCode,
+      type: 'email',
+    });
+    setLoading(false);
+
+    if (verifyError) {
+      setError(verifyError.message);
+      return;
+    }
+
     router.push('/onboarding');
   }
 
@@ -124,7 +188,7 @@ export default function SignupPage() {
             )}
           </p>
 
-          {step === 1 ? (
+          {step === 1 && !codeMode ? (
             <>
               {/* Social logins */}
               <div className="auth-social-row" style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
@@ -144,6 +208,7 @@ export default function SignupPage() {
 
               <form onSubmit={handleStep1} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {error && <div style={{ background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.25)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#fda4af' }}>{error}</div>}
+                {success && <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#6ee7b7' }}>{success}</div>}
                 <div>
                   <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', display: 'block', marginBottom: 8 }}>Email</label>
                   <input className="input-field" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
@@ -151,11 +216,76 @@ export default function SignupPage() {
                 <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 15, padding: '15px', marginTop: 4 }}>
                   Continue with Email <ArrowRight size={18} />
                 </button>
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: 14 }}
+                  disabled={loading}
+                  onClick={handleSendCode}
+                >
+                  {loading ? 'Sending code…' : 'Verify with email code'}
+                </button>
               </form>
             </>
+          ) : step === 1 && codeMode ? (
+            <form onSubmit={handleVerifyCode} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {error && <div style={{ background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.25)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#fda4af' }}>{error}</div>}
+              {success && <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#6ee7b7' }}>{success}</div>}
+
+              <div>
+                <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', display: 'block', marginBottom: 8 }}>Email</label>
+                <input className="input-field" type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
+              </div>
+
+              <div>
+                <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', display: 'block', marginBottom: 8 }}>Verification code</label>
+                <input
+                  className="input-field"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="Enter the code from email"
+                  value={otpCode}
+                  onChange={e => setOtpCode(e.target.value.replace(/\s/g, ''))}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-primary"
+                style={{ width: '100%', justifyContent: 'center', fontSize: 15, padding: '15px', marginTop: 4, opacity: loading ? 0.7 : 1 }}
+                disabled={loading}
+              >
+                {loading ? 'Verifying code…' : 'Verify code'}
+              </button>
+
+              <button
+                type="button"
+                className="btn-ghost"
+                style={{ width: '100%', justifyContent: 'center', fontSize: 14 }}
+                disabled={loading}
+                onClick={handleSendCode}
+              >
+                {otpSent ? 'Resend code' : 'Send code'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setCodeMode(false);
+                  setOtpCode('');
+                  setError('');
+                  setSuccess('');
+                }}
+                style={{ background: 'none', border: 'none', color: 'rgba(240,240,255,0.4)', fontSize: 13, cursor: 'pointer', marginTop: -4 }}
+              >
+                Use password signup instead
+              </button>
+            </form>
           ) : (
             <form onSubmit={handleStep2} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {error && <div style={{ background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.25)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#fda4af' }}>{error}</div>}
+              {success && <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 10, padding: '12px 14px', fontSize: 13, color: '#6ee7b7' }}>{success}</div>}
 
               <div>
                 <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', display: 'block', marginBottom: 8 }}>Your first name</label>
