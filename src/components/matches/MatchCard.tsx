@@ -9,48 +9,66 @@ function truncate(text: string, max = 140) {
 
 export default function MatchCard({ match }: { match: MatchView }) {
   const reasons = match.compatibilityReasons.slice(0, 3);
+  const summary = truncate(match.explanation || 'Strong intent and value alignment with clear relationship potential.', 108);
 
   return (
-    <article className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-      <div className="flex gap-4">
-        <div className="h-16 w-16 shrink-0 rounded-full ring-2 ring-violet-500/30 overflow-hidden">
-          {match.matchedProfile.photoUrl ? (
-            <img
-              src={match.matchedProfile.photoUrl}
-              alt={match.matchedProfile.firstName}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-slate-800/80">
-              <User size={20} className="text-slate-400" />
-            </div>
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <h3 className="text-lg font-semibold tracking-tight text-slate-100">
+    <article className="overflow-hidden rounded-2xl border border-slate-800/90 bg-slate-900/75 shadow-[0_24px_80px_rgba(2,6,23,0.55)]">
+      <div className="relative h-52">
+        {match.matchedProfile.photoUrl ? (
+          <img
+            src={match.matchedProfile.photoUrl}
+            alt={match.matchedProfile.firstName}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+            <User size={42} className="text-slate-500" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div className="inline-flex items-center rounded-full border border-violet-400/30 bg-violet-500/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-violet-200">
+            {match.matchedProfile.photos.length > 0
+              ? `${match.matchedProfile.photos.length} photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
+              : 'Profile pending photos'}
+          </div>
+          <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-100">
             {match.matchedProfile.firstName}
             {typeof match.matchedProfile.age === 'number' ? `, ${match.matchedProfile.age}` : ''}
           </h3>
-          <p className="mt-0.5 text-sm text-slate-400">{match.matchedProfile.location || 'Location not shared yet'}</p>
-          <p className="mt-2 text-sm text-slate-300">{truncate(match.matchedProfile.bio || 'No bio shared yet.', 120)}</p>
+          <p className="text-sm text-slate-300/90">{match.matchedProfile.location || 'Location not shared yet'}</p>
         </div>
       </div>
 
-      {reasons.length > 0 && (
-        <ul className="mt-4 space-y-1.5 text-sm text-violet-200">
-          {reasons.map(reason => (
-            <li key={reason}>• {reason}</li>
-          ))}
-        </ul>
-      )}
+      <div className="p-4">
+        <p className="text-sm leading-6 text-slate-300">{truncate(match.matchedProfile.bio || 'No bio shared yet.', 120)}</p>
 
-      <div className="mt-4">
-        <Link
-          href={`/matches/${match.id}`}
-          className="inline-flex items-center rounded-lg border border-violet-500/40 bg-violet-500/10 px-3 py-2 text-sm font-medium text-violet-200 hover:bg-violet-500/20"
-        >
-          View match
-        </Link>
+        <div className="mt-4 rounded-xl border border-violet-500/25 bg-violet-500/10 p-3">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-violet-200/90">Why this match fits</p>
+          <p className="mt-1.5 text-sm text-violet-100/90">{summary}</p>
+        </div>
+
+        {reasons.length > 0 && (
+          <ul className="mt-4 grid gap-2 sm:grid-cols-1">
+            {reasons.map(reason => (
+              <li
+                key={reason}
+                className="rounded-lg border border-slate-700/70 bg-slate-800/60 px-3 py-2 text-sm text-slate-200"
+              >
+                {reason}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="mt-4">
+          <Link
+            href={`/matches/${match.id}`}
+            className="inline-flex w-full items-center justify-center rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 py-2.5 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40"
+          >
+            View match
+          </Link>
+        </div>
       </div>
     </article>
   );

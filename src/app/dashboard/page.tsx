@@ -69,15 +69,24 @@ export default async function DashboardPage() {
               </Link>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-              <h2 className="text-lg font-medium">Daily Matches</h2>
-              <p className="mt-2 text-sm text-slate-400">Active matches: {matches.length}</p>
+            <div className="rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900/85 to-slate-950/70 p-5">
+              <div className="mb-3">
+                <h2 className="text-lg font-medium">Your Best Matches</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  {matches.length > 0
+                    ? `${matches.length} active match${matches.length > 1 ? 'es' : ''} with compatibility insight`
+                    : 'No active matches yet.'}
+                </p>
+              </div>
               {matches.length > 0 ? (
                 <div className="mt-4 space-y-4">
                   {matches.slice(0, 2).map(match => (
                     <MatchCard key={match.id} match={match} />
                   ))}
-                  <Link href="/matches" className="inline-block text-sm text-violet-300 hover:text-violet-200">
+                  <Link
+                    href="/matches"
+                    className="inline-flex w-full items-center justify-center rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 py-2.5 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40"
+                  >
                     View all matches →
                   </Link>
                 </div>

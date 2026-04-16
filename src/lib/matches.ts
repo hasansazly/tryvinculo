@@ -9,11 +9,14 @@ export type MatchView = {
   compatibilityReasons: string[];
   createdAt: string;
   matchedProfile: {
+    fullName: string;
     firstName: string;
     age: number | null;
     location: string;
     bio: string;
     photoUrl: string | null;
+    photos: string[];
+    interests: string[];
   };
 };
 
@@ -43,6 +46,15 @@ type OnboardingRow = {
   response: unknown;
 };
 
+type ProfileRow = {
+  id: string;
+  full_name: string | null;
+  age: number | null;
+  location: string | null;
+  bio: string | null;
+  interests: string[] | null;
+};
+
 export async function getMatchesForUser(
   supabase: SupabaseClient,
   userId: string
@@ -67,6 +79,15 @@ export async function getMatchesForUser(
   const rows = matchRows as MatchRow[];
   const matchedUserIds = rows.map(row => row.matched_user_id);
 
+  const { data: profileRows, error: profileError } = await supabase
+    .from('profiles')
+    .select('id,full_name,age,location,bio,interests')
+    .in('id', matchedUserIds);
+
+  if (profileError) {
+    throw new Error(profileError.message);
+  }
+
   const { data: onboardingRows, error: onboardingError } = await supabase
     .from('onboarding_responses')
     .select('user_id,category,response')
@@ -90,16 +111,39 @@ export async function getMatchesForUser(
     byUser.set(row.user_id, existing);
   });
 
+  const profilesById = new Map<string, ProfileRow>();
+  (profileRows as ProfileRow[] | null)?.forEach(profile => {
+    profilesById.set(profile.id, profile);
+  });
+
   return rows.map(row => {
     const snapshot = byUser.get(row.matched_user_id);
+    const profile = profilesById.get(row.matched_user_id);
     const demographics = snapshot?.demographics ?? {};
     const profileMeta = snapshot?.profileMeta ?? {};
 
-    const fullName = typeof demographics.fullName === 'string' ? demographics.fullName : '';
-    const age = typeof demographics.age === 'number' ? demographics.age : null;
-    const location = typeof demographics.location === 'string' ? demographics.location : '';
-    const bio = typeof demographics.bio === 'string' ? demographics.bio : '';
+    const fullName =
+      (typeof demographics.fullName === 'string' ? demographics.fullName : '') ||
+      profile?.full_name ||
+      'Vinculo Match';
+    const age =
+      typeof demographics.age === 'number'
+        ? demographics.age
+        : typeof profile?.age === 'number'
+          ? profile.age
+          : null;
+    const location =
+      (typeof demographics.location === 'string' ? demographics.location : '') ||
+      profile?.location ||
+      '';
+    const bio =
+      (typeof demographics.bio === 'string' ? demographics.bio : '') ||
+      profile?.bio ||
+      'Intentional dater on Vinculo.';
     const photos = toStringArray(profileMeta.photos);
+    const interests = toStringArray(demographics.interests).length
+      ? toStringArray(demographics.interests)
+      : toStringArray(profile?.interests);
 
     return {
       id: row.id,
@@ -110,11 +154,14 @@ export async function getMatchesForUser(
       compatibilityReasons: toStringArray(row.compatibility_reasons),
       createdAt: row.created_at,
       matchedProfile: {
+        fullName,
         firstName: parseFirstName(fullName),
         age,
         location,
         bio,
         photoUrl: photos[0] ?? null,
+        photos,
+        interests,
       },
     };
   });
