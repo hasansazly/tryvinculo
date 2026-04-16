@@ -1,13 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
+import { getSupabasePublishableKey, getSupabaseUrl } from '../../utils/supabase/env';
 
-const stripEnv = (value: string | undefined, name: string) => {
-  if (!value) {
-    throw new Error(`Missing env var: ${name}`);
-  }
-  return value.trim().replace(/^['"]|['"]$/g, '');
-};
-
-const supabaseUrl = stripEnv(process.env.NEXT_PUBLIC_SUPABASE_URL, 'NEXT_PUBLIC_SUPABASE_URL');
-const supabaseAnonKey = stripEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, 'NEXT_PUBLIC_SUPABASE_ANON_KEY');
+const supabaseUrl = getSupabaseUrl();
+const supabaseAnonKey = getSupabasePublishableKey();
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

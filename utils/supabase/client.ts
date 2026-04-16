@@ -1,13 +1,7 @@
 import { createBrowserClient } from '@supabase/ssr'
+import { getSupabasePublishableKey, getSupabaseUrl } from './env'
 
-const stripEnv = (value: string | undefined, name: string) => {
-  if (!value) {
-    throw new Error(`Missing env var: ${name}`)
-  }
-  return value.trim().replace(/^['"]|['"]$/g, '')
-}
-
-const supabaseUrl = stripEnv(process.env.NEXT_PUBLIC_SUPABASE_URL, 'NEXT_PUBLIC_SUPABASE_URL')
-const supabaseAnonKey = stripEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, 'NEXT_PUBLIC_SUPABASE_ANON_KEY')
+const supabaseUrl = getSupabaseUrl()
+const supabaseAnonKey = getSupabasePublishableKey()
 
 export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)

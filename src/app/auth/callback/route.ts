@@ -1,13 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-
-const stripEnv = (value: string | undefined, name: string) => {
-  if (!value) {
-    throw new Error(`Missing env var: ${name}`);
-  }
-  return value.trim().replace(/^['"]|['"]$/g, '');
-};
+import { getSupabasePublishableKey, getSupabaseUrl } from '../../../../utils/supabase/env';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -17,8 +11,8 @@ export async function GET(request: Request) {
   if (code) {
     const cookieStore = await cookies();
     const supabase = createServerClient(
-      stripEnv(process.env.NEXT_PUBLIC_SUPABASE_URL, 'NEXT_PUBLIC_SUPABASE_URL'),
-      stripEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, 'NEXT_PUBLIC_SUPABASE_ANON_KEY'),
+      getSupabaseUrl(),
+      getSupabasePublishableKey(),
       {
         cookies: {
           get(name: string) {
