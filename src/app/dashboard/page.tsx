@@ -1,9 +1,132 @@
 import Link from 'next/link';
+import { MessageCircle, Sparkles } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import LogoutButton from '@/components/auth/LogoutButton';
-import MatchCard from '@/components/matches/MatchCard';
+import { getDashboardPreviewLimit, getDashboardTodayPreview, resolveViewerTier } from '@/lib/curatedMatches';
 import { getMatchesForUser } from '@/lib/matches';
 import { createSupabaseServerClient } from '../../../utils/supabase/server';
+
+type ParticipantRow = {
+  conversation_id: string;
+  user_id: string;
+};
+
+function isMissingTableError(error: { code?: string; message?: string } | null | undefined, table: string) {
+  if (!error) return false;
+  return error.code === 'PGRST205' || error.message?.includes(`public.${table}`) || false;
+}
+
+async function getActiveConversationCount(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  userId: string
+) {
+  const { data: myParticipants, error: myParticipantsError } = await supabase
+    .from('conversation_participants')
+    .select('conversation_id,user_id')
+    .eq('user_id', userId)
+    .returns<ParticipantRow[]>();
+
+  if (myParticipantsError || !myParticipants?.length) return 0;
+
+  const conversationIds = myParticipants.map(row => row.conversation_id);
+  const { data: allParticipants } = await supabase
+    .from('conversation_participants')
+    .select('conversation_id,user_id')
+    .in('conversation_id', conversationIds)
+    .returns<ParticipantRow[]>();
+
+  const otherParticipantByConversation = new Map<string, string>();
+  for (const row of allParticipants ?? []) {
+    if (row.user_id !== userId && !otherParticipantByConversation.has(row.conversation_id)) {
+      otherParticipantByConversation.set(row.conversation_id, row.user_id);
+    }
+  }
+
+  const otherIds = [...new Set([...otherParticipantByConversation.values()])];
+  if (otherIds.length === 0) return 0;
+
+  const [{ data: activeMatches }, { data: blockRows }, { data: unmatchRows }] = await Promise.all([
+    supabase
+      .from('matches')
+      .select('matched_user_id,conversation_disabled')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .in('matched_user_id', otherIds),
+    supabase
+      .from('blocks')
+      .select('blocker_user_id,blocked_user_id')
+      .or(`blocker_user_id.eq.${userId},blocked_user_id.eq.${userId}`),
+    supabase
+      .from('unmatches')
+      .select('initiated_by_user_id,unmatched_user_id')
+      .or(`initiated_by_user_id.eq.${userId},unmatched_user_id.eq.${userId}`),
+  ]);
+
+  const blocked = new Set<string>();
+  for (const row of blockRows ?? []) {
+    if (row.blocker_user_id === userId) blocked.add(row.blocked_user_id);
+    if (row.blocked_user_id === userId) blocked.add(row.blocker_user_id);
+  }
+
+  const unmatched = new Set<string>();
+  for (const row of unmatchRows ?? []) {
+    if (row.initiated_by_user_id === userId) unmatched.add(row.unmatched_user_id);
+    if (row.unmatched_user_id === userId) unmatched.add(row.initiated_by_user_id);
+  }
+
+  const allowed = new Set<string>();
+  for (const row of activeMatches ?? []) {
+    if (!row.conversation_disabled) allowed.add(row.matched_user_id);
+  }
+
+  let count = 0;
+  for (const [, otherUserId] of otherParticipantByConversation.entries()) {
+    if (!allowed.has(otherUserId)) continue;
+    if (blocked.has(otherUserId)) continue;
+    if (unmatched.has(otherUserId)) continue;
+    count += 1;
+  }
+
+  return count;
+}
+
+async function getConnectionTrackSummary(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  userId: string
+) {
+  const { data: activeTracks, error: activeTracksError } = await supabase
+    .from('connection_tracks')
+    .select('id')
+    .eq('status', 'active')
+    .or(`user_one_id.eq.${userId},user_two_id.eq.${userId}`);
+
+  if (isMissingTableError(activeTracksError, 'connection_tracks')) {
+    return { activeTracks: 0, recentUpdates: 0 };
+  }
+
+  if (activeTracksError || !activeTracks?.length) {
+    return { activeTracks: 0, recentUpdates: 0 };
+  }
+
+  const trackIds = activeTracks.map(track => track.id);
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+  const { count: recentUpdates, error: eventsError } = await supabase
+    .from('connection_track_events')
+    .select('*', { count: 'exact', head: true })
+    .in('connection_track_id', trackIds)
+    .eq('event_type', 'response_submitted')
+    .gte('created_at', since);
+
+  if (isMissingTableError(eventsError, 'connection_track_events')) {
+    return { activeTracks: trackIds.length, recentUpdates: 0 };
+  }
+
+  return {
+    activeTracks: trackIds.length,
+    recentUpdates: eventsError ? 0 : recentUpdates ?? 0,
+  };
+}
 
 export default async function DashboardPage() {
   try {
@@ -26,21 +149,22 @@ export default async function DashboardPage() {
       redirect('/onboarding');
     }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .maybeSingle();
+    const [{ data: profile }, { count: rawResponsesCount, error: responsesCountError }, matches] = await Promise.all([
+      supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
+      supabase.from('onboarding_responses').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
+      getMatchesForUser(supabase, user.id),
+    ]);
 
-    const { count: rawResponsesCount, error: responsesCountError } = await supabase
-      .from('onboarding_responses')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
-    const responsesTableMissing =
-      responsesCountError?.code === 'PGRST205' ||
-      responsesCountError?.message?.includes("public.onboarding_responses");
-    const responsesCount = responsesTableMissing ? 0 : rawResponsesCount;
-    const matches = await getMatchesForUser(supabase, user.id);
+    const tier = resolveViewerTier((profile ?? null) as Record<string, unknown> | null);
+    const todayPreview = getDashboardTodayPreview(matches, tier);
+    const previewLimit = getDashboardPreviewLimit(tier);
+    const [activeConversationCount, connectionTrackSummary] = await Promise.all([
+      getActiveConversationCount(supabase, user.id),
+      getConnectionTrackSummary(supabase, user.id),
+    ]);
+
+    const responsesTableMissing = isMissingTableError(responsesCountError, 'onboarding_responses');
+    const responsesCount = responsesTableMissing ? 0 : rawResponsesCount ?? 0;
     const displayName =
       profile?.first_name ||
       profile?.full_name ||
@@ -64,81 +188,122 @@ export default async function DashboardPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.14em] text-[#A18BFF]">Dashboard</p>
-                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#F8F9FF] sm:text-5xl">Welcome back, {displayName}</h1>
+                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#F8F9FF] sm:text-5xl">
+                  Welcome back, {displayName}
+                </h1>
                 <p className="mt-2 text-sm text-[#A9B0D0] sm:text-base">
-                  {matches.length > 0
-                    ? `${matches.length} active match${matches.length > 1 ? 'es' : ''} ready with compatibility insights.`
-                    : 'Your dashboard is ready. New matches will appear here as soon as they are available.'}
+                  Summary only: today&apos;s curated matches, active conversations, and connection momentum.
                 </p>
               </div>
               <LogoutButton className="rounded-xl border border-[#3A4270] bg-[#101735] px-4 py-2.5 text-sm font-medium text-[#D4D9F4] transition hover:border-[#6B5CE7] hover:text-[#FFFFFF]" />
             </div>
           </header>
 
-          <section className="grid gap-4 xl:grid-cols-[1fr,1.1fr]">
-            <div className="space-y-4">
-              <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-6 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-                <h2 className="text-[34px] font-semibold leading-none text-[#F7F8FF]">Profile Completion</h2>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-xl border border-[#343E69] bg-[#151C3C] p-3.5">
-                    <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Onboarding status</p>
-                    <p className="mt-1 text-base font-medium text-[#F8F9FF]">Complete</p>
-                  </div>
-                  <div className="rounded-xl border border-[#343E69] bg-[#151C3C] p-3.5">
-                    <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Saved categories</p>
-                    <p className="mt-1 text-base font-medium text-[#F8F9FF]">{responsesCount ?? 0}</p>
-                  </div>
-                </div>
-                <Link
-                  href="/app/profile"
-                  className="mt-5 inline-flex items-center justify-center rounded-xl border border-[#7E62F2]/60 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
-                >
-                  Go to profile →
-                </Link>
-              </article>
+          <section className="grid gap-4 md:grid-cols-3">
+            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Today&apos;s matches</p>
+              <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{todayPreview.length}</p>
+              <p className="mt-1 text-xs text-[#A9B0D0]">
+                {tier === 'paid' ? 'Paid limit: up to 6' : 'Free limit: up to 3'}
+              </p>
+            </article>
 
-              <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-6 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-                <h3 className="text-sm font-medium uppercase tracking-[0.14em] text-[#A18BFF]">Today at a glance</h3>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-xl border border-[#343E69] bg-[#151C3C] p-3.5">
-                    <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Best matches</p>
-                    <p className="mt-1 text-2xl font-medium text-[#F8F9FF]">{matches.length}</p>
-                  </div>
-                  <div className="rounded-xl border border-[#343E69] bg-[#151C3C] p-3.5">
-                    <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Profile quality</p>
-                    <p className="mt-1 text-2xl font-medium text-[#F8F9FF]">Strong</p>
-                  </div>
-                </div>
-              </article>
-            </div>
+            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Active conversations</p>
+              <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{activeConversationCount}</p>
+              <p className="mt-1 text-xs text-[#A9B0D0]">Only currently active and messageable threads.</p>
+            </article>
 
-            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
-              <div className="mb-4">
-                <h2 className="text-[34px] font-semibold tracking-tight text-[#F8F9FF]">Your Best Matches</h2>
+            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Connection Track updates</p>
+              <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{connectionTrackSummary.recentUpdates}</p>
+              <p className="mt-1 text-xs text-[#A9B0D0]">
+                {connectionTrackSummary.activeTracks} active track{connectionTrackSummary.activeTracks === 1 ? '' : 's'}.
+              </p>
+            </article>
+          </section>
+
+          <section className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-semibold tracking-tight text-[#F8F9FF]">Today&apos;s matches</h2>
                 <p className="mt-1 text-sm text-[#A9B0D0]">
-                  {matches.length > 0
-                    ? `${matches.length} active match${matches.length > 1 ? 'es' : ''} with compatibility insight`
-                    : 'No active matches yet.'}
+                  Showing {todayPreview.length} of up to {previewLimit} curated match{previewLimit === 1 ? '' : 'es'}.
                 </p>
               </div>
+              <Link
+                href="/app/discover"
+                className="inline-flex items-center justify-center rounded-xl border border-[#7E62F2]/60 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
+              >
+                View all matches
+              </Link>
+            </div>
 
-              {matches.length > 0 ? (
-                <div className="space-y-4">
-                  {matches.slice(0, 1).map(match => (
-                    <MatchCard key={match.id} match={match} />
-                  ))}
-                  <Link
-                    href="/matches"
-                    className="inline-flex w-full items-center justify-center rounded-xl border border-[#4B57A0] bg-[#151C3C] px-4 py-2.5 text-sm font-medium text-[#D5DBF6] transition hover:border-[#6E60EB] hover:text-[#FFFFFF]"
-                  >
-                    View all matches →
-                  </Link>
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-[#3A4270] bg-[#0E1430] px-4 py-8 text-center text-sm text-[#A9B0D0]">
-                  No real matches yet. Add manual rows in `matches`.
-                </div>
-              )}
+            {todayPreview.length > 0 ? (
+              <div className="grid gap-3 md:grid-cols-2">
+                {todayPreview.map(match => {
+                  const potential =
+                    tier === 'paid' &&
+                    typeof match.compatibilityScore === 'number' &&
+                    match.compatibilityScore >= 50 &&
+                    match.compatibilityScore < 65;
+                  return (
+                    <Link
+                      key={match.id}
+                      href={`/matches/${match.id}`}
+                      className="rounded-xl border border-[#343E69] bg-[#151C3C] p-4 transition hover:border-[#6B5CE7]"
+                    >
+                      <p className="text-lg font-semibold text-[#F8F9FF]">
+                        {match.matchedProfile.firstName}
+                        {typeof match.matchedProfile.age === 'number' ? `, ${match.matchedProfile.age}` : ''}
+                      </p>
+                      <p className="mt-1 text-sm text-[#A9B0D0]">
+                        {match.matchedProfile.location || 'Location not shared yet'}
+                      </p>
+                      <p className="mt-2 line-clamp-2 text-sm text-[#CBD3F5]">{match.explanation || 'Compatibility summary available in Discover.'}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {potential ? (
+                          <span className="rounded-full border border-[#8B6A2E]/55 bg-[#2A2112] px-2.5 py-1 text-[11px] font-medium text-[#F4C977]">
+                            Potential Fit
+                          </span>
+                        ) : null}
+                        {match.compatibilityReasons.slice(0, 2).map(reason => (
+                          <span
+                            key={reason}
+                            className="rounded-full border border-[#4E5A92] bg-[#1B2550] px-2.5 py-1 text-[11px] text-[#D8E1FF]"
+                          >
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="rounded-xl border border-dashed border-[#3A4270] bg-[#0E1430] p-6 text-center text-sm text-[#A9B0D0]">
+                No fresh curated matches for today yet.
+              </div>
+            )}
+          </section>
+
+          <section className="grid gap-4 md:grid-cols-2">
+            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Onboarding status</p>
+              <p className="mt-2 text-base font-medium text-[#F8F9FF]">Complete</p>
+              <p className="mt-1 text-sm text-[#A9B0D0]">{responsesCount} saved categories</p>
+            </article>
+
+            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Momentum tip</p>
+              <p className="mt-2 flex items-center gap-2 text-base font-medium text-[#F8F9FF]">
+                <Sparkles size={16} className="text-[#C9C0FF]" />
+                Open Discover to act on today&apos;s best fits.
+              </p>
+              <p className="mt-1 flex items-center gap-2 text-sm text-[#A9B0D0]">
+                <MessageCircle size={14} />
+                Move one active conversation forward today.
+              </p>
             </article>
           </section>
         </div>
