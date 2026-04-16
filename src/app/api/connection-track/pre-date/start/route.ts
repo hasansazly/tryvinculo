@@ -88,15 +88,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Connection track unavailable for this pair.' }, { status: 403 });
     }
 
-    const { data: activeMatch } = await supabase
+    const { data: activeMatches, error: activeMatchError } = await supabase
       .from('matches')
       .select('id')
-      .eq('user_id', user.id)
-      .eq('matched_user_id', otherUserId)
       .eq('status', 'active')
-      .maybeSingle();
+      .or(
+        `and(user_id.eq.${user.id},matched_user_id.eq.${otherUserId}),and(user_id.eq.${otherUserId},matched_user_id.eq.${user.id})`
+      )
+      .limit(1);
 
-    if (!activeMatch) {
+    if (activeMatchError) {
+      return NextResponse.json({ error: activeMatchError.message }, { status: 500 });
+    }
+
+    if (!activeMatches || activeMatches.length === 0) {
       return NextResponse.json({ error: 'Pre-date check requires an active match.' }, { status: 403 });
     }
 

@@ -12,6 +12,7 @@ type MatchRow = {
   user_id: string;
   matched_user_id: string;
   status: string;
+  created_at?: string;
 };
 
 type QuestionRow = {
@@ -137,14 +138,22 @@ async function resolveContext(
     const otherUserId = userIds.find(id => id !== currentUserId);
     if (!otherUserId) throw new Error('Direct conversation participant not found');
 
-    const { data: match } = await supabase
+    const { data: matchRows, error: matchError } = await supabase
       .from('matches')
-      .select('id,user_id,matched_user_id,status')
-      .eq('user_id', currentUserId)
-      .eq('matched_user_id', otherUserId)
+      .select('id,user_id,matched_user_id,status,created_at')
       .eq('status', 'active')
-      .maybeSingle<MatchRow>();
+      .or(
+        `and(user_id.eq.${currentUserId},matched_user_id.eq.${otherUserId}),and(user_id.eq.${otherUserId},matched_user_id.eq.${currentUserId})`
+      )
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .returns<MatchRow[]>();
 
+    if (matchError) {
+      throw matchError;
+    }
+
+    const match = matchRows?.[0] ?? null;
     if (!match) {
       throw new Error('No active match found');
     }
