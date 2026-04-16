@@ -13,11 +13,9 @@ export type MatchView = {
     age: number | null;
     location: string;
     bio: string;
-    photoUrl: string;
+    photoUrl: string | null;
   };
 };
-
-const DEFAULT_PROFILE_PHOTO = 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80';
 
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter(item => typeof item === 'string') : [];
@@ -116,7 +114,7 @@ export async function getMatchesForUser(
         age,
         location,
         bio,
-        photoUrl: photos[0] ?? DEFAULT_PROFILE_PHOTO,
+        photoUrl: photos[0] ?? null,
       },
     };
   });

@@ -13,6 +13,7 @@ import {
   CheckCircle,
   Plus,
   X,
+  User,
 } from 'lucide-react';
 import { getSupabaseBrowserClient } from '../../../../utils/supabase/client';
 import { getCompatibilityColor } from '@/lib/utils';
@@ -58,8 +59,6 @@ type EditFormState = {
   smoking: string;
   kids: string;
 };
-
-const DEFAULT_PROFILE_PHOTO = 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80';
 
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter(item => typeof item === 'string') : [];
@@ -199,7 +198,7 @@ export default function ProfilePage() {
           location: profile?.location || (typeof demographics.location === 'string' ? demographics.location : '') || '',
           auraScore,
           bio: profile?.bio || (typeof demographics.bio === 'string' ? demographics.bio : '') || '',
-          photos: (meta.photos?.length ? meta.photos : [DEFAULT_PROFILE_PHOTO]),
+          photos: meta.photos?.length ? meta.photos : [],
           interests,
           values,
           relationshipGoal,
@@ -239,7 +238,7 @@ export default function ProfilePage() {
   const profileStrengthItems = useMemo(() => {
     if (!user) return [];
     return [
-      { label: 'Photo added', done: user.photos.length > 0 && user.photos[0] !== DEFAULT_PROFILE_PHOTO },
+      { label: 'Photo added', done: user.photos.length > 0 },
       { label: 'Bio written', done: user.bio.trim().length >= 40 },
       { label: 'Interests added', done: user.interests.length >= 3 },
       { label: 'Values set', done: user.values.length >= 3 },
@@ -370,7 +369,7 @@ export default function ProfilePage() {
   };
 
   const deletePhoto = async (photoUrl: string) => {
-    if (!user || photoUrl === DEFAULT_PROFILE_PHOTO) return;
+    if (!user) return;
     setFeedback('');
     setDeletingPhotoUrl(photoUrl);
 
@@ -394,13 +393,13 @@ export default function ProfilePage() {
         throw new Error(deleteError.message);
       }
 
-      const remainingPhotos = user.photos.filter(photo => photo !== photoUrl && photo !== DEFAULT_PROFILE_PHOTO);
+      const remainingPhotos = user.photos.filter(photo => photo !== photoUrl);
       const nextMeta: ProfileMeta = {
         ...user.meta,
         photos: remainingPhotos,
       };
 
-      await saveMetaOnly(nextMeta, remainingPhotos.length > 0 ? remainingPhotos : [DEFAULT_PROFILE_PHOTO]);
+      await saveMetaOnly(nextMeta, remainingPhotos);
       setBucketPhotoCount(prev => Math.max(0, prev - 1));
       setFeedback('Photo deleted.');
     } catch (error) {
@@ -465,7 +464,7 @@ export default function ProfilePage() {
 
       const { data: publicData } = supabase.storage.from('profile-photos').getPublicUrl(filePath);
       const publicUrl = publicData.publicUrl;
-      const nextPhotos = [publicUrl, ...user.photos.filter(photo => photo !== DEFAULT_PROFILE_PHOTO)].slice(0, 6);
+      const nextPhotos = [publicUrl, ...user.photos].slice(0, 6);
       const nextMeta: ProfileMeta = {
         ...user.meta,
         photos: nextPhotos,
@@ -521,7 +520,7 @@ export default function ProfilePage() {
     { label: 'Smokes', value: user.meta.smoking ?? '' },
     { label: 'Kids', value: user.meta.kids ?? '' },
   ].filter(item => item.value.trim().length > 0);
-  const galleryPhotos = user.photos.filter(photo => photo !== DEFAULT_PROFILE_PHOTO);
+  const galleryPhotos = user.photos;
 
   return (
     <div className="profile-page" style={{ padding: '32px', maxWidth: 800, width: '100%', margin: '0 auto' }}>
@@ -569,7 +568,13 @@ export default function ProfilePage() {
         <div style={{ padding: '0 28px 28px' }}>
           <div style={{ position: 'relative', display: 'inline-block', marginTop: -48 }}>
             <div style={{ width: 96, height: 96, borderRadius: '50%', overflow: 'hidden', border: '4px solid #0f0f1a', boxShadow: '0 0 0 2px rgba(139,92,246,0.3)' }}>
-              <img src={user.photos[0] ?? DEFAULT_PROFILE_PHOTO} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              {user.photos[0] ? (
+                <img src={user.photos[0]} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, rgba(31,41,55,0.95), rgba(17,24,39,0.9))' }}>
+                  <User size={30} color="rgba(226,232,240,0.65)" />
+                </div>
+              )}
             </div>
               <button
                 type="button"

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { User } from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '../../../../utils/supabase/server';
 import { findMatchById, getMatchesForUser } from '@/lib/matches';
@@ -43,11 +44,19 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
 
         <section className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6">
           <div className="flex flex-wrap items-start gap-4">
-            <img
-              src={match.matchedProfile.photoUrl}
-              alt={match.matchedProfile.firstName}
-              className="h-20 w-20 rounded-full object-cover ring-2 ring-violet-500/30"
-            />
+            <div className="h-20 w-20 rounded-full ring-2 ring-violet-500/30 overflow-hidden">
+              {match.matchedProfile.photoUrl ? (
+                <img
+                  src={match.matchedProfile.photoUrl}
+                  alt={match.matchedProfile.firstName}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-slate-800/80">
+                  <User size={24} className="text-slate-400" />
+                </div>
+              )}
+            </div>
             <div className="min-w-0 flex-1">
               <h1 className="text-2xl font-semibold tracking-tight">
                 {match.matchedProfile.firstName}

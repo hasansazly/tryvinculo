@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { User } from 'lucide-react';
 import type { MatchView } from '@/lib/matches';
 
 function truncate(text: string, max = 140) {
@@ -12,11 +13,19 @@ export default function MatchCard({ match }: { match: MatchView }) {
   return (
     <article className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
       <div className="flex gap-4">
-        <img
-          src={match.matchedProfile.photoUrl}
-          alt={match.matchedProfile.firstName}
-          className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-violet-500/30"
-        />
+        <div className="h-16 w-16 shrink-0 rounded-full ring-2 ring-violet-500/30 overflow-hidden">
+          {match.matchedProfile.photoUrl ? (
+            <img
+              src={match.matchedProfile.photoUrl}
+              alt={match.matchedProfile.firstName}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-slate-800/80">
+              <User size={20} className="text-slate-400" />
+            </div>
+          )}
+        </div>
         <div className="min-w-0 flex-1">
           <h3 className="text-lg font-semibold tracking-tight text-slate-100">
             {match.matchedProfile.firstName}

@@ -26,14 +26,12 @@ const SIDEBAR_NAV = [
 type SidebarIdentity = {
   name: string;
   auraScore: number;
-  photoUrl: string;
+  photoUrl: string | null;
 };
-
-const DEFAULT_SIDEBAR_PHOTO = 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80';
 
 function Sidebar() {
   const pathname = usePathname();
-  const [identity, setIdentity] = useState<SidebarIdentity>({ name: 'You', auraScore: 65, photoUrl: DEFAULT_SIDEBAR_PHOTO });
+  const [identity, setIdentity] = useState<SidebarIdentity>({ name: 'You', auraScore: 65, photoUrl: null });
 
   useEffect(() => {
     let active = true;
@@ -81,7 +79,7 @@ function Sidebar() {
             ? ((profileMetaRow.response as { photos?: unknown }).photos as unknown[])
             : [];
         const firstPhoto = maybePhotos.find(photo => typeof photo === 'string');
-        const photoUrl = typeof firstPhoto === 'string' && firstPhoto.trim().length > 0 ? firstPhoto : DEFAULT_SIDEBAR_PHOTO;
+        const photoUrl = typeof firstPhoto === 'string' && firstPhoto.trim().length > 0 ? firstPhoto : null;
 
         if (active) {
           setIdentity({ name, auraScore, photoUrl });
@@ -108,7 +106,11 @@ function Sidebar() {
 
       <div style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 14, padding: '12px 14px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{ width: 38, height: 38, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
-          <img src={identity.photoUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+          {identity.photoUrl ? (
+            <img src={identity.photoUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+          ) : (
+            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, rgba(51,65,85,0.95), rgba(30,41,59,0.9))' }} />
+          )}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f0ff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{identity.name}</div>
