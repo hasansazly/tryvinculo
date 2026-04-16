@@ -49,12 +49,6 @@ export async function proxy(request: NextRequest) {
 
     const onboardingComplete = profile?.onboarding_complete === true;
 
-    if (pathname === '/') {
-      return NextResponse.redirect(
-        new URL(onboardingComplete ? '/dashboard' : '/onboarding', request.url)
-      );
-    }
-
     if (!onboardingComplete && (isDashboardRoute || isAppRoute)) {
       return NextResponse.redirect(new URL('/onboarding', request.url));
     }
