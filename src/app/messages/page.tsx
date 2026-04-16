@@ -20,6 +20,11 @@ type ProfileRow = {
   first_name?: string | null;
 };
 
+type ActiveMatchRow = {
+  matched_user_id: string;
+  conversation_disabled?: boolean | null;
+};
+
 type OnboardingRow = {
   user_id: string;
   category: string;
@@ -116,6 +121,47 @@ export default async function MessagesInboxPage() {
 
   const otherUserIds = [...new Set([...otherParticipantByConversation.values()])];
 
+  const [{ data: activeMatchesRaw }, { data: blockRows }, { data: unmatchRows }] = await Promise.all([
+    otherUserIds.length > 0
+      ? supabase
+          .from('matches')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('status', 'active')
+          .in('matched_user_id', otherUserIds)
+          .returns<ActiveMatchRow[]>()
+      : Promise.resolve({ data: [] as ActiveMatchRow[] }),
+    supabase
+      .from('blocks')
+      .select('blocker_user_id,blocked_user_id')
+      .or(`blocker_user_id.eq.${user.id},blocked_user_id.eq.${user.id}`)
+      .returns<Array<{ blocker_user_id: string; blocked_user_id: string }>>(),
+    supabase
+      .from('unmatches')
+      .select('initiated_by_user_id,unmatched_user_id')
+      .or(`initiated_by_user_id.eq.${user.id},unmatched_user_id.eq.${user.id}`)
+      .returns<Array<{ initiated_by_user_id: string; unmatched_user_id: string }>>(),
+  ]);
+
+  const blockedIds = new Set<string>();
+  for (const row of blockRows ?? []) {
+    if (row.blocker_user_id === user.id) blockedIds.add(row.blocked_user_id);
+    if (row.blocked_user_id === user.id) blockedIds.add(row.blocker_user_id);
+  }
+
+  const unmatchedIds = new Set<string>();
+  for (const row of unmatchRows ?? []) {
+    if (row.initiated_by_user_id === user.id) unmatchedIds.add(row.unmatched_user_id);
+    if (row.unmatched_user_id === user.id) unmatchedIds.add(row.initiated_by_user_id);
+  }
+
+  const allowedByMatch = new Set<string>();
+  for (const row of activeMatchesRaw ?? []) {
+    if (!row.conversation_disabled) {
+      allowedByMatch.add(row.matched_user_id);
+    }
+  }
+
   const [{ data: profileRowsRaw }, { data: onboardingRowsRaw }] = await Promise.all([
     otherUserIds.length > 0
       ? supabase.from('profiles').select('id,email,first_name').in('id', otherUserIds).returns<ProfileRow[]>()
@@ -152,6 +198,11 @@ export default async function MessagesInboxPage() {
   const conversations = conversationIds
     .map(conversationId => {
       const otherUserId = otherParticipantByConversation.get(conversationId) ?? null;
+      if (!otherUserId) return null;
+      if (!allowedByMatch.has(otherUserId)) return null;
+      if (blockedIds.has(otherUserId)) return null;
+      if (unmatchedIds.has(otherUserId)) return null;
+
       const profile = otherUserId ? profileById.get(otherUserId) : undefined;
       const demographics = otherUserId ? demographicsById.get(otherUserId) : undefined;
       const emailPrefix = typeof profile?.email === 'string' ? profile.email.split('@')[0] : '';
@@ -175,6 +226,7 @@ export default async function MessagesInboxPage() {
         lastAt: latest?.created_at ?? null,
       };
     })
+    .filter((item): item is { conversationId: string; name: string; lastBody: string; lastAt: string | null } => Boolean(item))
     .sort((a, b) => {
       if (!a.lastAt && !b.lastAt) return 0;
       if (!a.lastAt) return 1;
@@ -191,21 +243,27 @@ export default async function MessagesInboxPage() {
         </header>
 
         <section className="space-y-2">
-          {conversations.map(item => (
-            <Link
-              key={item.conversationId}
-              href={`/messages/${item.conversationId}`}
-              className="block rounded-xl border border-slate-700/80 bg-slate-900/70 p-4 hover:border-violet-400/40"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="truncate text-base font-medium text-slate-100">{item.name}</p>
-                  <p className="mt-1 truncate text-sm text-slate-400">{item.lastBody}</p>
+          {conversations.length > 0 ? (
+            conversations.map(item => (
+              <Link
+                key={item.conversationId}
+                href={`/messages/${item.conversationId}`}
+                className="block rounded-xl border border-slate-700/80 bg-slate-900/70 p-4 hover:border-violet-400/40"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="truncate text-base font-medium text-slate-100">{item.name}</p>
+                    <p className="mt-1 truncate text-sm text-slate-400">{item.lastBody}</p>
+                  </div>
+                  <p className="shrink-0 text-xs text-slate-500">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
                 </div>
-                <p className="shrink-0 text-xs text-slate-500">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))
+          ) : (
+            <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-6 text-sm text-slate-400">
+              No active conversations. Blocked or unmatched chats are hidden here.
+            </div>
+          )}
         </section>
       </div>
     </main>

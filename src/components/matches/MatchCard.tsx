@@ -10,6 +10,8 @@ function truncate(text: string, max = 140) {
 export default function MatchCard({ match }: { match: MatchView }) {
   const reasons = match.compatibilityReasons.slice(0, 3);
   const summary = truncate(match.explanation || 'Strong intent and value alignment with clear relationship potential.', 108);
+  const potentialFit =
+    typeof match.compatibilityScore === 'number' && match.compatibilityScore >= 50 && match.compatibilityScore < 65;
 
   return (
     <article className="overflow-hidden rounded-2xl border border-slate-800/90 bg-slate-900/75 shadow-[0_24px_80px_rgba(2,6,23,0.55)]">
@@ -62,6 +64,11 @@ export default function MatchCard({ match }: { match: MatchView }) {
         )}
 
         <div className="mt-4">
+          {potentialFit ? (
+            <p className="mb-2 rounded-lg border border-amber-400/35 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-200">
+              Potential Fit (exploratory compatibility range)
+            </p>
+          ) : null}
           <Link
             href={`/matches/${match.id}`}
             className="inline-flex w-full items-center justify-center rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 py-2.5 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40"

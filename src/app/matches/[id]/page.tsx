@@ -4,6 +4,8 @@ import { notFound, redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '../../../../utils/supabase/server';
 import { findMatchById, getMatchesForUser } from '@/lib/matches';
 import StartConversationButton from '@/components/messages/StartConversationButton';
+import ConnectionSafetyActions from '@/components/safety/ConnectionSafetyActions';
+import TrustSignals from '@/components/matches/TrustSignals';
 
 type MatchDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -41,12 +43,21 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
     year: 'numeric',
   });
   const trustSignals = [
+    match.matchedProfile.profileCompleteness !== null
+      ? `Profile completeness ${Math.round(match.matchedProfile.profileCompleteness * 100)}%`
+      : 'Profile completeness still updating',
+    match.matchedProfile.isVerified ? 'Verified profile' : 'Verification pending',
+    `Intent: ${match.matchedProfile.relationshipIntent}`,
     match.matchedProfile.photos.length > 0
       ? `${match.matchedProfile.photos.length} profile photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
       : 'Profile ready for photos',
     match.compatibilityReasons.length >= 3 ? 'Strong compatibility coverage' : 'Early compatibility snapshot',
     `Matched on ${createdAtLabel}`,
   ];
+  const potentialFit =
+    typeof match.compatibilityScore === 'number' &&
+    match.compatibilityScore >= 50 &&
+    match.compatibilityScore < 65;
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 pb-28 pt-6 text-slate-100 sm:pb-10">
@@ -163,28 +174,27 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
           )}
         </section>
 
+        <TrustSignals signals={trustSignals} potentialFit={potentialFit} />
+
         <section className="rounded-3xl border border-slate-700/80 bg-slate-900/65 p-6 backdrop-blur">
           <h2 className="flex items-center gap-2 text-lg font-medium">
-            <ShieldCheck size={17} className="text-emerald-300" />
-            Trust signals
+            <ShieldCheck size={17} className="text-rose-300" />
+            Safety actions
           </h2>
           <p className="mt-2 text-sm text-slate-400">
-            This match is shown in your private match feed and visible only to your authenticated account.
+            You stay in control. Report keeps a record; block and unmatch close this connection.
           </p>
-          <div className="mt-4 grid gap-2 sm:grid-cols-3">
-            {trustSignals.map(signal => (
-              <div
-                key={signal}
-                className="rounded-xl border border-slate-700/70 bg-slate-800/65 px-3 py-2.5 text-sm text-slate-300"
-              >
-                {signal}
-              </div>
-            ))}
+          <div className="mt-4">
+            <ConnectionSafetyActions targetUserId={match.matchedUserId} />
           </div>
         </section>
 
         <section className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-700/70 bg-slate-950/85 px-4 py-3 backdrop-blur sm:static sm:border-none sm:bg-transparent sm:px-0 sm:py-0">
-          <StartConversationButton matchUserId={match.matchedUserId} />
+          <StartConversationButton
+            matchUserId={match.matchedUserId}
+            disabled={match.conversationDisabled}
+            disabledReason={match.conversationDisabledReason}
+          />
         </section>
       </div>
     </main>

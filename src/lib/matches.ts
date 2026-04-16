@@ -8,6 +8,10 @@ export type MatchView = {
   explanation: string;
   compatibilityReasons: string[];
   createdAt: string;
+  compatibilityScore: number | null;
+  tierLabel: string | null;
+  conversationDisabled: boolean;
+  conversationDisabledReason: string | null;
   matchedProfile: {
     fullName: string;
     firstName: string;
@@ -17,6 +21,9 @@ export type MatchView = {
     photoUrl: string | null;
     photos: string[];
     interests: string[];
+    profileCompleteness: number | null;
+    isVerified: boolean;
+    relationshipIntent: string;
   };
 };
 
@@ -47,6 +54,10 @@ type MatchRow = {
   explanation: string;
   compatibility_reasons: string[] | null;
   created_at: string;
+  compatibility_score?: number | null;
+  tier_label?: string | null;
+  conversation_disabled?: boolean | null;
+  conversation_disabled_reason?: string | null;
 };
 
 type OnboardingRow = {
@@ -66,7 +77,7 @@ export async function getMatchesForUser(
 ): Promise<MatchView[]> {
   const { data: matchRows, error: matchError } = await supabase
     .from('matches')
-    .select('id,user_id,matched_user_id,status,explanation,compatibility_reasons,created_at')
+    .select('*')
     .eq('user_id', userId)
     .eq('status', 'active')
     .order('created_at', { ascending: false });
@@ -78,24 +89,61 @@ export async function getMatchesForUser(
     return [];
   }
 
-  const rows = (matchRows as MatchRow[]).filter((row, index, all) => {
+  const dedupedRows = (matchRows as MatchRow[]).filter((row, index, all) => {
     // Keep only the first row per matched user (query is already ordered by created_at desc).
     return all.findIndex(item => item.matched_user_id === row.matched_user_id) === index;
   });
+
+  const [{ data: blockRows }, { data: unmatchRows }] = await Promise.all([
+    supabase
+      .from('blocks')
+      .select('blocker_user_id,blocked_user_id')
+      .or(`blocker_user_id.eq.${userId},blocked_user_id.eq.${userId}`)
+      .returns<Array<{ blocker_user_id: string; blocked_user_id: string }>>(),
+    supabase
+      .from('unmatches')
+      .select('initiated_by_user_id,unmatched_user_id')
+      .or(`initiated_by_user_id.eq.${userId},unmatched_user_id.eq.${userId}`)
+      .returns<Array<{ initiated_by_user_id: string; unmatched_user_id: string }>>(),
+  ]);
+
+  const blockedIds = new Set<string>();
+  for (const row of blockRows ?? []) {
+    if (row.blocker_user_id === userId) blockedIds.add(row.blocked_user_id);
+    if (row.blocked_user_id === userId) blockedIds.add(row.blocker_user_id);
+  }
+
+  const unmatchedIds = new Set<string>();
+  for (const row of unmatchRows ?? []) {
+    if (row.initiated_by_user_id === userId) unmatchedIds.add(row.unmatched_user_id);
+    if (row.unmatched_user_id === userId) unmatchedIds.add(row.initiated_by_user_id);
+  }
+
+  const rows = dedupedRows.filter(
+    row => !blockedIds.has(row.matched_user_id) && !unmatchedIds.has(row.matched_user_id)
+  );
+
+  if (rows.length === 0) {
+    return [];
+  }
   const matchedUserIds = rows.map(row => row.matched_user_id);
 
-  const { data: profileRows, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .in('id', matchedUserIds);
+  const { data: profileRows, error: profileError } = await supabase.from('profiles').select('*').in('id', matchedUserIds);
 
   const { data: onboardingRows, error: onboardingError } = await supabase
     .from('onboarding_responses')
     .select('user_id,category,response')
     .in('user_id', matchedUserIds)
-    .in('category', ['demographics', 'profile_meta']);
+    .in('category', ['demographics', 'profile_meta', 'relationship_intent']);
 
-  const byUser = new Map<string, { demographics?: Record<string, unknown>; profileMeta?: Record<string, unknown> }>();
+  const byUser = new Map<
+    string,
+    {
+      demographics?: Record<string, unknown>;
+      profileMeta?: Record<string, unknown>;
+      relationshipIntent?: Record<string, unknown>;
+    }
+  >();
   (onboardingError ? [] : (onboardingRows as OnboardingRow[] | null))?.forEach(row => {
     if (!row || typeof row.response !== 'object' || row.response === null) return;
     const existing = byUser.get(row.user_id) ?? {};
@@ -104,6 +152,9 @@ export async function getMatchesForUser(
     }
     if (row.category === 'profile_meta') {
       existing.profileMeta = row.response as Record<string, unknown>;
+    }
+    if (row.category === 'relationship_intent') {
+      existing.relationshipIntent = row.response as Record<string, unknown>;
     }
     byUser.set(row.user_id, existing);
   });
@@ -118,6 +169,7 @@ export async function getMatchesForUser(
     const profile = profilesById.get(row.matched_user_id);
     const demographics = snapshot?.demographics ?? {};
     const profileMeta = snapshot?.profileMeta ?? {};
+    const relationshipIntentResponse = snapshot?.relationshipIntent ?? {};
     const profileEmail =
       typeof profile?.email === 'string'
         ? profile.email
@@ -158,6 +210,15 @@ export async function getMatchesForUser(
     const interests = toStringArray(demographics.interests).length
       ? toStringArray(demographics.interests)
       : toStringArray(profile?.interests);
+    const relationshipIntent =
+      firstNonEmptyString([
+        relationshipIntentResponse.relationshipIntent,
+        relationshipIntentResponse.relationship_intent,
+        profile?.relationship_intent,
+      ]) || 'Not shared yet';
+    const profileCompleteness =
+      typeof profile?.profile_completeness === 'number' ? profile.profile_completeness : null;
+    const isVerified = Boolean(profile?.is_verified);
 
     return {
       id: row.id,
@@ -167,6 +228,14 @@ export async function getMatchesForUser(
       explanation: row.explanation || '',
       compatibilityReasons: toStringArray(row.compatibility_reasons),
       createdAt: row.created_at,
+      compatibilityScore:
+        typeof row.compatibility_score === 'number' ? row.compatibility_score : null,
+      tierLabel: typeof row.tier_label === 'string' ? row.tier_label : null,
+      conversationDisabled: Boolean(row.conversation_disabled),
+      conversationDisabledReason:
+        typeof row.conversation_disabled_reason === 'string'
+          ? row.conversation_disabled_reason
+          : null,
       matchedProfile: {
         fullName,
         firstName: parseFirstName(fullName),
@@ -176,6 +245,9 @@ export async function getMatchesForUser(
         photoUrl: photos[0] ?? null,
         photos,
         interests,
+        profileCompleteness,
+        isVerified,
+        relationshipIntent,
       },
     };
   });

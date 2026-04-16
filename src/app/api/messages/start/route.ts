@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     const { data: matchRow, error: matchCheckError } = await supabase
       .from('matches')
-      .select('id')
+      .select('*')
       .eq('user_id', user.id)
       .eq('matched_user_id', matchUserId)
       .eq('status', 'active')
@@ -41,6 +41,42 @@ export async function POST(req: NextRequest) {
 
     if (!matchRow) {
       return NextResponse.json({ error: 'No active match found for this user' }, { status: 403 });
+    }
+
+    const [{ data: blockRows }, { data: unmatchRows }] = await Promise.all([
+      supabase
+        .from('blocks')
+        .select('blocker_user_id,blocked_user_id')
+        .or(
+          `and(blocker_user_id.eq.${user.id},blocked_user_id.eq.${matchUserId}),and(blocker_user_id.eq.${matchUserId},blocked_user_id.eq.${user.id})`
+        ),
+      supabase
+        .from('unmatches')
+        .select('initiated_by_user_id,unmatched_user_id')
+        .or(
+          `and(initiated_by_user_id.eq.${user.id},unmatched_user_id.eq.${matchUserId}),and(initiated_by_user_id.eq.${matchUserId},unmatched_user_id.eq.${user.id})`
+        ),
+    ]);
+
+    if ((blockRows ?? []).length > 0) {
+      return NextResponse.json({ error: 'Messaging is unavailable for this match.' }, { status: 403 });
+    }
+
+    if ((unmatchRows ?? []).length > 0) {
+      return NextResponse.json({ error: 'This connection was unmatched.' }, { status: 403 });
+    }
+
+    const disabledReason =
+      typeof (matchRow as { conversation_disabled_reason?: unknown }).conversation_disabled_reason === 'string'
+        ? ((matchRow as { conversation_disabled_reason?: string }).conversation_disabled_reason ?? '').trim()
+        : '';
+    const conversationDisabled = Boolean((matchRow as { conversation_disabled?: unknown }).conversation_disabled);
+
+    if (conversationDisabled) {
+      return NextResponse.json(
+        { error: disabledReason || 'Messaging is disabled for this match.' },
+        { status: 403 }
+      );
     }
 
     const { data: myParticipantRows, error: myParticipantError } = await supabase

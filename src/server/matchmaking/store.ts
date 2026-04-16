@@ -319,7 +319,7 @@ export class InMemoryMatchmakingStore implements MatchmakingStore {
         .maybeSingle<Pick<PreferenceRow, 'user_id' | 'min_age' | 'max_age' | 'distance_km' | 'interested_in'>>(),
     ]);
 
-    const [blockRows, reportRows, shownRows] = await Promise.all([
+    const [blockRows, reportRows, shownRows, unmatchRows] = await Promise.all([
       supabase
         .from('blocks')
         .select('blocker_user_id,blocked_user_id')
@@ -336,6 +336,11 @@ export class InMemoryMatchmakingStore implements MatchmakingStore {
         .eq('user_id', userId)
         .gte('shown_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
         .returns<Array<{ candidate_user_id: string; shown_at: string }>>(),
+      supabase
+        .from('unmatches')
+        .select('initiated_by_user_id,unmatched_user_id')
+        .or(`initiated_by_user_id.eq.${userId},unmatched_user_id.eq.${userId}`)
+        .returns<Array<{ initiated_by_user_id: string; unmatched_user_id: string }>>(),
     ]);
 
     const excludedIds = new Set<string>([userId]);
@@ -350,6 +355,10 @@ export class InMemoryMatchmakingStore implements MatchmakingStore {
     }
     for (const row of shownRows.data ?? []) {
       excludedIds.add(row.candidate_user_id);
+    }
+    for (const row of unmatchRows.data ?? []) {
+      if (row.initiated_by_user_id === userId) excludedIds.add(row.unmatched_user_id);
+      if (row.unmatched_user_id === userId) excludedIds.add(row.initiated_by_user_id);
     }
 
     const minAge = selfPreference?.min_age ?? selfProfile?.preferred_min_age ?? 18;

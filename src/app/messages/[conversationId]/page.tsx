@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Send, Smile } from 'lucide-react';
+import { ArrowLeft, Send, ShieldCheck, Smile } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
+import ConversationGuidance from '@/components/messages/ConversationGuidance';
+import ConnectionSafetyActions from '@/components/safety/ConnectionSafetyActions';
 import { getSupabaseBrowserClient } from '../../../../utils/supabase/client';
 
 type MessageRow = {
@@ -23,12 +25,24 @@ type ProfileRow = {
   id: string;
   email?: string | null;
   first_name?: string | null;
+  profile_completeness?: number | null;
+  is_verified?: boolean | null;
+  relationship_intent?: string | null;
 };
 
 type OnboardingRow = {
   user_id: string;
   category: string;
   response: unknown;
+};
+
+type MatchRow = {
+  id: string;
+  matched_user_id: string;
+  compatibility_reasons?: string[] | null;
+  compatibility_score?: number | null;
+  conversation_disabled?: boolean | null;
+  conversation_disabled_reason?: string | null;
 };
 
 function firstNonEmpty(values: unknown[]): string {
@@ -57,7 +71,7 @@ export default function ConversationPage() {
   const conversationId = params.conversationId;
 
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [, setOtherUserId] = useState<string | null>(null);
+  const [otherUserId, setOtherUserId] = useState<string | null>(null);
   const [otherUserName, setOtherUserName] = useState<string>('Match');
   const [messages, setMessages] = useState<MessageRow[]>([]);
   const [input, setInput] = useState('');
@@ -65,6 +79,11 @@ export default function ConversationPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [compatibilityReasons, setCompatibilityReasons] = useState<string[]>([]);
+  const [relationshipIntent, setRelationshipIntent] = useState<string>('');
+  const [trustSignals, setTrustSignals] = useState<string[]>([]);
+  const [potentialFit, setPotentialFit] = useState(false);
+  const [messagingDisabledReason, setMessagingDisabledReason] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -88,7 +107,7 @@ export default function ConversationPage() {
         const { data: participantRowsRaw, error: participantsError } = await supabase
           .from('conversation_participants')
           .select('user_id')
-          .eq('conversation_id', conversationId)
+          .eq('conversation_id', conversationId);
         const participantRows = (participantRowsRaw ?? []) as ParticipantRow[];
 
         if (participantsError) {
@@ -104,10 +123,10 @@ export default function ConversationPage() {
         setOtherUserId(otherId);
 
         if (otherId) {
-          const [{ data: profile }, { data: demographics }] = await Promise.all([
+          const [{ data: profile }, { data: demographics }, { data: matchRowRaw }, { data: blockRows }, { data: unmatchRows }] = await Promise.all([
             supabase
               .from('profiles')
-              .select('id,email,first_name')
+              .select('id,email,first_name,profile_completeness,is_verified,relationship_intent')
               .eq('id', otherId)
               .maybeSingle(),
             supabase
@@ -116,14 +135,33 @@ export default function ConversationPage() {
               .eq('user_id', otherId)
               .eq('category', 'demographics')
               .maybeSingle(),
+            supabase
+              .from('matches')
+              .select('*')
+              .eq('user_id', user.id)
+              .eq('matched_user_id', otherId)
+              .eq('status', 'active')
+              .maybeSingle(),
+            supabase
+              .from('blocks')
+              .select('blocker_user_id,blocked_user_id')
+              .or(
+                `and(blocker_user_id.eq.${user.id},blocked_user_id.eq.${otherId}),and(blocker_user_id.eq.${otherId},blocked_user_id.eq.${user.id})`
+              ),
+            supabase
+              .from('unmatches')
+              .select('initiated_by_user_id,unmatched_user_id')
+              .or(
+                `and(initiated_by_user_id.eq.${user.id},unmatched_user_id.eq.${otherId}),and(initiated_by_user_id.eq.${otherId},unmatched_user_id.eq.${user.id})`
+              ),
           ]);
+
           const profileTyped = (profile ?? null) as ProfileRow | null;
           const demographicsTyped = (demographics ?? null) as OnboardingRow | null;
+          const matchRow = (matchRowRaw ?? null) as MatchRow | null;
 
           const response =
-            demographicsTyped &&
-            typeof demographicsTyped.response === 'object' &&
-            demographicsTyped.response !== null
+            demographicsTyped && typeof demographicsTyped.response === 'object' && demographicsTyped.response !== null
               ? (demographicsTyped.response as Record<string, unknown>)
               : {};
 
@@ -139,8 +177,42 @@ export default function ConversationPage() {
               emailPrefix,
             ]) || 'Match';
 
+          const reasons =
+            Array.isArray(matchRow?.compatibility_reasons) && matchRow?.compatibility_reasons
+              ? matchRow.compatibility_reasons.filter(item => typeof item === 'string').slice(0, 3)
+              : [];
+
+          const score = typeof matchRow?.compatibility_score === 'number' ? matchRow.compatibility_score : null;
+          const blocked = (blockRows ?? []).length > 0;
+          const unmatched = (unmatchRows ?? []).length > 0;
+          const disabledFromMatch = Boolean(matchRow?.conversation_disabled);
+          const disabledReason = firstNonEmpty([
+            matchRow?.conversation_disabled_reason,
+            blocked ? 'This user is blocked. Messaging is disabled.' : '',
+            unmatched ? 'This connection was unmatched. Messaging is disabled.' : '',
+            !matchRow ? 'No active match for this chat.' : '',
+          ]);
+
           if (active) {
             setOtherUserName(resolved);
+            setCompatibilityReasons(reasons);
+            setRelationshipIntent(
+              firstNonEmpty([profileTyped?.relationship_intent, (response as { relationshipIntent?: unknown }).relationshipIntent])
+            );
+            setPotentialFit(Boolean(score !== null && score >= 50 && score < 65));
+            setMessagingDisabledReason(
+              disabledFromMatch || blocked || unmatched || !matchRow ? disabledReason || 'Messaging is disabled.' : null
+            );
+
+            const profileCompleteness =
+              typeof profileTyped?.profile_completeness === 'number'
+                ? Math.round(profileTyped.profile_completeness * 100)
+                : null;
+            setTrustSignals([
+              profileCompleteness !== null ? `Profile completeness ${profileCompleteness}%` : 'Profile completeness updating',
+              profileTyped?.is_verified ? 'Verified profile' : 'Verification pending',
+              `Intent: ${firstNonEmpty([profileTyped?.relationship_intent]) || 'Not shared yet'}`,
+            ]);
           }
         }
 
@@ -180,9 +252,16 @@ export default function ConversationPage() {
     setInput(prev => `${prev}${emoji}`);
   };
 
+  const insertGuidancePrompt = (message: string) => {
+    setInput(prev => {
+      if (!prev.trim()) return message;
+      return `${prev.trim()} ${message}`;
+    });
+  };
+
   const onSend = async (event: FormEvent) => {
     event.preventDefault();
-    if (!currentUserId || !input.trim() || sending) return;
+    if (!currentUserId || !input.trim() || sending || Boolean(messagingDisabledReason)) return;
 
     setSending(true);
     setError(null);
@@ -239,6 +318,21 @@ export default function ConversationPage() {
             </Link>
             <h1 className="text-sm font-medium text-slate-200 sm:text-base">Chat with {otherUserName}</h1>
           </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {trustSignals.map(signal => (
+              <span
+                key={signal}
+                className="rounded-full border border-slate-700/80 bg-slate-800/70 px-2.5 py-1 text-[11px] text-slate-300"
+              >
+                {signal}
+              </span>
+            ))}
+            {potentialFit ? (
+              <span className="rounded-full border border-amber-400/35 bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-200">
+                Potential Fit
+              </span>
+            ) : null}
+          </div>
         </header>
 
         <section className="flex min-h-[60vh] flex-col rounded-2xl border border-slate-700/80 bg-slate-900/65 backdrop-blur">
@@ -271,6 +365,20 @@ export default function ConversationPage() {
           </div>
 
           <form onSubmit={onSend} className="border-t border-slate-700/80 p-3">
+            {otherUserId ? (
+              <div className="mb-3">
+                <ConnectionSafetyActions targetUserId={otherUserId} compact />
+              </div>
+            ) : null}
+
+            <div className="mb-3">
+              <ConversationGuidance
+                onPick={insertGuidancePrompt}
+                compatibilityReasons={compatibilityReasons}
+                relationshipIntent={relationshipIntent}
+              />
+            </div>
+
             {showEmojiPicker ? (
               <div className="mb-3 rounded-xl border border-slate-700/80 bg-slate-900/85 p-2">
                 <EmojiPicker
@@ -299,17 +407,24 @@ export default function ConversationPage() {
                 value={input}
                 onChange={event => setInput(event.target.value)}
                 placeholder="Type your message..."
-                className="h-11 flex-1 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-violet-400/50"
+                disabled={Boolean(messagingDisabledReason)}
+                className="h-11 flex-1 rounded-xl border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition focus:border-violet-400/50 disabled:cursor-not-allowed disabled:opacity-60"
               />
               <button
                 type="submit"
-                disabled={!input.trim() || sending || loading}
+                disabled={!input.trim() || sending || loading || Boolean(messagingDisabledReason)}
                 className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Send size={15} />
                 {sending ? 'Sending...' : 'Send'}
               </button>
             </div>
+            {messagingDisabledReason ? (
+              <p className="mt-2 flex items-center gap-1.5 text-xs text-amber-200">
+                <ShieldCheck size={12} />
+                {messagingDisabledReason}
+              </p>
+            ) : null}
             {error ? <p className="mt-2 text-xs text-rose-300">{error}</p> : null}
           </form>
         </section>

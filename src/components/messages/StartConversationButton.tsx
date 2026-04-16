@@ -1,16 +1,24 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { MessageCircle } from 'lucide-react';
+import { Lock, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 
-export default function StartConversationButton({ matchUserId }: { matchUserId: string }) {
+export default function StartConversationButton({
+  matchUserId,
+  disabled = false,
+  disabledReason,
+}: {
+  matchUserId: string;
+  disabled?: boolean;
+  disabledReason?: string | null;
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const onStart = async () => {
-    if (isLoading) return;
+    if (isLoading || disabled) return;
     setError(null);
     setIsLoading(true);
 
@@ -46,12 +54,13 @@ export default function StartConversationButton({ matchUserId }: { matchUserId: 
       <button
         type="button"
         onClick={onStart}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 py-3 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40 disabled:cursor-not-allowed disabled:opacity-70"
       >
-        <MessageCircle size={16} />
-        {isLoading ? 'Opening chat...' : 'Message This Match'}
+        {disabled ? <Lock size={16} /> : <MessageCircle size={16} />}
+        {disabled ? 'Messaging unavailable' : isLoading ? 'Opening chat...' : 'Message This Match'}
       </button>
+      {disabledReason ? <p className="mt-2 text-center text-xs text-amber-200">{disabledReason}</p> : null}
       {error ? <p className="mt-2 text-center text-xs text-rose-300">{error}</p> : null}
     </div>
   );
