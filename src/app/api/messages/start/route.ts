@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../utils/supabase/server';
+import { ensureConnectionTrackForPair } from '@/server/connectionTrack/service';
 
 function toInClause(ids: string[]): string {
   return `(${ids.map(id => `'${id.replace(/'/g, "''")}'`).join(',')})`;
@@ -131,6 +132,16 @@ export async function POST(req: NextRequest) {
         }
 
         if (directConversationRows && directConversationRows.length > 0) {
+          try {
+            await ensureConnectionTrackForPair(supabase, {
+              userA: user.id,
+              userB: matchUserId,
+              matchId: matchRow.id,
+              conversationId: directConversationRows[0].id,
+            });
+          } catch {
+            // Non-blocking: messaging should still work if Connection Track tables are not ready.
+          }
           return NextResponse.json({ conversationId: directConversationRows[0].id, created: false });
         }
       }
@@ -158,6 +169,17 @@ export async function POST(req: NextRequest) {
 
     if (participantsInsertError) {
       return NextResponse.json({ error: participantsInsertError.message }, { status: 500 });
+    }
+
+    try {
+      await ensureConnectionTrackForPair(supabase, {
+        userA: user.id,
+        userB: matchUserId,
+        matchId: matchRow.id,
+        conversationId: newConversation.id,
+      });
+    } catch {
+      // Non-blocking: messaging should still work if Connection Track tables are not ready.
     }
 
     return NextResponse.json({ conversationId: newConversation.id, created: true });

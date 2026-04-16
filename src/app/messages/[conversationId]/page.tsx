@@ -7,6 +7,7 @@ import { ArrowLeft, Send, ShieldCheck, Smile } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
 import ConversationGuidance from '@/components/messages/ConversationGuidance';
 import ConnectionSafetyActions from '@/components/safety/ConnectionSafetyActions';
+import ConnectionTrackPanel from '@/components/connection-track/ConnectionTrackPanel';
 import { getSupabaseBrowserClient } from '../../../../utils/supabase/client';
 
 type MessageRow = {
@@ -336,6 +337,9 @@ export default function ConversationPage() {
         </header>
 
         <section className="flex min-h-[60vh] flex-col rounded-2xl border border-[#DADDE1] bg-white shadow-[0_6px_18px_rgba(15,20,25,0.08)]">
+          <div className="border-b border-[#E4E6EB] p-3">
+            <ConnectionTrackPanel conversationId={conversationId} />
+          </div>
           <div className="flex-1 space-y-3 overflow-y-auto p-4">
             {loading ? <p className="text-sm text-[#777777]">Loading conversation...</p> : null}
             {!loading && groupedMessages.length === 0 ? (

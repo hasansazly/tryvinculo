@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../utils/supabase/server';
+import { deactivateConnectionTrackForPair } from '@/server/connectionTrack/service';
 
 async function archiveMyMatchRow(supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>, userId: string, targetUserId: string, reason: string) {
   const updatePayload = {
@@ -67,6 +68,16 @@ export async function POST(req: NextRequest) {
     const archiveError = await archiveMyMatchRow(supabase, user.id, targetUserId, reason);
     if (archiveError) {
       return NextResponse.json({ error: archiveError.message }, { status: 500 });
+    }
+
+    try {
+      await deactivateConnectionTrackForPair(supabase, {
+        userA: user.id,
+        userB: targetUserId,
+        reason: 'unmatched',
+      });
+    } catch {
+      // Non-blocking for unmatch action.
     }
 
     return NextResponse.json({ ok: true });
