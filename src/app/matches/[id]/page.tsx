@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2, ImageIcon, MapPin, MessageCircle, ShieldCheck, Sparkles, User } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ImageIcon, MapPin, ShieldCheck, Sparkles, User } from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '../../../../utils/supabase/server';
 import { findMatchById, getMatchesForUser } from '@/lib/matches';
+import StartConversationButton from '@/components/messages/StartConversationButton';
 
 type MatchDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -183,13 +184,7 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
         </section>
 
         <section className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-700/70 bg-slate-950/85 px-4 py-3 backdrop-blur sm:static sm:border-none sm:bg-transparent sm:px-0 sm:py-0">
-          <Link
-            href="/app/messages"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 py-3 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40"
-          >
-            <MessageCircle size={16} />
-            Message This Match
-          </Link>
+          <StartConversationButton matchUserId={match.matchedUserId} />
         </section>
       </div>
     </main>
