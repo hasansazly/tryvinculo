@@ -299,7 +299,11 @@ export default function OnboardingClient({ userEmail, initialProfile }: Onboardi
       .from('onboarding_responses')
       .upsert(onboardingRows, { onConflict: 'user_id,category' });
 
-    if (responsesError) {
+    const onboardingResponsesMissing =
+      responsesError?.code === 'PGRST205' ||
+      responsesError?.message?.includes("public.onboarding_responses");
+
+    if (responsesError && !onboardingResponsesMissing) {
       setLoading(false);
       setError(responsesError.message);
       return;

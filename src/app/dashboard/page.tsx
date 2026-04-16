@@ -30,10 +30,14 @@ export default async function DashboardPage() {
       .eq('id', user.id)
       .maybeSingle();
 
-    const { count: responsesCount } = await supabase
+    const { count: rawResponsesCount, error: responsesCountError } = await supabase
       .from('onboarding_responses')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', user.id);
+    const responsesTableMissing =
+      responsesCountError?.code === 'PGRST205' ||
+      responsesCountError?.message?.includes("public.onboarding_responses");
+    const responsesCount = responsesTableMissing ? 0 : rawResponsesCount;
 
     return (
       <main className="min-h-screen bg-slate-950 text-slate-100 px-4 py-10">
