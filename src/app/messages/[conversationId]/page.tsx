@@ -22,7 +22,6 @@ type ProfileRow = {
   id: string;
   email?: string | null;
   first_name?: string | null;
-  name?: string | null;
 };
 
 type OnboardingRow = {
@@ -106,7 +105,7 @@ export default function ConversationPage() {
           const [{ data: profile }, { data: demographics }] = await Promise.all([
             supabase
               .from('profiles')
-              .select('id,email,first_name,name')
+              .select('id,email,first_name')
               .eq('id', otherId)
               .maybeSingle(),
             supabase
@@ -135,7 +134,6 @@ export default function ConversationPage() {
               response.first_name,
               response.name,
               profileTyped?.first_name,
-              profileTyped?.name,
               emailPrefix,
             ]) || 'Match';
 
