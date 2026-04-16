@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Heart, Eye, EyeOff, ArrowRight, CheckCircle, Brain, Sparkles, Shield } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../../../utils/supabase/client';
 
 const PERKS = [
   { icon: Brain, text: 'AI-powered deep compatibility' },
@@ -63,16 +62,19 @@ export default function SignupPage() {
     }
 
     setLoading(true);
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
+    const response = await fetch('/api/auth/send-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
         shouldCreateUser: true,
-      },
+      }),
     });
     setLoading(false);
 
-    if (otpError) {
-      setError(otpError.message);
+    const result = await response.json();
+    if (!response.ok) {
+      setError(result?.error || 'Unable to send verification code.');
       return;
     }
 
@@ -92,15 +94,19 @@ export default function SignupPage() {
     }
 
     setLoading(true);
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email,
-      token: otpCode,
-      type: 'email',
+    const response = await fetch('/api/auth/verify-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        token: otpCode,
+      }),
     });
     setLoading(false);
 
-    if (verifyError) {
-      setError(verifyError.message);
+    const result = await response.json();
+    if (!response.ok) {
+      setError(result?.error || 'Unable to verify code.');
       return;
     }
 
