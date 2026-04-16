@@ -27,11 +27,11 @@ export default async function MatchesPage() {
   const matches = await getMatchesForUser(supabase, user.id);
 
   return (
-    <main className="min-h-screen bg-[#FAFAF9] px-4 py-10 text-[#111111]">
+    <main className="min-h-screen bg-[#F0F2F5] px-4 py-10 text-[#111111]">
       <div className="mx-auto w-full max-w-5xl">
-        <header className="mb-6 flex items-center justify-between rounded-2xl border border-[#E5E3DF] bg-white p-6">
+        <header className="mb-6 flex items-center justify-between rounded-2xl border border-[#DADDE1] bg-white p-6 shadow-[0_6px_18px_rgba(15,20,25,0.08)]">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.06em] text-[#4B3FA0]">Matches</p>
+            <p className="text-[11px] uppercase tracking-[0.06em] text-[#65676B]">Matches</p>
             <h1 className="mt-1 text-[28px] font-medium tracking-tight text-[#111111]">Your Real Matches</h1>
             <p className="mt-1 text-sm text-[#777777]">
               {matches.length > 0
@@ -41,7 +41,7 @@ export default async function MatchesPage() {
           </div>
           <Link
             href="/dashboard"
-            className="rounded-md border border-[#DDDDDD] px-4 py-2 text-sm text-[#555555] hover:bg-[#F7F6F4]"
+            className="rounded-md border border-[#CCD0D5] px-4 py-2 text-sm text-[#4E5966] hover:bg-[#F2F3F5]"
           >
             Back to dashboard
           </Link>
@@ -54,7 +54,7 @@ export default async function MatchesPage() {
             ))}
           </section>
         ) : (
-          <section className="rounded-2xl border border-dashed border-[#DAD6CE] bg-[#FCFBF9] p-8 text-center">
+          <section className="rounded-2xl border border-dashed border-[#CCD0D5] bg-[#F7F8FA] p-8 text-center">
             <p className="text-[#777777]">When you add rows to `matches`, they will appear here with reasons.</p>
           </section>
         )}

@@ -83,7 +83,7 @@ export default function ConnectionSafetyActions({
           type="button"
           onClick={() => runAction('report')}
           disabled={Boolean(loading)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-[#E8D7D7] bg-transparent px-3 py-1.5 text-xs font-medium text-[#CC3333] hover:bg-[#FDF4F4] disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-[#E4E6EB] bg-white px-3 py-1.5 text-xs font-medium text-[#CC3333] hover:bg-[#F7F8FA] disabled:opacity-60"
         >
           <AlertTriangle size={14} />
           {loading === 'report' ? 'Reporting...' : 'Report user'}
@@ -93,7 +93,7 @@ export default function ConnectionSafetyActions({
           type="button"
           onClick={() => runAction('unmatch')}
           disabled={Boolean(loading)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-[#E5E3DF] bg-transparent px-3 py-1.5 text-xs font-medium text-[#888888] hover:bg-[#F7F6F4] disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-[#E4E6EB] bg-white px-3 py-1.5 text-xs font-medium text-[#65676B] hover:bg-[#F7F8FA] disabled:opacity-60"
         >
           <UserX size={14} />
           {loading === 'unmatch' ? 'Unmatching...' : 'Unmatch'}
@@ -103,7 +103,7 @@ export default function ConnectionSafetyActions({
           type="button"
           onClick={() => runAction('block')}
           disabled={Boolean(loading)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-[#E5E3DF] bg-transparent px-3 py-1.5 text-xs font-medium text-[#888888] hover:bg-[#F7F6F4] disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-[#E4E6EB] bg-white px-3 py-1.5 text-xs font-medium text-[#65676B] hover:bg-[#F7F8FA] disabled:opacity-60"
         >
           <Ban size={14} />
           {loading === 'block' ? 'Blocking...' : 'Block user'}

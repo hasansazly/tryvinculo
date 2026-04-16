@@ -14,7 +14,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
     typeof match.compatibilityScore === 'number' && match.compatibilityScore >= 50 && match.compatibilityScore < 65;
 
   return (
-    <article className="overflow-hidden rounded-[14px] border border-[#E5E3DF] bg-white">
+    <article className="overflow-hidden rounded-[14px] border border-[#DADDE1] bg-white shadow-[0_6px_18px_rgba(15,20,25,0.08)]">
       <div className="relative h-52">
         {match.matchedProfile.photoUrl ? (
           <img
@@ -29,7 +29,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-white/85 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div className="inline-flex items-center rounded-[4px] border border-[#DDD8FA] bg-[#EDE9FA] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.06em] text-[#5B4FCF]">
+          <div className="inline-flex items-center rounded-[6px] border border-[#D7D0F2] bg-[#F1EDFF] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.06em] text-[#5B4FCF]">
             {match.matchedProfile.photos.length > 0
               ? `${match.matchedProfile.photos.length} photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
               : 'Profile pending photos'}
@@ -45,7 +45,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
       <div className="p-4">
         <p className="text-sm leading-6 text-[#555555]">{truncate(match.matchedProfile.bio || 'No bio shared yet.', 120)}</p>
 
-        <div className="mt-4 rounded-xl border border-[#E5E3DF] bg-[#FCFBF9] p-3">
+        <div className="mt-4 rounded-xl border border-[#E4E6EB] bg-[#F7F8FA] p-3">
           <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-[#888888]">Why this match fits</p>
           <p className="mt-1.5 text-sm font-normal text-[#333333]">{summary}</p>
         </div>
@@ -55,7 +55,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
             {reasons.map(reason => (
               <li
                 key={reason}
-                className="inline-flex items-center rounded-[20px] border border-[#DDD8FA] bg-[#EDE9FA] px-3 py-1 text-[12px] text-[#4B3FA0]"
+                className="inline-flex items-center rounded-[20px] border border-[#DDD8FA] bg-[#F4F3FF] px-3 py-1 text-[12px] text-[#4B3FA0]"
               >
                 {reason}
               </li>
@@ -71,7 +71,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
           ) : null}
           <Link
             href={`/matches/${match.id}`}
-            className="inline-flex w-full items-center justify-center rounded-lg border border-[#4B3FA0] bg-[#4B3FA0] px-4 py-3 text-sm font-medium text-white hover:bg-[#43388F]"
+            className="inline-flex w-full items-center justify-center rounded-lg border border-transparent bg-gradient-to-r from-[#4f5bd5] via-[#962fbf] to-[#d62976] px-4 py-3 text-sm font-medium text-white hover:opacity-95"
           >
             View match
           </Link>

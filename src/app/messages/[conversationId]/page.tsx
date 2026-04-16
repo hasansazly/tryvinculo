@@ -296,21 +296,22 @@ export default function ConversationPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white px-4 py-6 text-[#111111]">
+    <main className="min-h-screen bg-[#F0F2F5] px-4 py-6 text-[#111111]">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 opacity-100"
         style={{
-          background: 'transparent',
+          background:
+            'radial-gradient(780px 420px at -10% -10%, rgba(79,91,213,0.05), transparent 55%), radial-gradient(660px 360px at 110% 0%, rgba(214,41,118,0.04), transparent 55%)',
         }}
       />
 
       <div className="relative mx-auto flex w-full max-w-4xl flex-col gap-4">
-        <header className="border-b border-[#E5E3DF] bg-white p-4">
+        <header className="rounded-xl border border-[#DADDE1] bg-white p-4 shadow-[0_6px_18px_rgba(15,20,25,0.08)]">
           <div className="flex items-center justify-between gap-3">
             <Link
               href="/matches"
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#DDD9D1] bg-white px-3 py-1.5 text-sm text-[#4B3FA0] hover:bg-[#F4F3FF]"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#CCD0D5] bg-white px-3 py-1.5 text-sm text-[#4f5bd5] hover:bg-[#F2F3F5]"
             >
               <ArrowLeft size={14} />
               Back to matches
@@ -321,7 +322,7 @@ export default function ConversationPage() {
             {trustSignals.map(signal => (
               <span
                 key={signal}
-                className="rounded-[4px] border border-[#E2D8B8] bg-[#FFF8EC] px-2.5 py-1 text-[11px] text-[#A05A00]"
+                className="rounded-[4px] border border-[#D7D0F2] bg-[#F4F3FF] px-2.5 py-1 text-[11px] text-[#5B4FCF]"
               >
                 {signal}
               </span>
@@ -334,7 +335,7 @@ export default function ConversationPage() {
           </div>
         </header>
 
-        <section className="flex min-h-[60vh] flex-col rounded-2xl border border-[#E5E3DF] bg-white">
+        <section className="flex min-h-[60vh] flex-col rounded-2xl border border-[#DADDE1] bg-white shadow-[0_6px_18px_rgba(15,20,25,0.08)]">
           <div className="flex-1 space-y-3 overflow-y-auto p-4">
             {loading ? <p className="text-sm text-[#777777]">Loading conversation...</p> : null}
             {!loading && groupedMessages.length === 0 ? (
@@ -348,7 +349,7 @@ export default function ConversationPage() {
                       <div
                         className={`max-w-[85%] rounded-2xl border px-3 py-2 text-sm leading-6 sm:max-w-[70%] ${
                           mine
-                            ? 'rounded-br-[4px] border-[#4B3FA0] bg-[#4B3FA0] text-white'
+                            ? 'rounded-br-[4px] border-transparent bg-gradient-to-r from-[#4f5bd5] via-[#962fbf] to-[#d62976] text-white'
                             : 'rounded-bl-[4px] border-[#E5E3DF] bg-[#F0EEE8] text-[#111111]'
                         }`}
                       >
@@ -363,7 +364,7 @@ export default function ConversationPage() {
               : null}
           </div>
 
-          <form onSubmit={onSend} className="border-t border-[#E5E3DF] p-3">
+          <form onSubmit={onSend} className="border-t border-[#E4E6EB] p-3">
             {otherUserId ? (
               <div className="mb-3">
                 <ConnectionSafetyActions targetUserId={otherUserId} compact />
@@ -379,7 +380,7 @@ export default function ConversationPage() {
             </div>
 
             {showEmojiPicker ? (
-              <div className="mb-3 rounded-xl border border-[#E5E3DF] bg-white p-2">
+              <div className="mb-3 rounded-xl border border-[#E4E6EB] bg-white p-2">
                 <EmojiPicker
                   width="100%"
                   height={340}
@@ -395,8 +396,8 @@ export default function ConversationPage() {
                 onClick={() => setShowEmojiPicker(prev => !prev)}
                 className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border ${
                   showEmojiPicker
-                    ? 'border-[#4B3FA0] bg-[#F4F3FF] text-[#4B3FA0]'
-                    : 'border-[#E5E3DF] bg-[#F7F6F4] text-[#777777] hover:border-[#4B3FA0] hover:text-[#4B3FA0]'
+                    ? 'border-[#4f5bd5] bg-[#EEF0FF] text-[#4f5bd5]'
+                    : 'border-[#CCD0D5] bg-white text-[#65676B] hover:border-[#4f5bd5] hover:text-[#4f5bd5]'
                 }`}
                 aria-label="Toggle emoji picker"
               >
@@ -407,12 +408,12 @@ export default function ConversationPage() {
                 onChange={event => setInput(event.target.value)}
                 placeholder="Type your message..."
                 disabled={Boolean(messagingDisabledReason)}
-                className="h-11 flex-1 rounded-[24px] border border-[#E5E3DF] bg-[#F7F6F4] px-3 text-sm text-[#111111] outline-none transition focus:border-[#4B3FA0] disabled:cursor-not-allowed disabled:opacity-60"
+                className="h-11 flex-1 rounded-[24px] border border-[#CCD0D5] bg-[#F7F8FA] px-3 text-sm text-[#111111] outline-none transition focus:border-[#4f5bd5] disabled:cursor-not-allowed disabled:opacity-60"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || sending || loading || Boolean(messagingDisabledReason)}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#DDD8FA] bg-white px-4 text-sm font-medium text-[#4B3FA0] hover:bg-[#F4F3FF] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-transparent bg-gradient-to-r from-[#4f5bd5] via-[#962fbf] to-[#d62976] px-4 text-sm font-medium text-white hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Send size={15} />
                 {sending ? 'Sending...' : 'Send'}

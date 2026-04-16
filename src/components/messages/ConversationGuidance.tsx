@@ -43,14 +43,14 @@ export default function ConversationGuidance({
   };
 
   return (
-    <section className="border-t border-[#E5E3DF] bg-white p-3">
+    <section className="border-t border-[#E4E6EB] bg-white p-3">
       <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.06em] text-[#888888]">
         <Lightbulb size={14} />
         Conversation guidance
       </div>
       <div className="space-y-2">
         {(Object.keys(groups) as GuidanceKind[]).map(kind => (
-          <div key={kind} className="rounded-xl border border-[#E5E3DF] bg-white p-2.5">
+          <div key={kind} className="rounded-xl border border-[#E4E6EB] bg-[#F7F8FA] p-2.5">
             <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#888888]">{categoryTitles[kind]}</p>
             <div className="flex flex-wrap gap-2">
               {groups[kind].map(prompt => {
