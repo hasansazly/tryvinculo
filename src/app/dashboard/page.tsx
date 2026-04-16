@@ -41,61 +41,105 @@ export default async function DashboardPage() {
       responsesCountError?.message?.includes("public.onboarding_responses");
     const responsesCount = responsesTableMissing ? 0 : rawResponsesCount;
     const matches = await getMatchesForUser(supabase, user.id);
+    const displayName =
+      profile?.first_name ||
+      profile?.full_name ||
+      user.email?.split('@')[0] ||
+      user.email ||
+      'Member';
 
     return (
-      <main className="min-h-screen bg-slate-950 text-slate-100 px-4 py-10">
-        <div className="mx-auto w-full max-w-4xl space-y-6">
-          <header className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900/80 p-6">
-            <div>
-              <p className="text-xs uppercase tracking-wider text-violet-300">Dashboard</p>
-              <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-                Welcome back, {profile?.first_name || profile?.full_name || user.email}
-              </h1>
+      <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:py-10">
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 opacity-70"
+          style={{
+            background:
+              'radial-gradient(1200px 700px at -10% -10%, rgba(168,85,247,0.18), transparent 55%), radial-gradient(1100px 700px at 110% 0%, rgba(236,72,153,0.14), transparent 55%), radial-gradient(900px 500px at 50% 120%, rgba(59,130,246,0.14), transparent 60%)',
+          }}
+        />
+
+        <div className="relative mx-auto w-full max-w-6xl space-y-6">
+          <header className="rounded-3xl border border-slate-700/80 bg-slate-900/75 p-6 shadow-[0_28px_110px_rgba(2,6,23,0.55)] backdrop-blur">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.18em] text-violet-300">Dashboard</p>
+                <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Welcome back, {displayName}</h1>
+                <p className="mt-2 text-sm text-slate-400">
+                  {matches.length > 0
+                    ? `${matches.length} active match${matches.length > 1 ? 'es' : ''} ready with compatibility insights.`
+                    : 'Your dashboard is ready. New matches will appear here as soon as they are available.'}
+                </p>
+              </div>
+              <LogoutButton className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-800/80" />
             </div>
-            <LogoutButton className="rounded-lg border border-slate-700 px-4 py-2 text-sm hover:bg-slate-800" />
           </header>
 
-          <section className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-              <h2 className="text-lg font-medium">Profile Completion</h2>
-              <p className="mt-2 text-sm text-slate-400">
-                Onboarding status: <span className="text-emerald-400">Complete</span>
-              </p>
-              <p className="mt-1 text-sm text-slate-400">
-                Response categories saved: <span className="text-slate-200">{responsesCount ?? 0}</span>
-              </p>
-              <Link href="/app/profile" className="mt-4 inline-block text-sm text-violet-300 hover:text-violet-200">
-                Go to profile →
-              </Link>
+          <section className="grid gap-4 xl:grid-cols-[1fr,1.1fr]">
+            <div className="space-y-4">
+              <article className="rounded-3xl border border-slate-700/80 bg-slate-900/65 p-6 backdrop-blur">
+                <h2 className="text-lg font-medium">Profile Completion</h2>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-xl border border-slate-700/70 bg-slate-800/55 p-3.5">
+                    <p className="text-[11px] uppercase tracking-wider text-slate-400">Onboarding status</p>
+                    <p className="mt-1 text-sm font-medium text-emerald-300">Complete</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-700/70 bg-slate-800/55 p-3.5">
+                    <p className="text-[11px] uppercase tracking-wider text-slate-400">Saved categories</p>
+                    <p className="mt-1 text-sm font-medium text-slate-100">{responsesCount ?? 0}</p>
+                  </div>
+                </div>
+                <Link
+                  href="/app/profile"
+                  className="mt-5 inline-flex items-center justify-center rounded-xl border border-violet-400/30 bg-violet-500/10 px-4 py-2.5 text-sm font-medium text-violet-200 hover:border-violet-300/50 hover:bg-violet-500/20"
+                >
+                  Go to profile →
+                </Link>
+              </article>
+
+              <article className="rounded-3xl border border-slate-700/80 bg-slate-900/65 p-6 backdrop-blur">
+                <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-300">Today at a glance</h3>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-xl border border-slate-700/70 bg-slate-800/55 p-3.5">
+                    <p className="text-[11px] uppercase tracking-wider text-slate-400">Best matches</p>
+                    <p className="mt-1 text-2xl font-semibold text-slate-100">{matches.length}</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-700/70 bg-slate-800/55 p-3.5">
+                    <p className="text-[11px] uppercase tracking-wider text-slate-400">Profile quality</p>
+                    <p className="mt-1 text-2xl font-semibold text-violet-200">Strong</p>
+                  </div>
+                </div>
+              </article>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900/85 to-slate-950/70 p-5">
-              <div className="mb-3">
-                <h2 className="text-lg font-medium">Your Best Matches</h2>
+            <article className="rounded-3xl border border-slate-700/80 bg-slate-900/65 p-5 backdrop-blur">
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold tracking-tight">Your Best Matches</h2>
                 <p className="mt-1 text-sm text-slate-400">
                   {matches.length > 0
                     ? `${matches.length} active match${matches.length > 1 ? 'es' : ''} with compatibility insight`
                     : 'No active matches yet.'}
                 </p>
               </div>
+
               {matches.length > 0 ? (
-                <div className="mt-4 space-y-4">
-                  {matches.slice(0, 2).map(match => (
+                <div className="space-y-4">
+                  {matches.slice(0, 1).map(match => (
                     <MatchCard key={match.id} match={match} />
                   ))}
                   <Link
                     href="/matches"
-                    className="inline-flex w-full items-center justify-center rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 py-2.5 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40"
+                    className="inline-flex w-full items-center justify-center rounded-xl border border-violet-400/35 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/25 px-4 py-3 text-sm font-semibold text-violet-100 hover:from-violet-500/45 hover:to-fuchsia-500/40"
                   >
                     View all matches →
                   </Link>
                 </div>
               ) : (
-                <div className="mt-4 rounded-lg border border-dashed border-slate-700 px-4 py-6 text-center text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-slate-700/80 bg-slate-900/55 px-4 py-8 text-center text-sm text-slate-400">
                   No real matches yet. Add manual rows in `matches`.
                 </div>
               )}
-            </div>
+            </article>
           </section>
         </div>
       </main>
