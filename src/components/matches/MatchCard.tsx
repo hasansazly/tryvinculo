@@ -28,12 +28,12 @@ export default function MatchCard({ match }: { match: MatchView }) {
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#090E23] via-[#090E23]/35 to-transparent" />
+        <div className="absolute bottom-4 right-4 z-10 inline-flex items-center rounded-full border border-[#6D5CE8]/45 bg-[#19153B]/85 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#CBC1FF]">
+          {match.matchedProfile.photos.length > 0
+            ? `${match.matchedProfile.photos.length} photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
+            : 'Profile pending photos'}
+        </div>
         <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div className="inline-flex items-center rounded-full border border-[#6D5CE8]/45 bg-[#19153B]/85 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#CBC1FF]">
-            {match.matchedProfile.photos.length > 0
-              ? `${match.matchedProfile.photos.length} photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
-              : 'Profile pending photos'}
-          </div>
           <h3 className="mt-2 text-[38px] font-semibold leading-none tracking-tight text-[#F7F8FF]">
             {match.matchedProfile.firstName}
             {typeof match.matchedProfile.age === 'number' ? `, ${match.matchedProfile.age}` : ''}
