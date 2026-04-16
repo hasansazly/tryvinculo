@@ -47,7 +47,7 @@ function Sidebar() {
 
         if (!user) return;
 
-        const [{ data: profile }, { count: responsesCount }, { data: profileMetaRow }] = await Promise.all([
+        const [{ data: profile }, { count: responsesCount }, { data: profileMetaRow }, { data: demographicsRow }] = await Promise.all([
           supabase.from('profiles').select('full_name,email').eq('id', user.id).maybeSingle(),
           supabase.from('onboarding_responses').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
           supabase
@@ -56,9 +56,22 @@ function Sidebar() {
             .eq('user_id', user.id)
             .eq('category', 'profile_meta')
             .maybeSingle(),
+          supabase
+            .from('onboarding_responses')
+            .select('response')
+            .eq('user_id', user.id)
+            .eq('category', 'demographics')
+            .maybeSingle(),
         ]);
 
-        const name = profile?.full_name || profile?.email?.split('@')[0] || user.email?.split('@')[0] || 'You';
+        const demographicsName =
+          demographicsRow &&
+          typeof demographicsRow.response === 'object' &&
+          demographicsRow.response !== null &&
+          typeof (demographicsRow.response as { fullName?: unknown }).fullName === 'string'
+            ? (demographicsRow.response as { fullName?: string }).fullName?.trim()
+            : '';
+        const name = profile?.full_name?.trim() || demographicsName || profile?.email?.split('@')[0] || user.email?.split('@')[0] || 'You';
         const auraScore = Math.min(99, 65 + ((responsesCount ?? 0) * 4));
         const maybePhotos =
           profileMetaRow &&
