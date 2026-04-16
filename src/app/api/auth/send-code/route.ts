@@ -29,6 +29,8 @@ export async function POST(request: Request) {
 
     const supabaseUrl = getSupabaseUrl();
     const publishableKey = getSupabasePublishableKey();
+    const origin = new URL(request.url).origin;
+    const emailRedirectTo = `${origin}/auth/callback?next=/onboarding`;
     const otpUrl = `${supabaseUrl}/auth/v1/otp`;
     const response = await fetch(otpUrl, {
       method: 'POST',
@@ -40,6 +42,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         email,
         create_user: shouldCreateUser,
+        email_redirect_to: emailRedirectTo,
       }),
     });
 
