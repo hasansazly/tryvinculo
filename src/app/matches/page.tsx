@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import MatchCard from '@/components/matches/MatchCard';
+import MobileBottomNav from '@/components/navigation/MobileBottomNav';
 import { getMatchesForUser } from '@/lib/matches';
 import { createSupabaseServerClient } from '../../../utils/supabase/server';
 
@@ -27,7 +28,7 @@ export default async function MatchesPage() {
   const matches = await getMatchesForUser(supabase, user.id);
 
   return (
-    <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-[#F3F5FF]">
+    <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 pb-24 text-[#F3F5FF]">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 opacity-90"
@@ -68,6 +69,7 @@ export default async function MatchesPage() {
           </section>
         )}
       </div>
+      <MobileBottomNav />
     </main>
   );
 }

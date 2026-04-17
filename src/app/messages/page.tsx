@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { MessageCircle } from 'lucide-react';
+import MobileBottomNav from '@/components/navigation/MobileBottomNav';
 import { createSupabaseServerClient } from '../../../utils/supabase/server';
 
 type ParticipantRow = {
@@ -69,11 +70,12 @@ export default async function MessagesInboxPage() {
 
   if (myParticipantsError) {
     return (
-      <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-white">
+      <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 pb-24 text-white">
         <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
           <h1 className="text-xl font-semibold text-white">Messages</h1>
           <p className="mt-2 text-sm text-rose-300">{myParticipantsError.message}</p>
         </div>
+        <MobileBottomNav />
       </main>
     );
   }
@@ -83,7 +85,7 @@ export default async function MessagesInboxPage() {
 
   if (conversationIds.length === 0) {
     return (
-      <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-white">
+      <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 pb-24 text-white">
         <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
           <h1 className="text-xl font-semibold text-white">Messages</h1>
           <div className="mt-6 rounded-xl border border-white/10 bg-[#1E1E35] p-8 text-center">
@@ -91,6 +93,7 @@ export default async function MessagesInboxPage() {
             <p className="mt-3 text-sm text-white/70">No conversations yet. Open a match and click Message This Match.</p>
           </div>
         </div>
+        <MobileBottomNav />
       </main>
     );
   }
@@ -235,7 +238,7 @@ export default async function MessagesInboxPage() {
     });
 
   return (
-    <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-white">
+    <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 pb-24 text-white">
       <div className="mx-auto max-w-4xl">
         <header className="mb-6 rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
           <h1 className="text-2xl font-semibold tracking-tight text-white">Messages</h1>
@@ -266,6 +269,7 @@ export default async function MessagesInboxPage() {
           )}
         </section>
       </div>
+      <MobileBottomNav />
     </main>
   );
 }
