@@ -1,14 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bell, Shield, CreditCard, Trash2, ChevronRight, LogOut, HelpCircle } from 'lucide-react';
 
-interface ToggleItem {
-  label: string;
-  desc: string;
-  key: string;
-  value: boolean;
+function Section({ title, icon, children }: { title: string; icon: ReactNode; children: ReactNode }) {
+  return (
+    <div className="glass" style={{ borderRadius: 20, overflow: 'hidden', marginBottom: 16, background: '#FFFFFF', border: '1px solid #E5E3DF' }}>
+      <div style={{ padding: '16px 20px', borderBottom: '1px solid #ECE9E2', display: 'flex', alignItems: 'center', gap: 10 }}>
+        {icon}
+        <span style={{ fontSize: 16, fontWeight: 600, color: '#1A1A2E' }}>{title}</span>
+      </div>
+      <div style={{ padding: '8px 0' }}>{children}</div>
+    </div>
+  );
+}
+
+function Row({ label, desc, right }: { label: string; desc?: string; right: ReactNode }) {
+  return (
+    <div style={{ padding: '13px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+      <div>
+        <div style={{ fontSize: 14, fontWeight: 500, color: '#1A1A2E', marginBottom: desc ? 2 : 0 }}>{label}</div>
+        {desc && <div style={{ fontSize: 13, color: '#888780' }}>{desc}</div>}
+      </div>
+      {right}
+    </div>
+  );
 }
 
 export default function SettingsPage() {
@@ -41,43 +58,11 @@ export default function SettingsPage() {
     setPrivacy(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
   }
 
-  function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
-    return (
-      <div className={`toggle ${on ? 'on' : ''}`} onClick={onToggle} role="switch" aria-checked={on} />
-    );
-  }
-
-  function Section({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
-    return (
-      <div className="glass" style={{ borderRadius: 20, overflow: 'hidden', marginBottom: 16 }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 10 }}>
-          {icon}
-          <span style={{ fontSize: 14, fontWeight: 700 }}>{title}</span>
-        </div>
-        <div style={{ padding: '8px 0' }}>
-          {children}
-        </div>
-      </div>
-    );
-  }
-
-  function Row({ label, desc, right }: { label: string; desc?: string; right: React.ReactNode }) {
-    return (
-      <div style={{ padding: '13px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 500, color: '#f0f0ff', marginBottom: desc ? 2 : 0 }}>{label}</div>
-          {desc && <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>{desc}</div>}
-        </div>
-        {right}
-      </div>
-    );
-  }
-
   return (
     <div className="settings-page" style={{ padding: '32px', maxWidth: 680, width: '100%', margin: '0 auto' }}>
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>Settings</h1>
-        <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.4)' }}>Manage your preferences and account</p>
+        <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4, color: '#FFFFFF' }}>Settings</h1>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)' }}>Manage your preferences and account</p>
       </div>
 
       {/* ─ Discovery Preferences ─ */}
@@ -86,21 +71,21 @@ export default function SettingsPage() {
           {/* Show me toggle */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 2 }}>Show me on Vinculo</div>
-              <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>Turn off to hide your profile from discovery</div>
+              <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 2, color: '#1A1A2E' }}>Show me on Vinculo</div>
+              <div style={{ fontSize: 12, color: '#888780' }}>Turn off to hide your profile from discovery</div>
             </div>
             <div className={`toggle ${showMe ? 'on' : ''}`} onClick={() => setShowMe(!showMe)} role="switch" aria-checked={showMe} />
           </div>
 
           {/* Interested in */}
           <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', marginBottom: 10 }}>Interested in</div>
+            <div style={{ fontSize: 13, fontWeight: 500, color: '#1A1A2E', marginBottom: 10 }}>Interested in</div>
             <div className="settings-interest-row" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {['Men', 'Women', 'Everyone'].map(opt => (
                 <button
                   key={opt}
                   onClick={() => setInterestedIn(prev => prev.includes(opt) ? prev.filter(v => v !== opt) : [...prev, opt])}
-                  style={{ flex: 1, padding: '10px', borderRadius: 10, border: `1.5px solid ${interestedIn.includes(opt) ? 'rgba(139,92,246,0.5)' : 'rgba(255,255,255,0.08)'}`, background: interestedIn.includes(opt) ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.03)', color: interestedIn.includes(opt) ? '#c4b5fd' : 'rgba(240,240,255,0.55)', fontSize: 13, fontWeight: interestedIn.includes(opt) ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s' }}
+                  style={{ flex: 1, padding: '10px', borderRadius: 10, border: `1.5px solid ${interestedIn.includes(opt) ? 'rgba(139,92,246,0.5)' : '#E5E3DF'}`, background: interestedIn.includes(opt) ? 'rgba(139,92,246,0.12)' : '#FFFFFF', color: interestedIn.includes(opt) ? '#534AB7' : '#1A1A2E', fontSize: 13, fontWeight: interestedIn.includes(opt) ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s' }}
                 >
                   {opt}
                 </button>
@@ -111,16 +96,16 @@ export default function SettingsPage() {
           {/* Age range */}
           <div style={{ marginBottom: 16 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)' }}>Age range</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#a78bfa' }}>{minAge}–{maxAge}</span>
+              <span style={{ fontSize: 13, fontWeight: 500, color: '#1A1A2E' }}>Age range</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#534AB7' }}>{minAge}–{maxAge}</span>
             </div>
             <div style={{ display: 'flex', gap: 12 }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 11, color: 'rgba(240,240,255,0.3)', marginBottom: 6 }}>Min: {minAge}</div>
+                <div style={{ fontSize: 11, color: '#888780', marginBottom: 6 }}>Min: {minAge}</div>
                 <input type="range" min={18} max={70} value={minAge} onChange={e => setMinAge(Math.min(Number(e.target.value), maxAge - 1))} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 11, color: 'rgba(240,240,255,0.3)', marginBottom: 6 }}>Max: {maxAge}</div>
+                <div style={{ fontSize: 11, color: '#888780', marginBottom: 6 }}>Max: {maxAge}</div>
                 <input type="range" min={18} max={80} value={maxAge} onChange={e => setMaxAge(Math.max(Number(e.target.value), minAge + 1))} />
               </div>
             </div>
@@ -129,8 +114,8 @@ export default function SettingsPage() {
           {/* Distance */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)' }}>Maximum distance</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#a78bfa' }}>{distance} km</span>
+              <span style={{ fontSize: 13, fontWeight: 500, color: '#1A1A2E' }}>Maximum distance</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#534AB7' }}>{distance} km</span>
             </div>
             <input type="range" min={5} max={200} value={distance} onChange={e => setDistance(Number(e.target.value))} />
           </div>
@@ -172,7 +157,7 @@ export default function SettingsPage() {
         ))}
         <Row
           label="Blocked users"
-          right={<button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(240,240,255,0.4)', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontFamily: 'inherit' }}>Manage <ChevronRight size={14} /></button>}
+          right={<button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#5F5E5A', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontFamily: 'inherit' }}>Manage <ChevronRight size={14} /></button>}
         />
       </Section>
 
@@ -185,7 +170,7 @@ export default function SettingsPage() {
                 <span style={{ fontSize: 16, fontWeight: 700 }}>Free Plan</span>
                 <span style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 999, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: '#a78bfa' }}>CURRENT</span>
               </div>
-              <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.4)', marginBottom: 14 }}>3 daily matches · Basic features</div>
+              <div style={{ fontSize: 13, color: '#5F5E5A', marginBottom: 14 }}>3 daily matches · Basic features</div>
             </div>
           </div>
           <div className="settings-sub-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
@@ -194,9 +179,9 @@ export default function SettingsPage() {
               <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', marginBottom: 10 }}>5 matches + AI Coach + Date Planner</div>
               <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 12, padding: '9px' }}>Upgrade</button>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '14px 16px' }}>
+            <div style={{ background: '#FFFFFF', border: '1px solid #E5E3DF', borderRadius: 14, padding: '14px 16px' }}>
               <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>Deep — $39/mo</div>
-              <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', marginBottom: 10 }}>Unlimited + advanced features</div>
+              <div style={{ fontSize: 12, color: '#5F5E5A', marginBottom: 10 }}>Unlimited + advanced features</div>
               <button className="btn-ghost" style={{ width: '100%', justifyContent: 'center', fontSize: 12, padding: '9px' }}>Learn More</button>
             </div>
           </div>
@@ -206,19 +191,31 @@ export default function SettingsPage() {
       {/* ─ Support ─ */}
       <Section title="Support" icon={<HelpCircle size={16} color="#60a5fa" />}>
         {['Help Center', 'Report a problem', 'Contact us', 'Community Guidelines'].map(item => (
-          <Row key={item} label={item} right={<ChevronRight size={16} color="rgba(240,240,255,0.25)" />} />
+          <Row key={item} label={item} right={<ChevronRight size={16} color="#888780" />} />
         ))}
       </Section>
 
       {/* Danger zone */}
       <div className="glass" style={{ borderRadius: 20, overflow: 'hidden', marginBottom: 32 }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #F5D5D5', display: 'flex', alignItems: 'center', gap: 10 }}>
           <Trash2 size={16} color="#f43f5e" />
           <span style={{ fontSize: 14, fontWeight: 700, color: '#f43f5e' }}>Danger Zone</span>
         </div>
         <div style={{ padding: '8px 0' }}>
-          <Row label="Pause my account" desc="Temporarily hide your profile" right={<ChevronRight size={16} color="rgba(240,240,255,0.25)" />} />
-          <Row label="Delete account" desc="Permanently remove all your data" right={<ChevronRight size={16} color="rgba(244,63,94,0.5)" />} />
+          <div style={{ padding: '13px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 500, color: '#E24B4A', marginBottom: 2 }}>Pause my account</div>
+              <div style={{ fontSize: 13, color: '#A32D2D' }}>Temporarily hide your profile</div>
+            </div>
+            <ChevronRight size={16} color="#A32D2D" />
+          </div>
+          <div style={{ padding: '13px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 500, color: '#E24B4A', marginBottom: 2 }}>Delete account</div>
+              <div style={{ fontSize: 13, color: '#A32D2D' }}>Permanently remove all your data</div>
+            </div>
+            <ChevronRight size={16} color="#A32D2D" />
+          </div>
         </div>
       </div>
 
@@ -238,6 +235,14 @@ export default function SettingsPage() {
           .settings-page { padding: 24px 16px 32px !important; }
           .settings-interest-row button { flex: 1 1 calc(50% - 4px) !important; }
           .settings-sub-grid { grid-template-columns: 1fr !important; }
+        }
+        .settings-page .toggle {
+          background: #E7E5E1;
+          border: 1px solid #D6D3CF;
+        }
+        .settings-page .toggle.on {
+          background: #7F77DD;
+          border-color: #7F77DD;
         }
       `}</style>
     </div>

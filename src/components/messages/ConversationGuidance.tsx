@@ -43,16 +43,16 @@ export default function ConversationGuidance({
   };
 
   return (
-    <section className="rounded-xl border border-[#36416D] bg-[#101735] p-3">
-      <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.06em] text-[#A6AED0]">
+    <section className="rounded-xl border border-white/15 bg-[#0F142E] p-3">
+      <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.06em] text-white/50">
         <Flame size={14} />
         Spark prompts
       </div>
-      <p className="mb-2 text-xs text-[#8F99C4]">Spark now lives in chat as lightweight prompt support.</p>
+      <p className="mb-2 text-xs text-white/60">Spark now lives in chat as lightweight prompt support.</p>
       <div className="space-y-2">
         {(Object.keys(groups) as GuidanceKind[]).map(kind => (
-          <div key={kind} className="rounded-xl border border-[#36416D] bg-[#151C3C] p-2.5">
-            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#A6AED0]">{categoryTitles[kind]}</p>
+          <div key={kind} className="rounded-xl border border-white/15 bg-[#121938] p-2.5">
+            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-white/40">{categoryTitles[kind]}</p>
             <div className="flex flex-wrap gap-2">
               {groups[kind].map(prompt => {
                 const text = withContext(prompt, {
@@ -64,7 +64,7 @@ export default function ConversationGuidance({
                     key={`${kind}-${prompt}`}
                     type="button"
                     onClick={() => onPick(text)}
-                    className="rounded-[20px] border border-[#4E5A92] bg-[#1B2550] px-3 py-1.5 text-xs text-[#D8E1FF] hover:border-[#6C62E8] hover:bg-[#242E63]"
+                    className="rounded-[20px] border border-white/15 bg-[#1E1E35] px-3 py-1.5 text-xs text-white/80 hover:border-[#6C62E8] hover:bg-[#252540]"
                     title="Insert into message"
                   >
                     {text.length > 56 ? `${text.slice(0, 56)}...` : text}

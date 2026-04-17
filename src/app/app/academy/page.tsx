@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { BookOpen, Lock, Clock, Zap, ArrowRight, Trophy, CheckCircle } from 'lucide-react';
+import { BookOpen, Lock, Clock, Zap, ArrowRight, Trophy } from 'lucide-react';
 
 const COURSES = [
   {
@@ -83,7 +83,7 @@ export default function AcademyPage() {
   });
 
   return (
-    <div className="academy-page" style={{ padding: '32px', maxWidth: 820, width: '100%', margin: '0 auto' }}>
+    <div className="academy-page" style={{ padding: '32px', maxWidth: 820, width: '100%', margin: '0 auto', color: '#FFFFFF' }}>
 
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
@@ -91,31 +91,31 @@ export default function AcademyPage() {
           <div style={{ width: 36, height: 36, borderRadius: 11, background: 'linear-gradient(135deg, rgba(96,165,250,0.3), rgba(167,139,250,0.3))', border: '1px solid rgba(96,165,250,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <BookOpen size={18} color="#60a5fa" />
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em' }}>Vinculo Guidance</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', color: '#FFFFFF' }}>Vinculo Guidance</h1>
         </div>
-        <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.4)' }}>Support layer for active matches: practical guidance that helps conversations and dates go better.</p>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>Support layer for active matches: practical guidance that helps conversations and dates go better.</p>
       </div>
 
       {/* Progress */}
-      <div className="glass" style={{ borderRadius: 22, padding: '20px 24px', marginBottom: 20 }}>
+      <div className="glass" style={{ borderRadius: 22, padding: '20px 24px', marginBottom: 20, background: '#FFFFFF', border: '1px solid #E5E3DF' }}>
         <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.6)' }}>Your progress</span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#a78bfa' }}>{doneLessons}/{totalLessons} lessons</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>Your progress</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#534AB7' }}>{doneLessons}/{totalLessons} lessons</span>
             </div>
             <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.07)', overflow: 'hidden', marginBottom: 12 }}>
               <div style={{ height: '100%', width: `${pct}%`, background: 'linear-gradient(90deg, #7c3aed, #a78bfa)', borderRadius: 3 }} />
             </div>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
               {['🔥 5-day streak', `⭐ ${pct}% complete`, '🏆 1 guide completed'].map(s => (
-                <span key={s} style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>{s}</span>
+                <span key={s} style={{ fontSize: 12, color: '#5F5E5A' }}>{s}</span>
               ))}
             </div>
           </div>
           <div style={{ width: 68, height: 68, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(96,165,250,0.2))', border: '2px solid rgba(139,92,246,0.3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <span style={{ fontSize: 20, fontWeight: 800, color: '#a78bfa' }}>{pct}%</span>
-            <span style={{ fontSize: 9, color: 'rgba(240,240,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>done</span>
+            <span style={{ fontSize: 9, color: '#5F5E5A', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>done</span>
           </div>
         </div>
       </div>
@@ -129,12 +129,12 @@ export default function AcademyPage() {
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 11, fontWeight: 600, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Today&apos;s Guidance</div>
-            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{DAILY_LESSON.title}</div>
-            <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.5)', lineHeight: 1.6, marginBottom: 12 }}>{DAILY_LESSON.preview}</p>
+            <div style={{ fontSize: 17, fontWeight: 500, marginBottom: 6, color: '#FFFFFF' }}>{DAILY_LESSON.title}</div>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, marginBottom: 12 }}>{DAILY_LESSON.preview}</p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-              <span style={{ fontSize: 12, color: 'rgba(240,240,255,0.35)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <Clock size={12} /> {DAILY_LESSON.duration}
-              </span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Clock size={12} /> {DAILY_LESSON.duration}
+                </span>
               <button className="btn-primary" style={{ fontSize: 12, padding: '8px 16px' }}>
                 Read now <ArrowRight size={13} />
               </button>
@@ -149,7 +149,7 @@ export default function AcademyPage() {
           <button
             key={val}
             onClick={() => setFilter(val)}
-            style={{ flexShrink: 0, padding: '8px 16px', borderRadius: 10, border: `1.5px solid ${filter === val ? 'rgba(139,92,246,0.5)' : 'rgba(255,255,255,0.08)'}`, background: filter === val ? 'rgba(139,92,246,0.12)' : 'rgba(255,255,255,0.03)', color: filter === val ? '#c4b5fd' : 'rgba(240,240,255,0.5)', fontSize: 13, fontWeight: filter === val ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', whiteSpace: 'nowrap' }}
+            style={{ flexShrink: 0, padding: '8px 16px', borderRadius: 10, border: `1.5px solid ${filter === val ? '#FFFFFF' : 'rgba(255,255,255,0.2)'}`, background: filter === val ? '#FFFFFF' : 'transparent', color: filter === val ? '#1A1A2E' : 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: filter === val ? 600 : 400, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', whiteSpace: 'nowrap' }}
           >
             {label}
           </button>

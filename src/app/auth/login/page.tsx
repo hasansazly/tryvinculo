@@ -114,7 +114,7 @@ export default function LoginPage() {
       {/* Left panel — decorative */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="auth-desktop-panel auth-left-panel">
         {/* Gradient BG */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1A1A2E, #3C3489)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #1A1A2E 0%, #3C3489 100%)' }} />
         <div className="orb" style={{ width: 500, height: 500, background: 'rgba(124,58,237,0.15)', top: -100, left: -100 }} />
         <div className="orb" style={{ width: 400, height: 400, background: 'rgba(244,63,94,0.1)', bottom: 0, right: 0 }} />
 

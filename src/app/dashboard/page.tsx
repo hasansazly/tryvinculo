@@ -200,24 +200,24 @@ export default async function DashboardPage() {
           </header>
 
           <section className="grid gap-4 md:grid-cols-3">
-            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Today&apos;s matches</p>
+            <article className="rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-white/60">Today&apos;s matches</p>
               <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{todayPreview.length}</p>
-              <p className="mt-1 text-xs text-[#A9B0D0]">
+              <p className="mt-1 text-xs text-white/75">
                 {tier === 'paid' ? 'Paid limit: up to 6' : 'Free limit: up to 3'}
               </p>
             </article>
 
-            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Active conversations</p>
+            <article className="rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-white/60">Active conversations</p>
               <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{activeConversationCount}</p>
-              <p className="mt-1 text-xs text-[#A9B0D0]">Only currently active and messageable threads.</p>
+              <p className="mt-1 text-xs text-white/75">Only currently active and messageable threads.</p>
             </article>
 
-            <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/88 p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-              <p className="text-[11px] uppercase tracking-[0.07em] text-[#99A4D4]">Connection Track updates</p>
+            <article className="rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.07em] text-white/60">Connection Track updates</p>
               <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{connectionTrackSummary.recentUpdates}</p>
-              <p className="mt-1 text-xs text-[#A9B0D0]">
+              <p className="mt-1 text-xs text-white/75">
                 {connectionTrackSummary.activeTracks} active track{connectionTrackSummary.activeTracks === 1 ? '' : 's'}.
               </p>
             </article>

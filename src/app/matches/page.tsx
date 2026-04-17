@@ -40,9 +40,9 @@ export default async function MatchesPage() {
       <div className="relative mx-auto w-full max-w-6xl">
         <header className="mb-6 flex items-center justify-between rounded-[26px] border border-[#2A3158] bg-[#0B1024]/90 p-6 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.08em] text-[#A18BFF]">Matches</p>
+            <p className="text-[11px] uppercase tracking-[0.08em] text-white/50">Matches</p>
             <h1 className="mt-1 text-[40px] font-semibold tracking-tight text-[#F8F9FF]">Your Real Matches</h1>
-            <p className="mt-1 text-[18px] text-[#A9B0D0]">
+            <p className="mt-1 text-[18px] text-white/70">
               {matches.length > 0
                 ? `${matches.length} active matches ready to explore`
                 : 'No active matches yet. Add manually from Supabase for now.'}
@@ -50,7 +50,7 @@ export default async function MatchesPage() {
           </div>
           <Link
             href="/dashboard"
-            className="rounded-xl border border-[#3A4270] bg-[#101735] px-4 py-2 text-sm font-medium text-[#D4D9F4] transition hover:border-[#6B5CE7] hover:text-[#FFFFFF]"
+            className="rounded-xl border border-white/30 bg-transparent px-4 py-2 text-sm font-medium text-white transition hover:border-white/60"
           >
             Back to dashboard
           </Link>

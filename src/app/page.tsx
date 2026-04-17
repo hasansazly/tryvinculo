@@ -372,19 +372,19 @@ export default function LandingPage() {
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 14 }}>
               Most apps match you. None explain why.
             </h2>
-            <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)', maxWidth: 640, margin: '0 auto', lineHeight: 1.65 }}>
+            <p style={{ fontSize: 17, color: '#3D3D3D', maxWidth: 640, margin: '0 auto', lineHeight: 1.65 }}>
               Vinculo helps you decide where to invest your emotional energy before it gets wasted.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }} className="problem-grid">
             {PROBLEM_COMPARE.map(col => (
               <div key={col.title} className="glass" style={{ borderRadius: 20, padding: 28, border: col.tone === 'bright' ? '1px solid rgba(139,92,246,0.28)' : undefined }}>
-                <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: col.tone === 'bright' ? '#c4b5fd' : '#f0f0ff' }}>{col.title}</h3>
+                <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: col.tone === 'bright' ? '#3C3489' : '#6B6B6B' }}>{col.title}</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {col.points.map(point => (
                     <div key={point} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                       <CheckCircle size={14} color={col.tone === 'bright' ? '#a78bfa' : 'rgba(240,240,255,0.3)'} style={{ marginTop: 3, flexShrink: 0 }} />
-                      <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.62)', lineHeight: 1.6 }}>{point}</p>
+                      <p style={{ fontSize: 14, color: col.tone === 'bright' ? '#3C3489' : '#6B6B6B', lineHeight: 1.6 }}>{point}</p>
                     </div>
                   ))}
                 </div>
@@ -405,21 +405,21 @@ export default function LandingPage() {
             <h3 style={{ fontSize: 'clamp(26px, 3.4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 12 }}>
               Keep promising matches moving with purpose.
             </h3>
-            <p style={{ fontSize: 16, color: 'rgba(240,240,255,0.5)', lineHeight: 1.65, maxWidth: 760, marginBottom: 20 }}>
+            <p style={{ fontSize: 16, color: '#444441', lineHeight: 1.65, maxWidth: 760, marginBottom: 20 }}>
               Connection Track gives each match a lightweight shared cadence so conversations keep moving with purpose.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }} className="connection-grid">
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Daily micro-question</div>
-                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>One short prompt each day keeps momentum alive.</p>
+                <p style={{ fontSize: 13, color: '#444441', lineHeight: 1.6 }}>One short prompt each day keeps momentum alive.</p>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Weekly compatibility pulse</div>
-                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>See how your alignment evolves over time.</p>
+                <p style={{ fontSize: 13, color: '#444441', lineHeight: 1.6 }}>See how your alignment evolves over time.</p>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
                 <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Pre-date intention check</div>
-                <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>Set expectations before meeting to reduce anxiety and mixed signals.</p>
+                <p style={{ fontSize: 13, color: '#444441', lineHeight: 1.6 }}>Set expectations before meeting to reduce anxiety and mixed signals.</p>
               </div>
             </div>
           </div>
@@ -437,10 +437,10 @@ export default function LandingPage() {
             <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 16 }}>
               Built for calm, confident decisions.
             </h2>
-            <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)', maxWidth: 500, margin: '0 auto', lineHeight: 1.65 }}>
+            <p style={{ fontSize: 17, color: '#3D3D3D', maxWidth: 500, margin: '0 auto', lineHeight: 1.65 }}>
               Why This Match Fits leads the experience. Everything else exists to make your next choice clearer.
             </p>
-            <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.38)', maxWidth: 620, margin: '12px auto 0', lineHeight: 1.65 }}>
+            <p style={{ fontSize: 14, color: '#5F5E5A', maxWidth: 620, margin: '12px auto 0', lineHeight: 1.65 }}>
               Built on attachment theory and Big Five psychology, translated into practical match clarity.
             </p>
           </div>
@@ -460,7 +460,7 @@ export default function LandingPage() {
                     <Icon size={22} color={colors?.icon} />
                   </div>
                   <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10, letterSpacing: '-0.02em' }}>{f.title}</h3>
-                  <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.5)', lineHeight: 1.65 }}>{f.desc}</p>
+                  <p style={{ fontSize: 14, color: '#3D3D3D', lineHeight: 1.65 }}>{f.desc}</p>
                 </div>
               );
             })}
@@ -479,14 +479,14 @@ export default function LandingPage() {
             <h3 style={{ fontSize: 'clamp(26px, 3.4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 12 }}>
               Dating feels better when trust is visible.
             </h3>
-            <p style={{ fontSize: 16, color: 'rgba(240,240,255,0.5)', lineHeight: 1.65, maxWidth: 760, marginBottom: 20 }}>
+            <p style={{ fontSize: 16, color: '#3D3D3D', lineHeight: 1.65, maxWidth: 760, marginBottom: 20 }}>
               Vinculo helps you make clearer decisions with practical trust design, not promises of certainty.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }} className="connection-grid">
               {TRUST_FEATURES.map(feature => (
                 <div key={feature.title} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '16px 18px' }}>
                   <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{feature.title}</div>
-                  <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.52)', lineHeight: 1.6 }}>{feature.desc}</p>
+                  <p style={{ fontSize: 13, color: '#3D3D3D', lineHeight: 1.6 }}>{feature.desc}</p>
                 </div>
               ))}
             </div>
@@ -521,7 +521,7 @@ export default function LandingPage() {
                     </div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(139,92,246,0.6)', letterSpacing: '0.1em', marginBottom: 10 }}>STEP {s.step}</div>
                     <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10, letterSpacing: '-0.02em' }}>{s.title}</h3>
-                    <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)', lineHeight: 1.65 }}>{s.desc}</p>
+                    <p style={{ fontSize: 14, color: '#444441', lineHeight: 1.65 }}>{s.desc}</p>
                   </div>
                 </div>
               );
@@ -537,7 +537,7 @@ export default function LandingPage() {
             <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 16 }}>
               Real people,<br />real connections.
             </h2>
-            <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)' }}>Don&apos;t take our word for it.</p>
+            <p style={{ fontSize: 17, color: '#5F5E5A' }}>Don&apos;t take our word for it.</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }} className="testimonials-grid">
@@ -560,7 +560,7 @@ export default function LandingPage() {
                       <span style={{ fontWeight: 700, fontSize: 14 }}>{t.name}</span>
                       {t.verified && <CheckCircle size={13} color="#34d399" fill="rgba(52,211,153,0.2)" />}
                     </div>
-                    <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>Age {t.age} · {t.city}</div>
+                    <div style={{ fontSize: 12, color: '#5F5E5A' }}>Age {t.age} · {t.city}</div>
                   </div>
                 </div>
               </div>
@@ -574,7 +574,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
             <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 16 }}>Simple, fair pricing.</h2>
-            <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.45)' }}>Start with clarity. Upgrade when you want deeper guidance.</p>
+            <p style={{ fontSize: 17, color: '#5F5E5A' }}>Start with clarity. Upgrade when you want deeper guidance.</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 900, margin: '0 auto' }} className="pricing-grid">
@@ -687,7 +687,7 @@ export default function LandingPage() {
               <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 16, lineHeight: 1.15 }}>
                 Your person is out there.<br />Let&apos;s find them.
               </h2>
-              <p style={{ fontSize: 17, color: 'rgba(240,240,255,0.5)', marginBottom: 36, lineHeight: 1.65 }}>
+              <p style={{ fontSize: 17, color: '#3D3D3D', marginBottom: 36, lineHeight: 1.65 }}>
                 Join people who want something calmer, clearer, and more intentional than endless swiping.
               </p>
               <Link href="/auth/signup" className="btn-primary" style={{ fontSize: 17, padding: '16px 40px' }}>

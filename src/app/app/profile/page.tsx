@@ -862,6 +862,27 @@ export default function ProfilePage() {
       )}
 
       <style>{`
+        .profile-page .glass {
+          background: #FFFFFF !important;
+          border: 1px solid #E5E3DF !important;
+        }
+        .profile-page .glass p,
+        .profile-page .glass h2,
+        .profile-page .glass h3,
+        .profile-page .glass span,
+        .profile-page .glass div {
+          color: #1A1A2E;
+        }
+        .profile-page .glass [style*="text-transform: uppercase"] {
+          color: #5F5E5A !important;
+        }
+        .profile-page .glass .tag {
+          color: #4B3FA0 !important;
+        }
+        .profile-page .glass button,
+        .profile-page .glass button * {
+          color: inherit;
+        }
         @media (max-width: 767px) {
           .profile-page { padding: 24px 16px 32px !important; }
           .profile-header-row { flex-wrap: wrap; gap: 12px; }

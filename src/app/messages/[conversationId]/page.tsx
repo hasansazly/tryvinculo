@@ -323,7 +323,7 @@ export default function ConversationPage() {
             {trustSignals.map(signal => (
               <span
                 key={signal}
-                className="rounded-[4px] border border-[#5A4DB7] bg-[#1B1740] px-2.5 py-1 text-[11px] text-[#C8BCFF]"
+                className="rounded-[4px] border border-white/15 bg-white/10 px-2.5 py-1 text-[11px] text-white/80"
               >
                 {signal}
               </span>
@@ -341,6 +341,9 @@ export default function ConversationPage() {
             <ConnectionTrackPanel conversationId={conversationId} />
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto p-4">
+            {error?.toLowerCase().includes('connection track') ? (
+              <div className="rounded-md border border-[#5c2323] bg-[#3C1515] px-3 py-2 text-sm text-[#FF9999]">{error}</div>
+            ) : null}
             {loading ? <p className="text-sm text-[#A9B0D0]">Loading conversation...</p> : null}
             {!loading && groupedMessages.length === 0 ? (
               <p className="text-sm text-[#A9B0D0]">No messages yet. Say hi and start the conversation.</p>
@@ -354,11 +357,11 @@ export default function ConversationPage() {
                         className={`max-w-[85%] rounded-2xl border px-3 py-2 text-sm leading-6 shadow-[0_8px_24px_rgba(8,12,30,0.35)] sm:max-w-[70%] ${
                           mine
                             ? 'rounded-br-[4px] border-[#7E62F2]/55 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] text-white'
-                            : 'rounded-bl-[4px] border-[#36416D] bg-[#151C3C] text-[#E8EBFF]'
+                            : 'rounded-bl-[4px] border-[#36416D] bg-[#1E1E35] text-white/90'
                         }`}
                       >
                         <p>{message.body}</p>
-                        <p className="mt-1 text-[11px] text-[#B7BEDD]">
+                        <p className={`mt-1 text-[11px] ${mine ? 'text-white/70' : 'text-white/50'}`}>
                           {formatTimestamp(message.created_at)}
                         </p>
                       </div>
@@ -429,7 +432,9 @@ export default function ConversationPage() {
                 {messagingDisabledReason}
               </p>
             ) : null}
-            {error ? <p className="mt-2 text-xs text-[#FF8A8A]">{error}</p> : null}
+            {error && !error.toLowerCase().includes('connection track') ? (
+              <p className="mt-2 text-xs text-[#FF8A8A]">{error}</p>
+            ) : null}
           </form>
         </section>
       </div>

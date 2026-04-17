@@ -36,7 +36,7 @@ export default function CoachPage() {
   const [debriefDone, setDebriefDone] = useState(false);
 
   return (
-    <div className="coach-page" style={{ padding: '32px', maxWidth: 780, width: '100%', margin: '0 auto' }}>
+    <div className="coach-page" style={{ padding: '32px', maxWidth: 780, width: '100%', margin: '0 auto', color: '#FFFFFF' }}>
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
@@ -44,9 +44,9 @@ export default function CoachPage() {
           <div style={{ width: 36, height: 36, borderRadius: 11, background: 'linear-gradient(135deg, rgba(167,139,250,0.3), rgba(219,39,119,0.2))', border: '1px solid rgba(167,139,250,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Brain size={18} color="#a78bfa" />
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em' }}>AI Coach</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', color: '#FFFFFF' }}>AI Coach</h1>
         </div>
-        <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.4)' }}>Your personal relationship intelligence. Learns you, advises you, grows with you.</p>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>Your personal relationship intelligence. Learns you, advises you, grows with you.</p>
       </div>
 
       {/* Nav */}
@@ -98,22 +98,22 @@ export default function CoachPage() {
             ].map(item => (
               <div key={item.title} onClick={() => setSection(item.s as Section)} className="card-lift" style={{ borderRadius: 18, padding: '18px', cursor: 'pointer', background: item.colorBg, border: `1px solid ${item.colorBorder}` }}>
                 <div style={{ fontSize: 28, marginBottom: 10 }}>{item.icon}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>{item.title}</div>
-                <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.45)', lineHeight: 1.4, marginBottom: 12 }}>{item.sub}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4, color: '#FFFFFF' }}>{item.title}</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.82)', lineHeight: 1.4, marginBottom: 12 }}>{item.sub}</div>
                 <span style={{ fontSize: 12, color: item.color, fontWeight: 600 }}>Open →</span>
               </div>
             ))}
           </div>
 
-          <div className="glass" style={{ borderRadius: 20, padding: '20px 22px' }}>
+          <div className="glass" style={{ borderRadius: 20, padding: '20px 22px', background: '#FFFFFF', border: '1px solid #E5E3DF' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
               <Lightbulb size={15} color="#fbbf24" />
               <span style={{ fontSize: 13, fontWeight: 700, color: '#fbbf24' }}>Coach&apos;s Insight</span>
             </div>
-            <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.65)', lineHeight: 1.8 }}>
+            <p style={{ fontSize: 14, color: '#1A1A2E', lineHeight: 1.8 }}>
               Based on your Spark answers, you tend to open up gradually — which is healthy. But you sometimes over-explain when uncertain. Try being comfortable saying &ldquo;I&apos;m not sure&rdquo; without filling the silence.
             </p>
-            <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(251,191,36,0.07)', border: '1px solid rgba(251,191,36,0.15)', borderRadius: 10, fontSize: 12, color: '#fde68a' }}>
+            <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: 10, fontSize: 12, color: '#A05A00' }}>
               📚 Related: Communication Mastery → Lesson 3
             </div>
           </div>

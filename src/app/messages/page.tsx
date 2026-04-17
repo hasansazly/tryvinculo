@@ -69,9 +69,9 @@ export default async function MessagesInboxPage() {
 
   if (myParticipantsError) {
     return (
-      <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100">
-        <div className="mx-auto max-w-4xl rounded-2xl border border-slate-700/80 bg-slate-900/70 p-6">
-          <h1 className="text-xl font-semibold">Messages</h1>
+      <main className="min-h-screen bg-[#060814] px-4 py-8 text-white">
+        <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
+          <h1 className="text-xl font-semibold text-white">Messages</h1>
           <p className="mt-2 text-sm text-rose-300">{myParticipantsError.message}</p>
         </div>
       </main>
@@ -83,12 +83,12 @@ export default async function MessagesInboxPage() {
 
   if (conversationIds.length === 0) {
     return (
-      <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100">
-        <div className="mx-auto max-w-4xl rounded-2xl border border-slate-700/80 bg-slate-900/70 p-6">
-          <h1 className="text-xl font-semibold">Messages</h1>
-          <div className="mt-6 rounded-xl border border-slate-700/70 bg-slate-900/70 p-8 text-center">
-            <MessageCircle size={34} className="mx-auto text-slate-500" />
-            <p className="mt-3 text-sm text-slate-400">No conversations yet. Open a match and click Message This Match.</p>
+      <main className="min-h-screen bg-[#060814] px-4 py-8 text-white">
+        <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
+          <h1 className="text-xl font-semibold text-white">Messages</h1>
+          <div className="mt-6 rounded-xl border border-white/10 bg-[#1E1E35] p-8 text-center">
+            <MessageCircle size={34} className="mx-auto text-white/50" />
+            <p className="mt-3 text-sm text-white/70">No conversations yet. Open a match and click Message This Match.</p>
           </div>
         </div>
       </main>
@@ -235,11 +235,11 @@ export default async function MessagesInboxPage() {
     });
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100">
+    <main className="min-h-screen bg-[#060814] px-4 py-8 text-white">
       <div className="mx-auto max-w-4xl">
-        <header className="mb-6 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-6">
-          <h1 className="text-2xl font-semibold tracking-tight">Messages</h1>
-          <p className="mt-1 text-sm text-slate-400">{conversations.length} active conversation{conversations.length > 1 ? 's' : ''}</p>
+        <header className="mb-6 rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
+          <h1 className="text-2xl font-semibold tracking-tight text-white">Messages</h1>
+          <p className="mt-1 text-sm text-white/70">{conversations.length} active conversation{conversations.length > 1 ? 's' : ''}</p>
         </header>
 
         <section className="space-y-2">
@@ -248,19 +248,19 @@ export default async function MessagesInboxPage() {
               <Link
                 key={item.conversationId}
                 href={`/messages/${item.conversationId}`}
-                className="block rounded-xl border border-slate-700/80 bg-slate-900/70 p-4 hover:border-violet-400/40"
+                className="block rounded-xl border-b border-white/10 bg-[#1E1E35] p-4 transition hover:bg-[#252540] hover:border-[#6B5CE7]"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="truncate text-base font-medium text-slate-100">{item.name}</p>
-                    <p className="mt-1 truncate text-sm text-slate-400">{item.lastBody}</p>
+                    <p className="truncate text-base font-medium text-white">{item.name}</p>
+                    <p className="mt-1 truncate text-sm text-white/60">{item.lastBody}</p>
                   </div>
-                  <p className="shrink-0 text-xs text-slate-500">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
+                  <p className="shrink-0 text-xs text-white/40">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
                 </div>
               </Link>
             ))
           ) : (
-            <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-6 text-sm text-slate-400">
+            <div className="rounded-xl border border-white/10 bg-[#1E1E35] p-6 text-sm text-white/70">
               No active conversations. Blocked or unmatched chats are hidden here.
             </div>
           )}

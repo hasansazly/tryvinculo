@@ -15,6 +15,13 @@ type SectionProps = {
 };
 
 function Section({ title, subtitle, matches, emptyText, statusLabel }: SectionProps) {
+  const badgeStyles =
+    statusLabel === 'new'
+      ? { background: '#7F77DD', border: '#7F77DD', text: '#FFFFFF' }
+      : statusLabel === 'active'
+        ? { background: '#1D9E75', border: '#1D9E75', text: '#FFFFFF' }
+        : { background: '#3B2E12', border: '#8B6A2E', text: '#F4C977' };
+
   return (
     <section className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
       <div className="mb-4 flex items-start justify-between gap-4">
@@ -22,7 +29,14 @@ function Section({ title, subtitle, matches, emptyText, statusLabel }: SectionPr
           <h2 className="text-2xl font-semibold tracking-tight text-[#F8F9FF]">{title}</h2>
           <p className="mt-1 text-sm text-[#A9B0D0]">{subtitle}</p>
         </div>
-        <span className="rounded-full border border-[#4E5A92] bg-[#1B2550] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.05em] text-[#D8E1FF]">
+        <span
+          className="rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.05em]"
+          style={{
+            background: badgeStyles.background,
+            borderColor: badgeStyles.border,
+            color: badgeStyles.text,
+          }}
+        >
           {statusLabel}
         </span>
       </div>
@@ -80,9 +94,9 @@ export default async function AppDiscoverPage() {
         <header className="rounded-[26px] border border-[#2A3158] bg-[#0B1024]/90 p-6 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.14em] text-[#A18BFF]">Discover</p>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-white/50">Discover</p>
               <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#F8F9FF] sm:text-5xl">Curated Matches</h1>
-              <p className="mt-2 text-sm text-[#A9B0D0] sm:text-base">
+              <p className="mt-2 text-sm text-white/70 sm:text-base">
                 Focused browsing for relevant matches now. No endless inventory, no old history.
               </p>
             </div>
@@ -121,7 +135,7 @@ export default async function AppDiscoverPage() {
           />
         ) : (
           <section className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
-            <p className="flex items-center gap-2 text-sm text-[#A9B0D0]">
+            <p className="flex items-center gap-2 text-sm italic text-white/50">
               <Sparkles size={15} className="text-[#C9C0FF]" />
               Potential Fit section is available on paid plans.
             </p>
