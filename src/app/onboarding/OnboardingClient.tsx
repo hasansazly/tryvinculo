@@ -125,9 +125,9 @@ function TogglePills({
             style={{
               padding: '8px 14px',
               borderRadius: 999,
-              border: `1px solid ${isSelected ? 'rgba(139,92,246,0.65)' : 'rgba(255,255,255,0.13)'}`,
-              background: isSelected ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.04)',
-              color: isSelected ? '#ddd6fe' : isDisabled ? 'rgba(240,240,255,0.25)' : 'rgba(240,240,255,0.65)',
+              border: `1px solid ${isSelected ? '#7F77DD' : '#D7D1F8'}`,
+              background: isSelected ? '#EDE9FA' : '#F8F6FF',
+              color: isSelected ? '#2E275C' : isDisabled ? '#A7A2C5' : '#3D366E',
               cursor: isDisabled ? 'not-allowed' : 'pointer',
               fontSize: 13,
               fontFamily: 'inherit',
@@ -428,14 +428,14 @@ export default function OnboardingClient({
 
           {step === 4 && (
             <div>
-              <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)', marginBottom: 8 }}>Choose at least 3 values</div>
+              <div style={{ fontSize: 13, color: '#6B668A', marginBottom: 8 }}>Choose at least 3 values</div>
               <TogglePills options={VALUE_OPTIONS} selected={state.values} onToggle={value => toggleArray('values', value)} max={6} />
             </div>
           )}
 
           {step === 5 && (
             <div>
-              <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)', marginBottom: 8 }}>Lifestyle markers (pick 2+)</div>
+              <div style={{ fontSize: 13, color: '#6B668A', marginBottom: 8 }}>Lifestyle markers (pick 2+)</div>
               <TogglePills options={LIFESTYLE_OPTIONS} selected={state.lifestyle} onToggle={value => toggleArray('lifestyle', value)} max={6} />
             </div>
           )}
@@ -443,7 +443,7 @@ export default function OnboardingClient({
           {step === 6 && (
             <div style={{ display: 'grid', gap: 14 }}>
               <div>
-                <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)', marginBottom: 8 }}>Preferred dating pace</div>
+                <div style={{ fontSize: 13, color: '#6B668A', marginBottom: 8 }}>Preferred dating pace</div>
                 <select className="input-field" value={state.pace} onChange={e => setField('pace', e.target.value)}>
                   <option value="">Select pace</option>
                   <option value="slow">Slow and intentional</option>
@@ -452,7 +452,7 @@ export default function OnboardingClient({
                 </select>
               </div>
               <div>
-                <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)', marginBottom: 8 }}>Dealbreakers</div>
+                <div style={{ fontSize: 13, color: '#6B668A', marginBottom: 8 }}>Dealbreakers</div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <input
                     className="input-field"
@@ -490,23 +490,23 @@ export default function OnboardingClient({
           {step === 7 && (
             <div style={{ display: 'grid', gap: 14 }}>
               <div>
-                <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)', marginBottom: 8 }}>Interested in</div>
+                <div style={{ fontSize: 13, color: '#6B668A', marginBottom: 8 }}>Interested in</div>
                 <TogglePills options={['Men', 'Women', 'Everyone']} selected={state.interestedIn} onToggle={value => toggleArray('interestedIn', value)} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)', marginBottom: 8 }}>Minimum age</div>
+                  <div style={{ fontSize: 13, color: '#6B668A', marginBottom: 8 }}>Minimum age</div>
                   <input className="input-field" type="number" min={18} max={80} value={state.minAge} onChange={e => setField('minAge', Number(e.target.value))} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)', marginBottom: 8 }}>Maximum age</div>
+                  <div style={{ fontSize: 13, color: '#6B668A', marginBottom: 8 }}>Maximum age</div>
                   <input className="input-field" type="number" min={18} max={80} value={state.maxAge} onChange={e => setField('maxAge', Number(e.target.value))} />
                 </div>
               </div>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.55)' }}>Distance radius</div>
-                  <div style={{ fontSize: 13, color: '#c4b5fd' }}>{state.distanceKm} km</div>
+                  <div style={{ fontSize: 13, color: '#6B668A' }}>Distance radius</div>
+                  <div style={{ fontSize: 13, color: '#5A4FCF' }}>{state.distanceKm} km</div>
                 </div>
                 <input type="range" min={5} max={250} value={state.distanceKm} onChange={e => setField('distanceKm', Number(e.target.value))} />
               </div>
