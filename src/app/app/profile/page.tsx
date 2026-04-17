@@ -46,6 +46,7 @@ type ProfileViewUser = {
   personalityTraits: string[];
   loveLanguage: string;
   meta: ProfileMeta;
+  auraCategories: AuraCategoryScore[];
 };
 
 type EditFormState = {
@@ -60,8 +61,135 @@ type EditFormState = {
   kids: string;
 };
 
+type AuraCategoryKey =
+  | 'profile_completeness'
+  | 'intent_clarity'
+  | 'communication_preferences'
+  | 'values_coverage'
+  | 'lifestyle_preferences';
+
+type AuraCategoryScore = {
+  key: AuraCategoryKey;
+  label: string;
+  score: number;
+  desc: string;
+};
+
+const AURA_WEIGHTS: Record<AuraCategoryKey, number> = {
+  profile_completeness: 0.3,
+  intent_clarity: 0.2,
+  communication_preferences: 0.15,
+  values_coverage: 0.2,
+  lifestyle_preferences: 0.15,
+};
+
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter(item => typeof item === 'string') : [];
+}
+
+function clampScore(value: number): number {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function ratioScore(current: number, target: number): number {
+  if (target <= 0) return 0;
+  return clampScore((Math.min(current, target) / target) * 100);
+}
+
+function getAuraScores(input: {
+  name: string;
+  age: number;
+  bio: string;
+  photosCount: number;
+  location: string;
+  occupation: string;
+  relationshipGoal: string;
+  communicationStyle: string;
+  loveLanguage: string;
+  attachmentStyle: string;
+  values: string[];
+  interests: string[];
+  lifestyle: string[];
+  drinking: string;
+  smoking: string;
+  kids: string;
+}) {
+  const profileCompleteness = clampScore(
+    (input.photosCount > 0 ? 20 : 0) +
+      (input.bio.trim().length >= 40 ? 20 : 0) +
+      (input.location.trim().length > 0 ? 15 : 0) +
+      (input.occupation.trim().length > 0 ? 15 : 0) +
+      (input.age > 0 ? 10 : 0) +
+      (ratioScore(input.interests.length, 3) * 0.1) +
+      (ratioScore(input.values.length, 3) * 0.1)
+  );
+
+  const intentClarity = clampScore(
+    (input.relationshipGoal.trim().length > 0 ? 60 : 0) +
+      (input.bio.trim().length >= 40 ? 20 : 0) +
+      (input.values.length >= 3 ? 20 : input.values.length > 0 ? 10 : 0)
+  );
+
+  const communicationPreferences = clampScore(
+    (input.communicationStyle.trim().length > 0 ? 45 : 0) +
+      (input.loveLanguage.trim().length > 0 ? 25 : 0) +
+      (input.attachmentStyle.trim().length > 0 ? 15 : 0) +
+      (input.bio.trim().length >= 40 ? 15 : 0)
+  );
+
+  const valuesCoverage = clampScore(
+    ratioScore(input.values.length, 5) * 0.7 + ratioScore(input.interests.length, 5) * 0.3
+  );
+
+  const lifestyleDeclaredCount =
+    (input.drinking.trim().length > 0 ? 1 : 0) +
+    (input.smoking.trim().length > 0 ? 1 : 0) +
+    (input.kids.trim().length > 0 ? 1 : 0);
+  const lifestylePreferences = clampScore(
+    ratioScore(input.lifestyle.length, 4) * 0.4 +
+      (input.location.trim().length > 0 ? 20 : 0) +
+      (input.occupation.trim().length > 0 ? 15 : 0) +
+      ratioScore(lifestyleDeclaredCount, 3) * 0.25
+  );
+
+  const categories: AuraCategoryScore[] = [
+    {
+      key: 'profile_completeness',
+      label: 'Profile Completeness',
+      score: profileCompleteness,
+      desc: 'How complete your core profile fields are.',
+    },
+    {
+      key: 'intent_clarity',
+      label: 'Intent Clarity',
+      score: intentClarity,
+      desc: 'How clearly your relationship intent is expressed.',
+    },
+    {
+      key: 'communication_preferences',
+      label: 'Communication Preferences',
+      score: communicationPreferences,
+      desc: 'How well your communication preferences are defined.',
+    },
+    {
+      key: 'values_coverage',
+      label: 'Values Coverage',
+      score: valuesCoverage,
+      desc: 'How much value and interest context your profile provides.',
+    },
+    {
+      key: 'lifestyle_preferences',
+      label: 'Lifestyle Preferences',
+      score: lifestylePreferences,
+      desc: 'How much day-to-day lifestyle context is filled out.',
+    },
+  ];
+
+  const auraScore = clampScore(
+    categories.reduce((sum, category) => sum + category.score * AURA_WEIGHTS[category.key], 0)
+  );
+
+  return { categories, auraScore };
 }
 
 export default function ProfilePage() {
@@ -180,15 +308,24 @@ export default function ProfilePage() {
           personalityTraits: toStringArray(profileMeta.personalityTraits),
         };
 
-        const completionSignals = [
-          Boolean(profile?.bio || demographics.bio),
-          interests.length >= 3,
-          values.length >= 3,
-          lifestyle.length >= 2,
-          Boolean(relationshipGoal),
-          Boolean(meta.photos?.length),
-        ].filter(Boolean).length;
-        const auraScore = Math.min(99, 62 + completionSignals * 6);
+        const { categories: auraCategories, auraScore } = getAuraScores({
+          name,
+          age,
+          bio: profile?.bio || (typeof demographics.bio === 'string' ? demographics.bio : '') || '',
+          photosCount: meta.photos?.length ?? 0,
+          location: profile?.location || (typeof demographics.location === 'string' ? demographics.location : '') || '',
+          occupation: profile?.occupation || (typeof demographics.occupation === 'string' ? demographics.occupation : '') || '',
+          relationshipGoal,
+          communicationStyle,
+          loveLanguage: meta.loveLanguage || communicationStyle,
+          attachmentStyle: meta.attachmentStyle ?? '',
+          values,
+          interests,
+          lifestyle,
+          drinking: meta.drinking ?? '',
+          smoking: meta.smoking ?? '',
+          kids: meta.kids ?? '',
+        });
 
         const nextUser: ProfileViewUser = {
           userId: authUser.id,
@@ -205,6 +342,7 @@ export default function ProfilePage() {
           personalityTraits: meta.personalityTraits?.length ? meta.personalityTraits : lifestyle,
           loveLanguage: meta.loveLanguage || communicationStyle,
           meta,
+          auraCategories,
         };
 
         if (active) {
@@ -503,13 +641,7 @@ export default function ProfilePage() {
     );
   }
 
-  const AURA_DIMENSIONS = [
-    { label: 'Emotional Intelligence', score: Math.min(98, user.auraScore + 1), desc: 'Shows empathy and thoughtful responses' },
-    { label: 'Communication Style', score: Math.min(97, user.auraScore - 2), desc: 'Clear intent and message consistency' },
-    { label: 'Lifestyle Fit', score: Math.min(95, user.auraScore - 4), desc: 'Aligned pace and routine preferences' },
-    { label: 'Values Alignment', score: Math.min(98, user.auraScore + 2), desc: 'Strong overlap in priorities and values' },
-    { label: 'Depth', score: Math.min(96, user.auraScore), desc: 'Signals meaningful connection potential' },
-  ];
+  const AURA_DIMENSIONS = user.auraCategories;
 
   const detailItems = [
     { label: 'Height', value: user.meta.height ?? '' },
@@ -765,10 +897,10 @@ export default function ProfilePage() {
           <div className="glass aura-card" style={{ borderRadius: 20, padding: '20px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
               <Brain size={16} color="#a78bfa" />
-              <span style={{ fontSize: 15, fontWeight: 700, color: '#a78bfa' }}>Your Aura Profile</span>
+              <span style={{ fontSize: 15, fontWeight: 700, color: '#a78bfa' }}>Aura Readiness</span>
             </div>
             <p style={{ fontSize: 14, color: '#5F5B74', lineHeight: 1.7, marginBottom: 20 }}>
-              Aura reflects how complete and aligned your profile is across intent, values, and communication preferences.
+              These scores reflect profile readiness and clarity based on completed fields. They are not personality judgments.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {AURA_DIMENSIONS.map(dim => {
