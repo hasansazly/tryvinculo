@@ -11,6 +11,9 @@ type OnboardingClientProps = {
     fullName: string;
     age: string;
     gender: string;
+    university: string;
+    major: string;
+    year: string;
     location: string;
     occupation: string;
     bio: string;
@@ -37,6 +40,9 @@ type FormState = {
   fullName: string;
   age: string;
   gender: string;
+  university: string;
+  major: string;
+  year: string;
   location: string;
   occupation: string;
   bio: string;
@@ -157,6 +163,9 @@ export default function OnboardingClient({
     fullName: initialProfile.fullName,
     age: initialProfile.age,
     gender: initialProfile.gender,
+    university: initialProfile.university || 'Temple University',
+    major: initialProfile.major,
+    year: initialProfile.year,
     location: initialProfile.location,
     occupation: initialProfile.occupation,
     bio: initialProfile.bio,
@@ -306,7 +315,22 @@ export default function OnboardingClient({
     );
 
     const onboardingRows = [
-      { user_id: user.id, category: 'demographics', response: { fullName: state.fullName, age, gender: state.gender, location: state.location, occupation: state.occupation, bio: state.bio, interests: state.interests } },
+      {
+        user_id: user.id,
+        category: 'demographics',
+        response: {
+          fullName: state.fullName,
+          age,
+          gender: state.gender,
+          university: state.university,
+          major: state.major,
+          year: state.year,
+          location: state.location,
+          occupation: state.occupation,
+          bio: state.bio,
+          interests: state.interests,
+        },
+      },
       { user_id: user.id, category: 'relationship_intent', response: { relationshipIntent: state.relationshipIntent } },
       { user_id: user.id, category: 'communication_style', response: { communicationStyle: state.communicationStyle } },
       { user_id: user.id, category: 'values', response: { values: state.values } },
@@ -392,6 +416,21 @@ export default function OnboardingClient({
                   <option value="woman">Woman</option>
                   <option value="nonbinary">Non-binary</option>
                   <option value="other">Other</option>
+                </select>
+              </div>
+              <select className="input-field" value={state.university} onChange={e => setField('university', e.target.value)}>
+                <option value="Temple University">Temple University</option>
+              </select>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <input className="input-field" placeholder="Major (optional)" value={state.major} onChange={e => setField('major', e.target.value)} />
+                <select className="input-field" value={state.year} onChange={e => setField('year', e.target.value)}>
+                  <option value="">Select year (optional)</option>
+                  <option value="Freshman">Freshman</option>
+                  <option value="Sophomore">Sophomore</option>
+                  <option value="Junior">Junior</option>
+                  <option value="Senior">Senior</option>
+                  <option value="Graduate">Graduate</option>
+                  <option value="Alumni">Alumni</option>
                 </select>
               </div>
               <input className="input-field" placeholder="City, State" value={state.location} onChange={e => setField('location', e.target.value)} />
