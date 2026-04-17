@@ -381,6 +381,7 @@ export default function ConversationPage() {
             <div className="mb-3">
               <ConversationGuidance
                 onPick={insertGuidancePrompt}
+                conversationId={conversationId}
                 compatibilityReasons={compatibilityReasons}
                 relationshipIntent={relationshipIntent}
               />

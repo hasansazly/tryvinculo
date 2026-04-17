@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
 import { Flame } from 'lucide-react';
 import { CONVERSATION_BUTTON_COPY, CONVERSATION_PROMPTS } from '@/lib/conversationSupportCopy';
 
@@ -21,20 +22,76 @@ function withContext(prompt: string, context: { reason?: string; intent?: string
 
 export default function ConversationGuidance({
   onPick,
+  conversationId,
   compatibilityReasons,
   relationshipIntent,
 }: {
   onPick: (message: string) => void;
+  conversationId: string;
   compatibilityReasons: string[];
   relationshipIntent?: string;
 }) {
   const primaryReason = compatibilityReasons[0] ?? 'shared priorities';
 
-  const groups: Record<GuidanceKind, string[]> = {
-    startEasy: CONVERSATION_PROMPTS.opening.thoughtful.slice(0, 3),
-    goDeeper: CONVERSATION_PROMPTS.substance.direct.slice(0, 3),
-    suggestPlan: CONVERSATION_PROMPTS.plan.playful.slice(0, 3),
-  };
+  const fallbackGroups = useMemo(
+    () => ({
+      startEasy: CONVERSATION_PROMPTS.opening.thoughtful.slice(0, 3),
+      goDeeper: CONVERSATION_PROMPTS.substance.direct.slice(0, 3),
+      suggestPlan: CONVERSATION_PROMPTS.plan.playful.slice(0, 3),
+    }),
+    []
+  );
+  const [groups, setGroups] = useState<Record<GuidanceKind, string[]>>(fallbackGroups);
+  const [loading, setLoading] = useState(false);
+  const [source, setSource] = useState<'ai' | 'fallback'>('fallback');
+
+  useEffect(() => {
+    let active = true;
+
+    const load = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/messages/spark-suggestions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            conversationId,
+            compatibilityReasons,
+            relationshipIntent,
+          }),
+        });
+
+        if (!res.ok) throw new Error('Failed to load AI suggestions');
+        const json = (await res.json()) as {
+          source?: 'ai' | 'fallback';
+          suggestions?: Partial<Record<GuidanceKind, string[]>>;
+        };
+
+        const nextGroups: Record<GuidanceKind, string[]> = {
+          startEasy: (json.suggestions?.startEasy ?? fallbackGroups.startEasy).slice(0, 3),
+          goDeeper: (json.suggestions?.goDeeper ?? fallbackGroups.goDeeper).slice(0, 3),
+          suggestPlan: (json.suggestions?.suggestPlan ?? fallbackGroups.suggestPlan).slice(0, 3),
+        };
+
+        if (active) {
+          setGroups(nextGroups);
+          setSource(json.source === 'ai' ? 'ai' : 'fallback');
+        }
+      } catch {
+        if (active) {
+          setGroups(fallbackGroups);
+          setSource('fallback');
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    void load();
+    return () => {
+      active = false;
+    };
+  }, [conversationId, compatibilityReasons, relationshipIntent, fallbackGroups]);
 
   const categoryTitles: Record<GuidanceKind, string> = {
     startEasy: CONVERSATION_BUTTON_COPY.startEasy.label,
@@ -48,7 +105,13 @@ export default function ConversationGuidance({
         <Flame size={14} />
         Spark prompts
       </div>
-      <p className="mb-2 text-xs text-white/60">Spark now lives in chat as lightweight prompt support.</p>
+      <p className="mb-2 text-xs text-white/60">
+        {loading
+          ? 'Generating context-aware suggestions...'
+          : source === 'ai'
+            ? 'AI suggestions are based on your recent conversation.'
+            : 'Using local prompt fallback. Add an API key for AI-generated suggestions.'}
+      </p>
       <div className="space-y-2">
         {(Object.keys(groups) as GuidanceKind[]).map(kind => (
           <div key={kind} className="rounded-xl border border-white/15 bg-[#121938] p-2.5">
