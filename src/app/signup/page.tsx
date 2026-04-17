@@ -3,6 +3,8 @@
 import { FormEvent, useState } from 'react';
 import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
 
+const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('@temple.edu');
+
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,6 +16,12 @@ export default function SignupPage() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    if (!isTempleEmail(email)) {
+      setError('Only Temple University emails (@temple.edu) are allowed.');
+      return;
+    }
+
     setLoading(true);
 
     let signUpError: { message: string } | null = null;

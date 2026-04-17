@@ -12,6 +12,8 @@ const PERKS = [
   { icon: CheckCircle, text: 'No credit card required' },
 ];
 
+const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('@temple.edu');
+
 export default function SignupPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -43,6 +45,7 @@ export default function SignupPage() {
     setSuccess('');
     if (!email) { setError('Email is required.'); return; }
     if (!/\S+@\S+\.\S+/.test(email)) { setError('Enter a valid email.'); return; }
+    if (!isTempleEmail(email)) { setError('Only Temple University emails (@temple.edu) are allowed.'); return; }
     setStep(2);
   }
 
@@ -68,6 +71,10 @@ export default function SignupPage() {
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError('Enter a valid email.');
+      return;
+    }
+    if (!isTempleEmail(email)) {
+      setError('Only Temple University emails (@temple.edu) are allowed.');
       return;
     }
 
@@ -106,6 +113,10 @@ export default function SignupPage() {
 
     if (!email || !otpCode) {
       setError('Please enter your email and verification code.');
+      return;
+    }
+    if (!isTempleEmail(email)) {
+      setError('Only Temple University emails (@temple.edu) are allowed.');
       return;
     }
 

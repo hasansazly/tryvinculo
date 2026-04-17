@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { Heart, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('@temple.edu');
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -32,6 +34,7 @@ export default function LoginPage() {
     setError('');
     setSuccess('');
     if (!email || !password) { setError('Please fill in all fields.'); return; }
+    if (!isTempleEmail(email)) { setError('Only Temple University emails (@temple.edu) are allowed.'); return; }
     setLoading(true);
     // Simulate auth
     await new Promise(r => setTimeout(r, 1200));
@@ -44,6 +47,10 @@ export default function LoginPage() {
     setSuccess('');
     if (!email) {
       setError('Please enter your email first.');
+      return;
+    }
+    if (!isTempleEmail(email)) {
+      setError('Only Temple University emails (@temple.edu) are allowed.');
       return;
     }
 
@@ -81,6 +88,10 @@ export default function LoginPage() {
     setSuccess('');
     if (!email || !otpCode) {
       setError('Please enter your email and verification code.');
+      return;
+    }
+    if (!isTempleEmail(email)) {
+      setError('Only Temple University emails (@temple.edu) are allowed.');
       return;
     }
 

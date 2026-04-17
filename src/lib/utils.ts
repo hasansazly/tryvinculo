@@ -53,6 +53,15 @@ export function truncate(str: string, max: number): string {
   return str.slice(0, max).trimEnd() + '…';
 }
 
+export function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
+
+export function isTempleEmail(email: string): boolean {
+  const normalized = normalizeEmail(email);
+  return normalized.endsWith('@temple.edu');
+}
+
 export const INTERESTS = [
   'Hiking', 'Photography', 'Cooking', 'Travel', 'Music', 'Art', 'Reading',
   'Fitness', 'Gaming', 'Film', 'Coffee', 'Wine', 'Yoga', 'Meditation',

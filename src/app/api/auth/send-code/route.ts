@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabasePublishableKey, getSupabaseUrl } from '../../../../../utils/supabase/env';
+import { isTempleEmail, normalizeEmail } from '@/lib/utils';
 
 const getErrorDetails = (error: unknown) => {
   const e = error as {
@@ -20,11 +21,18 @@ const getErrorDetails = (error: unknown) => {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const email = typeof body?.email === 'string' ? body.email : '';
+    const email = typeof body?.email === 'string' ? normalizeEmail(body.email) : '';
     const shouldCreateUser = Boolean(body?.shouldCreateUser);
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required.' }, { status: 400 });
+    }
+
+    if (!isTempleEmail(email)) {
+      return NextResponse.json(
+        { error: 'Only Temple University emails (@temple.edu) are allowed.' },
+        { status: 403 }
+      );
     }
 
     const supabaseUrl = getSupabaseUrl();
