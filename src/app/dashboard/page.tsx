@@ -224,17 +224,11 @@ export default async function DashboardPage() {
           }}
         />
 
-        <div className="relative mx-auto w-full max-w-[360px] pb-6">
-          {/* Status bar */}
-          <div className="flex items-center justify-between px-5 pt-3 text-[11px] text-white/50">
-            <span>9:41</span>
-            <span>78%</span>
-          </div>
-
+        <div className="relative w-full pb-6">
           {/* Topbar */}
-          <div className="flex items-center justify-between px-4 py-2.5">
+          <div className="flex items-center justify-between px-4 pt-3 pb-2">
             <span className="text-[10px] font-medium tracking-[0.1em] text-white/35">DASHBOARD</span>
-            <LogoutButton className="rounded-full border border-white/[0.12] px-2.5 py-1 text-[11px] text-white/40" />
+            <LogoutButton className="rounded-full border border-white/[0.12] px-3 py-1.5 text-[11px] text-white/40" />
           </div>
 
           {/* Profile hero */}
@@ -272,7 +266,7 @@ export default async function DashboardPage() {
           <div className="px-3">
             {/* Today's Activity */}
             <p className="mb-2 mt-[14px] text-[10px] font-medium tracking-[0.09em] text-white/35">TODAY&apos;S ACTIVITY</p>
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-3 gap-[6px]">
               <div className="rounded-[14px] border border-white/[0.08] bg-white/[0.06] px-2 py-2.5">
                 <p className="text-[9px] tracking-[0.05em] text-white/40">MATCHES</p>
                 <p className="mt-1 text-[22px] font-bold leading-none text-white">{todayPreview.length}</p>
@@ -346,7 +340,7 @@ export default async function DashboardPage() {
             )}
 
             {/* Bottom 2-col grid */}
-            <div className="mt-1.5 grid grid-cols-2 gap-1.5">
+            <div className="mt-[6px] grid grid-cols-2 gap-[6px]">
               <div className="rounded-[14px] border border-white/[0.08] bg-white/[0.06] p-3">
                 <p className="text-[9px] tracking-[0.07em] text-white/35">ONBOARDING</p>
                 <p className="mt-1 text-[14px] font-semibold text-white">Complete</p>
@@ -360,7 +354,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Tip card */}
-            <div className="mt-1.5 rounded-[14px] border border-[rgba(127,119,221,0.25)] bg-[rgba(127,119,221,0.12)] p-3">
+            <div className="mt-[6px] rounded-[14px] border border-[rgba(127,119,221,0.25)] bg-[rgba(127,119,221,0.12)] p-3">
               <p className="text-[9px] tracking-[0.07em] text-[rgba(167,139,250,0.8)]">MOMENTUM TIP</p>
               <div className="mt-1.5 space-y-1">
                 <div className="flex items-start gap-[5px] text-[11px] leading-[1.4] text-white/75">
