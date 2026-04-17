@@ -138,8 +138,8 @@ export default function SignupPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#07070f', display: 'flex' }}>
       {/* Left panel */}
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="auth-desktop-panel">
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(219,39,119,0.18) 0%, rgba(124,58,237,0.15) 60%, rgba(7,7,15,0) 100%)' }} />
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="auth-desktop-panel auth-left-panel">
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1A1A2E, #3C3489)' }} />
         <div className="orb" style={{ width: 500, height: 500, background: 'rgba(219,39,119,0.12)', top: -80, right: -80 }} />
         <div className="orb" style={{ width: 400, height: 400, background: 'rgba(124,58,237,0.12)', bottom: 0, left: -60 }} />
 
@@ -147,11 +147,11 @@ export default function SignupPage() {
           <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Heart size={18} color="white" fill="white" />
           </div>
-          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em' }}>vinculo</span>
+          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em', color: '#FFFFFF' }}>vinculo</span>
         </div>
 
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 32, lineHeight: 1.2 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 32, lineHeight: 1.2, color: '#FFFFFF' }}>
             The app that actually<br />understands you.
           </h2>
 
@@ -161,27 +161,27 @@ export default function SignupPage() {
               return (
                 <div key={p.text} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={16} color="#a78bfa" />
+                    <Icon size={16} color="#FFFFFF" />
                   </div>
-                  <span style={{ fontSize: 15, color: 'rgba(240,240,255,0.7)' }}>{p.text}</span>
+                  <span style={{ fontSize: 15, color: 'rgba(255,255,255,0.75)' }}>{p.text}</span>
                 </div>
               );
             })}
           </div>
 
           {/* Social proof */}
-          <div className="glass" style={{ borderRadius: 16, padding: '16px 20px', marginTop: 36, display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div className="glass" style={{ borderRadius: 16, padding: '16px 20px', marginTop: 36, display: 'flex', alignItems: 'center', gap: 16, background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.2)' }}>
             <div style={{ display: 'flex' }}>
               {['https://images.unsplash.com/photo-1494790108755-2616b612b786?w=80&q=80',
                 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80',
                 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=80&q=80',
               ].map((src, i) => (
-                <img key={i} src={src} alt="" style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '2px solid #07070f', marginLeft: i > 0 ? -8 : 0 }} />
+                <img key={i} src={src} alt="" style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.4)', marginLeft: i > 0 ? -8 : 0 }} />
               ))}
             </div>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>200k+ members</div>
-              <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>joined this month</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF' }}>200k+ members</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>joined this month</div>
             </div>
           </div>
         </div>

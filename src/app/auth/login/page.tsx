@@ -112,9 +112,9 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#07070f', display: 'flex' }}>
       {/* Left panel — decorative */}
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="auth-desktop-panel">
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="auth-desktop-panel auth-left-panel">
         {/* Gradient BG */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(219,39,119,0.15) 50%, rgba(7,7,15,0) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1A1A2E, #3C3489)' }} />
         <div className="orb" style={{ width: 500, height: 500, background: 'rgba(124,58,237,0.15)', top: -100, left: -100 }} />
         <div className="orb" style={{ width: 400, height: 400, background: 'rgba(244,63,94,0.1)', bottom: 0, right: 0 }} />
 
@@ -123,23 +123,23 @@ export default function LoginPage() {
           <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Heart size={18} color="white" fill="white" />
           </div>
-          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em' }}>vinculo</span>
+          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em', color: '#FFFFFF' }}>vinculo</span>
         </div>
 
         {/* Testimonial */}
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 440 }}>
           {/* Match preview card */}
-          <div className="glass" style={{ borderRadius: 20, padding: 20, marginBottom: 28 }}>
+          <div className="glass" style={{ borderRadius: 20, padding: 20, marginBottom: 28, background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.2)' }}>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 14 }}>
-              <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover' }} alt="" />
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', marginLeft: -16, border: '2px solid #07070f' }} alt="" />
+              <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.4)' }} alt="" />
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', marginLeft: -16, border: '2px solid rgba(255,255,255,0.4)' }} alt="" />
               <div>
-                <div style={{ fontSize: 14, fontWeight: 600 }}>Emma & James matched</div>
-                <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>97% compatibility · Values + Goals</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF' }}>Emma & James matched</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>97% compatibility · Values + Goals</div>
               </div>
               <div style={{ marginLeft: 'auto', fontSize: 20 }}>💫</div>
             </div>
-            <div style={{ fontSize: 13, color: 'rgba(240,240,255,0.6)', lineHeight: 1.6 }}>
+            <div style={{ fontSize: 13, color: '#FFFFFF', lineHeight: 1.6 }}>
               &ldquo;We got engaged last month. Vinculo showed me things about our compatibility I never could have seen on my own.&rdquo;
             </div>
             <div style={{ marginTop: 12, display: 'flex', gap: 6 }}>
@@ -148,7 +148,7 @@ export default function LoginPage() {
               ))}
             </div>
           </div>
-          <p style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.25, letterSpacing: '-0.02em', color: 'rgba(240,240,255,0.9)' }}>
+          <p style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.25, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
             Welcome back.<br />Your matches are waiting.
           </p>
         </div>

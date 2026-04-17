@@ -593,6 +593,37 @@ a:active .lucide-heart {
   color: #534AB7 !important;
 }
 
+/* Global contrast safety utilities */
+.contrast-safe {
+  color: #1A1A2E;
+}
+.contrast-safe p,
+.contrast-safe li,
+.contrast-safe span,
+.contrast-safe label {
+  color: #2C2C2A;
+}
+.contrast-safe .muted,
+.contrast-safe .secondary,
+.contrast-safe .text-muted {
+  color: #5F5E5A !important;
+}
+.contrast-safe nav a {
+  color: #1A1A2E;
+}
+.dark-surface nav a {
+  color: #FFFFFF;
+}
+label {
+  color: #1A1A2E;
+  font-weight: 500;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #888780;
+  opacity: 1;
+}
+
 /* Matches: single column on mobile */
 @media (max-width: 767px) {
   .matches-grid {
