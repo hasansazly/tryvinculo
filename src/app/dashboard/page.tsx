@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MessageCircle, Sparkles } from 'lucide-react';
+import { Camera, CheckCircle2, MapPin, MessageCircle, Sparkles, User } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import LogoutButton from '@/components/auth/LogoutButton';
 import { getDashboardPreviewLimit, getDashboardTodayPreview, resolveViewerTier } from '@/lib/curatedMatches';
@@ -9,6 +9,10 @@ import { createSupabaseServerClient } from '../../../utils/supabase/server';
 type ParticipantRow = {
   conversation_id: string;
   user_id: string;
+};
+
+type OnboardingResponseRow = {
+  response: unknown;
 };
 
 function isMissingTableError(error: { code?: string; message?: string } | null | undefined, table: string) {
@@ -149,9 +153,21 @@ export default async function DashboardPage() {
       redirect('/onboarding');
     }
 
-    const [{ data: profile }, { count: rawResponsesCount, error: responsesCountError }, matches] = await Promise.all([
+    const [{ data: profile }, { count: rawResponsesCount, error: responsesCountError }, { data: demographicsRow }, { data: profileMetaRow }, matches] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
       supabase.from('onboarding_responses').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
+      supabase
+        .from('onboarding_responses')
+        .select('response')
+        .eq('user_id', user.id)
+        .eq('category', 'demographics')
+        .maybeSingle<OnboardingResponseRow>(),
+      supabase
+        .from('onboarding_responses')
+        .select('response')
+        .eq('user_id', user.id)
+        .eq('category', 'profile_meta')
+        .maybeSingle<OnboardingResponseRow>(),
       getMatchesForUser(supabase, user.id),
     ]);
 
@@ -165,9 +181,34 @@ export default async function DashboardPage() {
 
     const responsesTableMissing = isMissingTableError(responsesCountError, 'onboarding_responses');
     const responsesCount = responsesTableMissing ? 0 : rawResponsesCount ?? 0;
+    const demographics =
+      demographicsRow && typeof demographicsRow.response === 'object' && demographicsRow.response !== null
+        ? (demographicsRow.response as Record<string, unknown>)
+        : {};
+    const profileMeta =
+      profileMetaRow && typeof profileMetaRow.response === 'object' && profileMetaRow.response !== null
+        ? (profileMetaRow.response as Record<string, unknown>)
+        : {};
+    const photos = Array.isArray(profileMeta.photos)
+      ? (profileMeta.photos as unknown[]).filter(item => typeof item === 'string')
+      : [];
+    const profilePhoto = photos.length > 0 ? (photos[0] as string) : null;
+    const profileAge =
+      typeof profile?.age === 'number'
+        ? profile.age
+        : typeof demographics.age === 'number'
+          ? demographics.age
+          : null;
+    const profileLocation =
+      profile?.location ||
+      (typeof demographics.location === 'string' ? demographics.location : '') ||
+      'Location not shared yet';
+    const isVerified = profile?.is_verified === true;
+    const auraScore = Math.min(99, 60 + responsesCount * 4);
     const displayName =
       profile?.first_name ||
       profile?.full_name ||
+      (typeof demographics.fullName === 'string' ? demographics.fullName : '') ||
       user.email?.split('@')[0] ||
       user.email ||
       'Member';
@@ -184,19 +225,67 @@ export default async function DashboardPage() {
         />
 
         <div className="relative mx-auto w-full max-w-6xl space-y-6">
-          <header className="rounded-[26px] border border-[#2A3158] bg-[#0B1024]/90 p-6 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="section-label">Dashboard</p>
-                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#F8F9FF] sm:text-5xl">
-                  Welcome back, {displayName}
-                </h1>
-                <p className="body-on-dark mt-2 text-sm text-[#A9B0D0] sm:text-base">
-                  Summary only: today&apos;s curated matches, active conversations, and connection momentum.
-                </p>
-              </div>
+          <header className="space-y-4">
+            <div className="flex items-start justify-between gap-4 rounded-[22px] border border-[#2A3158] bg-[#0B1024]/90 p-4 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
+              <p className="section-label">Dashboard</p>
               <LogoutButton className="rounded-xl border border-[#3A4270] bg-[#101735] px-4 py-2.5 text-sm font-medium text-[#D4D9F4] transition hover:border-[#6B5CE7] hover:text-[#FFFFFF]" />
             </div>
+
+            <article className="overflow-hidden rounded-[28px] border border-[#2A3158] bg-[#0B1024]/90 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
+              <div className="h-36 bg-gradient-to-r from-[#CDB6FA] via-[#E7BAD8] to-[#F6E0CF] sm:h-44" />
+              <div className="relative bg-[#EEF0F6] px-6 pb-7 pt-16 text-[#1A1A2E] sm:px-8 sm:pt-20">
+                <div className="absolute -top-12 left-6 h-24 w-24 overflow-hidden rounded-full border-[4px] border-[#2F245C] bg-[#20243B] sm:left-8 sm:h-28 sm:w-28">
+                  {profilePhoto ? (
+                    <img src={profilePhoto} alt={displayName} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <User size={36} className="text-[#AEB6D1]" />
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    className="pointer-events-none absolute bottom-1 right-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#7E46DB] to-[#D02E8B] text-white sm:h-9 sm:w-9"
+                    aria-label="Profile photo"
+                  >
+                    <Camera size={16} />
+                  </button>
+                </div>
+
+                <div className="flex items-end justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h1 className="truncate text-[34px] font-semibold leading-none tracking-tight text-[#1F1A3A] sm:text-[44px]">
+                        {displayName}
+                        {typeof profileAge === 'number' ? `, ${profileAge}` : ''}
+                      </h1>
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[#8CDCB9] bg-[#DBF5E9] px-3 py-1 text-sm font-medium text-[#1E7D5A]">
+                        <CheckCircle2 size={16} />
+                        {isVerified ? 'Verified' : 'Unverified'}
+                      </span>
+                    </div>
+                    <p className="mt-3 flex items-center gap-1.5 text-[17px] text-[#464262]">
+                      <MapPin size={17} />
+                      {profileLocation}
+                    </p>
+                  </div>
+
+                  <div className="shrink-0 text-center">
+                    <div
+                      className="grid h-20 w-20 place-items-center rounded-full text-4xl font-semibold text-[#7B5BE9] sm:h-24 sm:w-24"
+                      style={{
+                        background:
+                          `conic-gradient(#7B5BE9 ${Math.round((auraScore / 100) * 360)}deg, rgba(123,91,233,0.2) 0deg)`,
+                      }}
+                    >
+                      <div className="grid h-[74px] w-[74px] place-items-center rounded-full bg-[#EEF0F6] text-[42px] font-semibold text-[#4A4666] sm:h-[88px] sm:w-[88px]">
+                        {auraScore}
+                      </div>
+                    </div>
+                    <p className="mt-2 text-lg font-semibold text-[#6F5BDC]">Aura Score</p>
+                  </div>
+                </div>
+              </div>
+            </article>
           </header>
 
           <section className="grid gap-4 md:grid-cols-3">

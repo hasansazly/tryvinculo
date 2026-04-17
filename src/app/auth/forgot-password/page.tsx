@@ -144,27 +144,8 @@ export default function ForgotPasswordPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#07070f', display: 'flex' }}>
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 48 }} className="auth-desktop-panel auth-left-panel">
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #1A1A2E 0%, #3C3489 100%)' }} />
-        <div className="orb" style={{ width: 500, height: 500, background: 'rgba(219,39,119,0.12)', top: -80, right: -80 }} />
-        <div className="orb" style={{ width: 400, height: 400, background: 'rgba(124,58,237,0.12)', bottom: 0, left: -60 }} />
-
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Heart size={18} color="white" fill="white" />
-          </div>
-          <span style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.03em', color: '#FFFFFF' }}>vinculo</span>
-        </div>
-
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 32, lineHeight: 1.2, color: '#FFFFFF' }}>
-            Reset your password<br />securely.
-          </h2>
-        </div>
-      </div>
-
-      <div className="auth-form-shell" style={{ width: '100%', maxWidth: 520, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 40px' }}>
-        <div style={{ width: '100%' }}>
+      <div className="auth-form-shell" style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '32px 16px' }}>
+        <div style={{ width: '100%', maxWidth: 520, marginTop: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 40 }} className="auth-mobile-logo">
             <div style={{ width: 34, height: 34, borderRadius: 9, background: 'linear-gradient(135deg, #7c3aed, #db2777)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Heart size={16} color="white" fill="white" />
@@ -272,6 +253,17 @@ export default function ForgotPasswordPage() {
               </button>
             ) : null}
           </form>
+
+          <style>{`
+            .auth-mobile-logo {
+              justify-content: center;
+            }
+            @media (max-width: 767px) {
+              .auth-form-shell {
+                padding: 20px 16px !important;
+              }
+            }
+          `}</style>
         </div>
       </div>
     </div>
