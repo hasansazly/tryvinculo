@@ -203,7 +203,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div style={{ background: '#FDF0F5', minHeight: '100vh', color: '#1A1A2E' }}>
+    <div className="landing-theme" style={{ background: '#FDF0F5', minHeight: '100vh', color: '#1A1A2E' }}>
       {/* ── Nav ── */}
       <nav
         style={{

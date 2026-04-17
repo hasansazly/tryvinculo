@@ -571,6 +571,28 @@ a:active .lucide-heart {
   .btn-primary, .btn-ghost { width: 100%; }
 }
 
+/* Contrast emergency fixes (scoped to landing only) */
+.landing-theme {
+  color: #1A1A2E;
+}
+.landing-theme p,
+.landing-theme li,
+.landing-theme span,
+.landing-theme label {
+  color: #2C2C2A;
+}
+.landing-theme .text-gray-400,
+.landing-theme .text-gray-300 {
+  color: #5F5E5A !important;
+}
+.landing-theme nav a {
+  color: #1A1A2E !important;
+}
+.landing-theme .step-label,
+.landing-theme [class*="step"] {
+  color: #534AB7 !important;
+}
+
 /* Matches: single column on mobile */
 @media (max-width: 767px) {
   .matches-grid {
