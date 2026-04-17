@@ -27,7 +27,7 @@ export default async function MatchesPage() {
   const matches = await getMatchesForUser(supabase, user.id);
 
   return (
-    <main className="min-h-screen bg-[#060814] px-4 py-8 text-[#F3F5FF]">
+    <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-[#F3F5FF]">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 opacity-90"
@@ -40,9 +40,9 @@ export default async function MatchesPage() {
       <div className="relative mx-auto w-full max-w-6xl">
         <header className="mb-6 flex items-center justify-between rounded-[26px] border border-[#2A3158] bg-[#0B1024]/90 p-6 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.08em] text-white/50">Matches</p>
+            <p className="section-label">Matches</p>
             <h1 className="mt-1 text-[40px] font-semibold tracking-tight text-[#F8F9FF]">Your Real Matches</h1>
-            <p className="mt-1 text-[18px] text-white/70">
+            <p className="body-on-dark mt-1 text-[18px] text-white/70">
               {matches.length > 0
                 ? `${matches.length} active matches ready to explore`
                 : 'No active matches yet. Add manually from Supabase for now.'}
@@ -57,7 +57,7 @@ export default async function MatchesPage() {
         </header>
 
         {matches.length > 0 ? (
-          <section className="grid gap-5 md:grid-cols-2">
+          <section className="matches-grid grid gap-5 md:grid-cols-2">
             {matches.map(match => (
               <MatchCard key={match.id} match={match} />
             ))}

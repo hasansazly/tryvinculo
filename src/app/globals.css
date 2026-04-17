@@ -693,3 +693,229 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 .toggle.on::after { transform: translateX(20px); }
+
+/* ========================================================================
+   App Interior Premium Dark Theme (style only, no logic changes)
+   ======================================================================== */
+.app-interior-page {
+  background: #0D0D1A;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.app-interior-page h1 {
+  color: #FFFFFF !important;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.app-interior-page h2 {
+  color: #FFFFFF !important;
+  font-weight: 500;
+}
+
+.app-interior-page h3 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.app-interior-page .section-label {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.08em !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+}
+
+.app-interior-page .body-on-dark {
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.app-interior-page .stat-card {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+}
+
+.app-interior-page .stat-label {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.06em !important;
+}
+
+.app-interior-page .stat-value {
+  color: #FFFFFF !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+}
+
+.app-interior-page .stat-desc {
+  color: rgba(255, 255, 255, 0.45) !important;
+  font-size: 12px !important;
+}
+
+/* White-card readability inside interior pages */
+.app-interior-page .profile-section,
+.app-interior-page [class*="profile-card"],
+.app-interior-page [class*="section-card"],
+.app-interior-page.profile-page .glass,
+.app-interior-page.settings-page .glass {
+  background: #FFFFFF !important;
+}
+
+.app-interior-page .profile-section p,
+.app-interior-page .profile-section span,
+.app-interior-page .profile-section div,
+.app-interior-page.profile-page .glass p,
+.app-interior-page.profile-page .glass span,
+.app-interior-page.profile-page .glass div,
+.app-interior-page.profile-page .glass h2,
+.app-interior-page.profile-page .glass h3,
+.app-interior-page.settings-page .glass p,
+.app-interior-page.settings-page .glass span,
+.app-interior-page.settings-page .glass div,
+.app-interior-page.settings-page .glass h2,
+.app-interior-page.settings-page .glass h3 {
+  color: #1A1A2E;
+}
+
+.app-interior-page .profile-section .section-label,
+.app-interior-page .profile-section [class*="section-title"] {
+  color: #888780 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+}
+
+.app-interior-page .about-text,
+.app-interior-page [class*="bio"] {
+  color: #3D3D3D !important;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.app-interior-page [class*="empty"],
+.app-interior-page [class*="placeholder"] {
+  color: #AAAAAA !important;
+  font-style: italic;
+}
+
+/* Profile tags */
+.app-interior-page .interest-tag,
+.app-interior-page .tag-violet {
+  background: #EEEDFE !important;
+  color: #3C3489 !important;
+  border: 1px solid #CECBF6 !important;
+  border-radius: 999px !important;
+  padding: 6px 16px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.app-interior-page .value-tag,
+.app-interior-page .tag-rose {
+  background: #FBEAF0 !important;
+  color: #72243E !important;
+  border: 1px solid #F4C0D1 !important;
+  border-radius: 999px !important;
+  padding: 6px 16px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.app-interior-page .detail-label {
+  color: #888780 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.07em !important;
+}
+
+.app-interior-page .detail-value {
+  color: #1A1A2E !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* Premium sidebar */
+.app-sidebar {
+  background: linear-gradient(180deg, #13132A 0%, #0D0D1A 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.app-sidebar a,
+.app-sidebar .nav-item {
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-size: 14px;
+}
+
+.app-sidebar .nav-item.active {
+  background: rgba(127, 119, 221, 0.2) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(127, 119, 221, 0.4) !important;
+  border-radius: 12px !important;
+}
+
+.app-sidebar .user-name {
+  color: #FFFFFF !important;
+  font-weight: 500;
+}
+
+.app-sidebar .aura-label {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 12px;
+}
+
+.app-sidebar .daily-matches-panel {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.app-sidebar .daily-label {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.06em !important;
+}
+
+.app-sidebar .daily-sub {
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-size: 11px !important;
+}
+
+/* Matches layout */
+.matches-grid,
+[class*="matches-list"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 16px !important;
+  width: 100% !important;
+}
+
+.match-card,
+[class*="match-card"] {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.match-photo-area {
+  position: relative;
+}
+
+.match-photo-area::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  border-radius: 0 0 20px 20px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.match-photo-area > * {
+  position: relative;
+  z-index: 1;
+}

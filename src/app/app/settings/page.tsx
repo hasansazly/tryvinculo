@@ -59,7 +59,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="settings-page" style={{ padding: '32px', maxWidth: 680, width: '100%', margin: '0 auto' }}>
+    <div className="app-interior-page settings-page" style={{ padding: '32px', maxWidth: 680, width: '100%', margin: '0 auto' }}>
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4, color: '#FFFFFF' }}>Settings</h1>
         <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)' }}>Manage your preferences and account</p>

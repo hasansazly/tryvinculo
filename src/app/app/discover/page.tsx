@@ -80,7 +80,7 @@ export default async function AppDiscoverPage() {
   const sections = getDiscoverSections(matches, tier);
 
   return (
-    <main className="min-h-screen bg-[#060814] px-4 py-8 text-[#F3F5FF] sm:py-10">
+    <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-[#F3F5FF] sm:py-10">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 opacity-90"
@@ -94,9 +94,9 @@ export default async function AppDiscoverPage() {
         <header className="rounded-[26px] border border-[#2A3158] bg-[#0B1024]/90 p-6 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/50">Discover</p>
+              <p className="section-label">Discover</p>
               <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#F8F9FF] sm:text-5xl">Curated Matches</h1>
-              <p className="mt-2 text-sm text-white/70 sm:text-base">
+              <p className="body-on-dark mt-2 text-sm text-white/70 sm:text-base">
                 Focused browsing for relevant matches now. No endless inventory, no old history.
               </p>
             </div>

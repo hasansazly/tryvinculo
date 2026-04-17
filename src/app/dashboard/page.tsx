@@ -173,7 +173,7 @@ export default async function DashboardPage() {
       'Member';
 
     return (
-      <main className="min-h-screen bg-[#060814] px-4 py-8 text-[#F3F5FF] sm:py-10">
+      <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-[#F3F5FF] sm:py-10">
         <div
           aria-hidden
           className="pointer-events-none fixed inset-0 opacity-90"
@@ -187,11 +187,11 @@ export default async function DashboardPage() {
           <header className="rounded-[26px] border border-[#2A3158] bg-[#0B1024]/90 p-6 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.14em] text-[#A18BFF]">Dashboard</p>
+                <p className="section-label">Dashboard</p>
                 <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#F8F9FF] sm:text-5xl">
                   Welcome back, {displayName}
                 </h1>
-                <p className="mt-2 text-sm text-[#A9B0D0] sm:text-base">
+                <p className="body-on-dark mt-2 text-sm text-[#A9B0D0] sm:text-base">
                   Summary only: today&apos;s curated matches, active conversations, and connection momentum.
                 </p>
               </div>
@@ -200,24 +200,24 @@ export default async function DashboardPage() {
           </header>
 
           <section className="grid gap-4 md:grid-cols-3">
-            <article className="rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-              <p className="text-[11px] uppercase tracking-[0.07em] text-white/60">Today&apos;s matches</p>
-              <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{todayPreview.length}</p>
-              <p className="mt-1 text-xs text-white/75">
+            <article className="stat-card rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="section-label stat-label">Today&apos;s matches</p>
+              <p className="stat-value mt-2 text-3xl font-semibold text-[#F8F9FF]">{todayPreview.length}</p>
+              <p className="stat-desc mt-1 text-xs text-white/75">
                 {tier === 'paid' ? 'Paid limit: up to 6' : 'Free limit: up to 3'}
               </p>
             </article>
 
-            <article className="rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-              <p className="text-[11px] uppercase tracking-[0.07em] text-white/60">Active conversations</p>
-              <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{activeConversationCount}</p>
-              <p className="mt-1 text-xs text-white/75">Only currently active and messageable threads.</p>
+            <article className="stat-card rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="section-label stat-label">Active conversations</p>
+              <p className="stat-value mt-2 text-3xl font-semibold text-[#F8F9FF]">{activeConversationCount}</p>
+              <p className="stat-desc mt-1 text-xs text-white/75">Only currently active and messageable threads.</p>
             </article>
 
-            <article className="rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
-              <p className="text-[11px] uppercase tracking-[0.07em] text-white/60">Connection Track updates</p>
-              <p className="mt-2 text-3xl font-semibold text-[#F8F9FF]">{connectionTrackSummary.recentUpdates}</p>
-              <p className="mt-1 text-xs text-white/75">
+            <article className="stat-card rounded-2xl border border-white/10 bg-[#1E1E35] p-5 shadow-[0_20px_64px_rgba(5,10,30,0.55)] backdrop-blur">
+              <p className="section-label stat-label">Connection Track updates</p>
+              <p className="stat-value mt-2 text-3xl font-semibold text-[#F8F9FF]">{connectionTrackSummary.recentUpdates}</p>
+              <p className="stat-desc mt-1 text-xs text-white/75">
                 {connectionTrackSummary.activeTracks} active track{connectionTrackSummary.activeTracks === 1 ? '' : 's'}.
               </p>
             </article>
@@ -227,7 +227,7 @@ export default async function DashboardPage() {
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-semibold tracking-tight text-[#F8F9FF]">Today&apos;s matches</h2>
-                <p className="mt-1 text-sm text-[#A9B0D0]">
+                <p className="body-on-dark mt-1 text-sm text-[#A9B0D0]">
                   Showing {todayPreview.length} of up to {previewLimit} curated match{previewLimit === 1 ? '' : 'es'}.
                 </p>
               </div>

@@ -36,7 +36,7 @@ export default function CoachPage() {
   const [debriefDone, setDebriefDone] = useState(false);
 
   return (
-    <div className="coach-page" style={{ padding: '32px', maxWidth: 780, width: '100%', margin: '0 auto', color: '#FFFFFF' }}>
+    <div className="app-interior-page coach-page" style={{ padding: '32px', maxWidth: 780, width: '100%', margin: '0 auto', color: '#FFFFFF' }}>
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>

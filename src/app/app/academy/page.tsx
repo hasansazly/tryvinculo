@@ -83,7 +83,7 @@ export default function AcademyPage() {
   });
 
   return (
-    <div className="academy-page" style={{ padding: '32px', maxWidth: 820, width: '100%', margin: '0 auto', color: '#FFFFFF' }}>
+    <div className="app-interior-page academy-page" style={{ padding: '32px', maxWidth: 820, width: '100%', margin: '0 auto', color: '#FFFFFF' }}>
 
       {/* Header */}
       <div style={{ marginBottom: 28 }}>

@@ -523,7 +523,7 @@ export default function ProfilePage() {
   const galleryPhotos = user.photos;
 
   return (
-    <div className="profile-page" style={{ padding: '32px', maxWidth: 800, width: '100%', margin: '0 auto' }}>
+    <div className="app-interior-page profile-page" style={{ padding: '32px', maxWidth: 800, width: '100%', margin: '0 auto' }}>
       <input
         ref={fileInputRef}
         type="file"
@@ -662,17 +662,17 @@ export default function ProfilePage() {
 
       {activeTab === 'profile' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div className="glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>About</div>
+          <div className="profile-section glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
+            <div className="section-label" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>About</div>
             {user.bio ? (
-              <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.7)', lineHeight: 1.75 }}>{user.bio}</p>
+              <p className="about-text" style={{ fontSize: 14, color: 'rgba(240,240,255,0.7)', lineHeight: 1.75 }}>{user.bio}</p>
             ) : (
-              <p style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)', lineHeight: 1.75 }}>Add a short bio so your matches understand your vibe quickly.</p>
+              <p className="placeholder" style={{ fontSize: 14, color: 'rgba(240,240,255,0.45)', lineHeight: 1.75 }}>Add a short bio so your matches understand your vibe quickly.</p>
             )}
           </div>
 
-          <div className="glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Photos</div>
+          <div className="profile-section glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
+            <div className="section-label" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Photos</div>
             <div className="profile-photos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
               {galleryPhotos.map((src, i) => (
                 <div key={i} style={{ aspectRatio: '1', borderRadius: 12, overflow: 'hidden', position: 'relative' }}>
@@ -718,40 +718,40 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Interests</div>
+          <div className="profile-section glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
+            <div className="section-label" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Interests</div>
             {user.interests.length > 0 ? (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {user.interests.map(interest => (
-                  <span key={interest} className="tag tag-violet" style={{ fontSize: 13 }}>{interest}</span>
+                  <span key={interest} className="interest-tag tag tag-violet" style={{ fontSize: 13 }}>{interest}</span>
                 ))}
               </div>
             ) : (
-              <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.45)' }}>No interests saved yet.</p>
+              <p className="empty" style={{ fontSize: 13, color: 'rgba(240,240,255,0.45)' }}>No interests saved yet.</p>
             )}
           </div>
 
-          <div className="glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Core values</div>
+          <div className="profile-section glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
+            <div className="section-label" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Core values</div>
             {user.values.length > 0 ? (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {user.values.map(value => (
-                  <span key={value} className="tag tag-rose" style={{ fontSize: 13 }}>{value}</span>
+                  <span key={value} className="value-tag tag tag-rose" style={{ fontSize: 13 }}>{value}</span>
                 ))}
               </div>
             ) : (
-              <p style={{ fontSize: 13, color: 'rgba(240,240,255,0.45)' }}>No values saved yet.</p>
+              <p className="empty" style={{ fontSize: 13, color: 'rgba(240,240,255,0.45)' }}>No values saved yet.</p>
             )}
           </div>
 
           {detailItems.length > 0 && (
-            <div className="glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Life details</div>
+            <div className="profile-section glass" style={{ borderRadius: 20, padding: '20px 24px' }}>
+              <div className="section-label" style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240,240,255,0.4)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Life details</div>
               <div className="profile-details-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 {detailItems.map(item => (
                   <div key={item.label}>
-                    <div style={{ fontSize: 11, color: 'rgba(240,240,255,0.3)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.label}</div>
-                    <div style={{ fontSize: 14, fontWeight: 500, textTransform: 'capitalize', color: 'rgba(240,240,255,0.75)' }}>{item.value}</div>
+                    <div className="detail-label" style={{ fontSize: 11, color: 'rgba(240,240,255,0.3)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.label}</div>
+                    <div className="detail-value" style={{ fontSize: 14, fontWeight: 500, textTransform: 'capitalize', color: 'rgba(240,240,255,0.75)' }}>{item.value}</div>
                   </div>
                 ))}
               </div>

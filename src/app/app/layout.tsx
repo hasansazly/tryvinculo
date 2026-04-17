@@ -112,10 +112,10 @@ function Sidebar() {
           )}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f0ff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{identity.name}</div>
+          <div className="user-name" style={{ fontSize: 13, fontWeight: 600, color: '#f0f0ff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{identity.name}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
             <Sparkles size={10} color="#a78bfa" />
-            <span style={{ fontSize: 11, color: '#a78bfa', fontWeight: 500 }}>Aura {identity.auraScore}</span>
+            <span className="aura-label" style={{ fontSize: 11, color: '#a78bfa', fontWeight: 500 }}>Aura {identity.auraScore}</span>
           </div>
         </div>
         <Bell size={16} color="rgba(240,240,255,0.35)" />
@@ -145,14 +145,14 @@ function Sidebar() {
         })}
       </nav>
 
-      <div style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.18)', borderRadius: 14, padding: '14px 16px', marginBottom: 16 }}>
-        <div style={{ fontSize: 11, fontWeight: 600, color: '#fde68a', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Daily Matches</div>
+      <div className="daily-matches-panel" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.18)', borderRadius: 14, padding: '14px 16px', marginBottom: 16 }}>
+        <div className="daily-label" style={{ fontSize: 11, fontWeight: 600, color: '#fde68a', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Daily Matches</div>
         <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
           {[1,2,3,4,5].map(i => (
             <div key={i} style={{ flex: 1, height: 5, borderRadius: 3, background: i <= 3 ? 'linear-gradient(90deg, #fbbf24, #f59e0b)' : 'rgba(255,255,255,0.08)' }} />
           ))}
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>3 of 5 viewed · Resets in 6h</div>
+        <div className="daily-sub" style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>3 of 5 viewed · Resets in 6h</div>
       </div>
 
       <LogoutButton className="nav-item" style={{ color: 'rgba(244,63,94,0.6)' }}>
@@ -262,7 +262,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div style={{ height: '100dvh', background: '#07070f', display: 'flex', overflow: 'hidden' }}>
       {/* Desktop sidebar */}
       <div
-        className="desktop-only"
+        className="desktop-only app-sidebar"
         style={{
           width: 260,
           flexShrink: 0,

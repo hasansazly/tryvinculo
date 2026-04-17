@@ -14,8 +14,8 @@ export default function MatchCard({ match }: { match: MatchView }) {
     typeof match.compatibilityScore === 'number' && match.compatibilityScore >= 50 && match.compatibilityScore < 65;
 
   return (
-    <article className="group overflow-hidden rounded-[24px] border border-[#2A3158] bg-[#0B1024]/92 shadow-[0_26px_70px_rgba(5,10,30,0.6)] backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#6D5CE8]">
-      <div className="relative h-64">
+    <article className="match-card group overflow-hidden rounded-[24px] border border-[#2A3158] bg-[#0B1024]/92 shadow-[0_26px_70px_rgba(5,10,30,0.6)] backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#6D5CE8]">
+      <div className="match-photo-area relative h-64">
         {match.matchedProfile.photoUrl ? (
           <img
             src={match.matchedProfile.photoUrl}

@@ -69,7 +69,7 @@ export default async function MessagesInboxPage() {
 
   if (myParticipantsError) {
     return (
-      <main className="min-h-screen bg-[#060814] px-4 py-8 text-white">
+      <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-white">
         <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
           <h1 className="text-xl font-semibold text-white">Messages</h1>
           <p className="mt-2 text-sm text-rose-300">{myParticipantsError.message}</p>
@@ -83,7 +83,7 @@ export default async function MessagesInboxPage() {
 
   if (conversationIds.length === 0) {
     return (
-      <main className="min-h-screen bg-[#060814] px-4 py-8 text-white">
+      <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-white">
         <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
           <h1 className="text-xl font-semibold text-white">Messages</h1>
           <div className="mt-6 rounded-xl border border-white/10 bg-[#1E1E35] p-8 text-center">
@@ -235,11 +235,11 @@ export default async function MessagesInboxPage() {
     });
 
   return (
-    <main className="min-h-screen bg-[#060814] px-4 py-8 text-white">
+    <main className="app-interior-page min-h-screen bg-[#060814] px-4 py-8 text-white">
       <div className="mx-auto max-w-4xl">
         <header className="mb-6 rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
           <h1 className="text-2xl font-semibold tracking-tight text-white">Messages</h1>
-          <p className="mt-1 text-sm text-white/70">{conversations.length} active conversation{conversations.length > 1 ? 's' : ''}</p>
+          <p className="body-on-dark mt-1 text-sm text-white/70">{conversations.length} active conversation{conversations.length > 1 ? 's' : ''}</p>
         </header>
 
         <section className="space-y-2">
