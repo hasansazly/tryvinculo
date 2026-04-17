@@ -200,6 +200,21 @@ h2 {
 }
 .input-field:hover:not(:focus) { border-color: rgba(255,255,255,0.14); }
 
+/* Auth forms: keep entry text clearly visible on dark backgrounds */
+.auth-form-shell .input-field {
+  color: rgba(245, 244, 255, 0.96);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.auth-form-shell .input-field::placeholder {
+  color: rgba(210, 202, 255, 0.72);
+}
+.auth-form-shell .input-field:focus {
+  border-color: rgba(167, 139, 250, 0.75);
+  background: rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
 /* Sidebar nav */
 .nav-item {
   display: flex;
