@@ -202,9 +202,10 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="landing-theme" style={{ background: '#FDF0F5', minHeight: '100vh', color: '#1A1A2E' }}>
+    <div className="landing-theme landing-shell" style={{ background: '#FDF0F5', minHeight: '100vh', color: '#1A1A2E' }}>
       {/* ── Nav ── */}
       <nav
+        className="landing-nav"
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
           transition: 'all 0.3s ease',
@@ -213,7 +214,7 @@ export default function LandingPage() {
           borderBottom: scrolled ? '1px solid #F4C0D1' : '1px solid transparent',
         }}
       >
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="landing-nav-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <div style={{
@@ -284,7 +285,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="fade-in-up" style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', paddingTop: 100, background: 'linear-gradient(135deg, #FDF0F5 0%, #EEEDFE 100%)' }}>
+      <section className="fade-in-up landing-hero" style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', paddingTop: 100, background: 'linear-gradient(135deg, #FDF0F5 0%, #EEEDFE 100%)' }}>
         {/* Orbs */}
         <div className="orb" style={{ width: 600, height: 600, background: 'rgba(212,83,126,0.18)', top: -200, left: -200 }} />
         <div className="orb" style={{ width: 500, height: 500, background: 'rgba(127,119,221,0.15)', bottom: -100, right: -100 }} />
@@ -359,13 +360,22 @@ export default function LandingPage() {
                   Why this match works: high alignment on values, communication style, and relationship intent.
                 </div>
               </div>
+              <div className="hero-floating-orb hero-floating-orb-a" aria-hidden="true">
+                <Heart size={14} color="#ffffff" fill="#ffffff" />
+              </div>
+              <div className="hero-floating-orb hero-floating-orb-b" aria-hidden="true">
+                <Sparkles size={14} color="#ffffff" />
+              </div>
+              <div className="hero-floating-orb hero-floating-orb-c" aria-hidden="true">
+                <CheckCircle size={14} color="#ffffff" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Problem ── */}
-      <section className="fade-in-up" style={{ padding: '90px 24px', borderTop: '1px solid #F4C0D1', borderBottom: '1px solid #F4C0D1' }}>
+      <section className="fade-in-up landing-section landing-section-problem" style={{ padding: '90px 24px', borderTop: '1px solid #F4C0D1', borderBottom: '1px solid #F4C0D1' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 52 }}>
             <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 14 }}>
@@ -394,7 +404,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Connection Track ── */}
-      <section className="fade-in-up" style={{ padding: '20px 24px 90px' }}>
+      <section className="fade-in-up landing-section" style={{ padding: '20px 24px 90px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div className="glass" style={{ borderRadius: 24, padding: '30px 28px', border: '1px solid rgba(139,92,246,0.25)' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 999, padding: '5px 12px', marginBottom: 14 }}>
@@ -426,7 +436,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Features ── */}
-      <section id="features" className="fade-in-up" style={{ padding: '100px 24px' }}>
+      <section id="features" className="fade-in-up landing-section" style={{ padding: '100px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: 999, padding: '5px 14px', marginBottom: 20 }}>
@@ -468,7 +478,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Trust ── */}
-      <section className="fade-in-up" style={{ padding: '0 24px 90px' }}>
+      <section className="fade-in-up landing-section" style={{ padding: '0 24px 90px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div className="glass" style={{ borderRadius: 24, padding: '30px 28px', border: '1px solid rgba(52,211,153,0.2)' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.2)', borderRadius: 999, padding: '5px 12px', marginBottom: 14 }}>
@@ -494,7 +504,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── How It Works ── */}
-      <section id="how-it-works" className="fade-in-up" style={{ padding: '100px 24px', background: '#FBEAF0' }}>
+      <section id="how-it-works" className="fade-in-up landing-section" style={{ padding: '100px 24px', background: '#FBEAF0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 72 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 999, padding: '5px 14px', marginBottom: 20 }}>
@@ -530,7 +540,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Testimonials ── */}
-      <section id="testimonials" className="fade-in-up" style={{ padding: '100px 24px' }}>
+      <section id="testimonials" className="fade-in-up landing-section" style={{ padding: '100px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
             <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 16 }}>
@@ -569,7 +579,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA Banner ── */}
-      <section className="fade-in-up" style={{ padding: '100px 24px' }}>
+      <section className="fade-in-up landing-section" style={{ padding: '100px 24px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
           <div className="cta-banner" style={{
             borderRadius: 28,
@@ -623,13 +633,119 @@ export default function LandingPage() {
 
       {/* Responsive styles */}
       <style>{`
+        .landing-shell {
+          background-image:
+            radial-gradient(1200px 480px at -10% -10%, rgba(212,83,126,0.09), transparent 60%),
+            radial-gradient(900px 420px at 110% 8%, rgba(127,119,221,0.1), transparent 60%);
+        }
+        .landing-nav-inner {
+          position: relative;
+        }
+        .landing-nav-inner::after {
+          content: '';
+          position: absolute;
+          left: 24px;
+          right: 24px;
+          bottom: 6px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(83,74,183,0.18), transparent);
+          pointer-events: none;
+        }
+        .landing-hero::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(700px 360px at 50% 6%, rgba(255,255,255,0.45), transparent 70%),
+            linear-gradient(180deg, transparent 0%, rgba(253,240,245,0.45) 100%);
+          pointer-events: none;
+        }
+        .hero-phone-frame {
+          border: 1px solid rgba(255,255,255,0.8) !important;
+          box-shadow: 0 24px 70px rgba(83,74,183,0.18), 0 2px 10px rgba(212,83,126,0.16);
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.92) 100%) !important;
+        }
+        .hero-floating-orb {
+          position: absolute;
+          width: 34px;
+          height: 34px;
+          border-radius: 999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.55);
+          box-shadow: 0 10px 24px rgba(42,32,89,0.24);
+          z-index: 2;
+          animation: heroOrbFloat 4.6s ease-in-out infinite;
+        }
+        .hero-floating-orb-a {
+          top: 14%;
+          right: 8%;
+          background: linear-gradient(135deg, rgba(212,83,126,0.85), rgba(228,126,160,0.92));
+        }
+        .hero-floating-orb-b {
+          bottom: 20%;
+          left: 5%;
+          background: linear-gradient(135deg, rgba(127,119,221,0.9), rgba(168,161,240,0.9));
+          animation-delay: 0.6s;
+        }
+        .hero-floating-orb-c {
+          top: 56%;
+          right: 3%;
+          background: linear-gradient(135deg, rgba(29,158,117,0.88), rgba(81,201,161,0.9));
+          animation-delay: 1.2s;
+        }
+        .landing-section .glass,
+        .landing-section .card-lift,
+        .problem-grid > div,
+        .testimonials-grid > div {
+          box-shadow: 0 10px 30px rgba(83,74,183,0.09);
+        }
+        .testimonials-grid > div {
+          background: linear-gradient(180deg, rgba(251,234,240,0.92), rgba(255,255,255,0.85)) !important;
+        }
+        .cta-banner {
+          box-shadow: 0 24px 70px rgba(83,74,183,0.18);
+        }
+        @keyframes heroOrbFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
         .nav-desktop-links { display: flex; }
         @media (max-width: 767px) {
+          .landing-nav {
+            padding-top: max(env(safe-area-inset-top, 0px), 8px);
+          }
+          .landing-nav-inner {
+            height: 62px !important;
+            border-radius: 16px;
+            margin: 0 8px;
+            padding: 0 14px !important;
+            background: rgba(255,255,255,0.74);
+            border: 1px solid rgba(244,192,209,0.9);
+            box-shadow: 0 10px 28px rgba(83,74,183,0.14);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+          }
+          .landing-nav-inner::after {
+            display: none;
+          }
+          .landing-hero {
+            min-height: auto !important;
+            padding-top: 98px !important;
+            padding-bottom: 34px !important;
+          }
           .nav-desktop-links { display: none !important; }
           .hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; text-align: center; }
           .hero-phone-wrap { margin-top: 24px; }
-          .hero-phone-frame { width: min(280px, 100%) !important; max-width: 280px !important; }
+          .hero-phone-frame { width: min(290px, 100%) !important; max-width: 290px !important; padding: 18px !important; }
           .hero-floating-card { display: none !important; }
+          .hero-floating-orb-a { top: 4%; right: 2%; }
+          .hero-floating-orb-b { bottom: 10%; left: 0; }
+          .hero-floating-orb-c { top: 50%; right: 0; }
           .hero-cta-group { flex-direction: column !important; }
           .hero-cta-group > a { width: 100% !important; }
           .problem-grid { grid-template-columns: 1fr !important; }
@@ -637,6 +753,7 @@ export default function LandingPage() {
           .features-grid { grid-template-columns: 1fr !important; }
           .steps-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
           .testimonials-grid { grid-template-columns: 1fr !important; }
+          .landing-section { padding-top: 72px !important; padding-bottom: 72px !important; }
         }
         @media (max-width: 767px) {
           .hamburger-btn { display: flex !important; }
@@ -645,6 +762,9 @@ export default function LandingPage() {
           .cta-banner { padding: 40px 24px !important; }
           /* Footer flex */
           footer > div { flex-direction: column; align-items: flex-start !important; }
+        }
+        @media (max-width: 430px) {
+          .landing-hero h1 { font-size: clamp(36px, 9vw, 48px) !important; }
         }
         @media (max-width: 480px) {
           .btn-primary, .btn-ghost {
