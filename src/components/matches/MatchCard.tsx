@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { User } from 'lucide-react';
+import { Lock, User } from 'lucide-react';
 import type { MatchView } from '@/lib/matches';
 
 function truncate(text: string, max = 140) {
@@ -16,7 +16,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
   return (
     <article className="match-card group overflow-hidden rounded-[24px] border border-[#2A3158] bg-[#0B1024]/92 shadow-[0_26px_70px_rgba(5,10,30,0.6)] backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#6D5CE8]">
       <div className="match-photo-area relative h-64">
-        {match.matchedProfile.photoUrl ? (
+        {match.canViewPhotos && match.matchedProfile.photoUrl ? (
           <img
             src={match.matchedProfile.photoUrl}
             alt={match.matchedProfile.firstName}
@@ -24,14 +24,24 @@ export default function MatchCard({ match }: { match: MatchView }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_50%_20%,rgba(154,87,255,0.22),rgba(11,16,36,0.96)_62%)]">
-            <User size={52} className="text-[#5E6B9A]" />
+            <div className="flex flex-col items-center gap-2 text-center">
+              <User size={48} className="text-[#5E6B9A]" />
+              {!match.canViewPhotos ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#5B4BC8]/40 bg-[#1A2344]/80 px-3 py-1 text-[11px] font-medium text-[#D8D0FF]">
+                  <Lock size={12} />
+                  {match.photosLockedReason || 'Photos unlock after mutual match'}
+                </span>
+              ) : null}
+            </div>
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#090E23] via-[#090E23]/35 to-transparent" />
         <div className="absolute bottom-4 right-4 z-10 inline-flex items-center rounded-full border border-[#6D5CE8]/45 bg-[#19153B]/85 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#CBC1FF]">
-          {match.matchedProfile.photos.length > 0
-            ? `${match.matchedProfile.photos.length} photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
-            : 'Profile pending photos'}
+          {match.canViewPhotos
+            ? match.matchedProfile.photos.length > 0
+              ? `${match.matchedProfile.photos.length} photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
+              : 'Profile pending photos'
+            : 'Photos unlock after mutual match'}
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <h3 className="mt-2 text-[38px] font-semibold leading-none tracking-tight text-[#F7F8FF]">

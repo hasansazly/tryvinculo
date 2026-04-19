@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { canViewPhotos, PHOTOS_UNLOCK_COPY } from '@/lib/photoAccess';
 
 export type MatchView = {
   id: string;
@@ -12,6 +13,9 @@ export type MatchView = {
   tierLabel: string | null;
   conversationDisabled: boolean;
   conversationDisabledReason: string | null;
+  isMutualMatch: boolean;
+  canViewPhotos: boolean;
+  photosLockedReason: string | null;
   matchedProfile: {
     fullName: string;
     firstName: string;
@@ -71,6 +75,11 @@ type ProfileRow = {
   [key: string]: unknown;
 };
 
+type ReciprocalMatchRow = {
+  user_id: string;
+  matched_user_id: string;
+};
+
 export async function getMatchesForUser(
   supabase: SupabaseClient,
   userId: string
@@ -128,13 +137,23 @@ export async function getMatchesForUser(
   }
   const matchedUserIds = rows.map(row => row.matched_user_id);
 
-  const { data: profileRows, error: profileError } = await supabase.from('profiles').select('*').in('id', matchedUserIds);
+  const [{ data: profileRows, error: profileError }, { data: onboardingRows, error: onboardingError }, { data: reciprocalRows }] = await Promise.all([
+    supabase.from('profiles').select('*').in('id', matchedUserIds),
+    supabase
+      .from('onboarding_responses')
+      .select('user_id,category,response')
+      .in('user_id', matchedUserIds)
+      .in('category', ['demographics', 'profile_meta', 'relationship_intent']),
+    supabase
+      .from('matches')
+      .select('user_id,matched_user_id')
+      .eq('status', 'active')
+      .eq('matched_user_id', userId)
+      .in('user_id', matchedUserIds)
+      .returns<ReciprocalMatchRow[]>(),
+  ]);
 
-  const { data: onboardingRows, error: onboardingError } = await supabase
-    .from('onboarding_responses')
-    .select('user_id,category,response')
-    .in('user_id', matchedUserIds)
-    .in('category', ['demographics', 'profile_meta', 'relationship_intent']);
+  const mutualMatchUserIds = new Set((reciprocalRows ?? []).map(row => row.user_id));
 
   const byUser = new Map<
     string,
@@ -207,6 +226,12 @@ export async function getMatchesForUser(
       (typeof profile?.bio === 'string' ? profile.bio : '') ||
       'Intentional dater on Vinculo.';
     const photos = toStringArray(profileMeta.photos);
+    const isMutualMatch = mutualMatchUserIds.has(row.matched_user_id);
+    const canViewMatchPhotos = canViewPhotos({
+      isMutualMatch,
+      isSelf: row.matched_user_id === userId,
+    });
+    const safePhotos = canViewMatchPhotos ? photos : [];
     const interests = toStringArray(demographics.interests).length
       ? toStringArray(demographics.interests)
       : toStringArray(profile?.interests);
@@ -236,14 +261,17 @@ export async function getMatchesForUser(
         typeof row.conversation_disabled_reason === 'string'
           ? row.conversation_disabled_reason
           : null,
+      isMutualMatch,
+      canViewPhotos: canViewMatchPhotos,
+      photosLockedReason: canViewMatchPhotos ? null : PHOTOS_UNLOCK_COPY,
       matchedProfile: {
         fullName,
         firstName: parseFirstName(fullName),
         age,
         location,
         bio,
-        photoUrl: photos[0] ?? null,
-        photos,
+        photoUrl: canViewMatchPhotos ? photos[0] ?? null : null,
+        photos: safePhotos,
         interests,
         profileCompleteness,
         isVerified,

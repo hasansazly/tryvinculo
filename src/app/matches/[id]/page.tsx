@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2, ImageIcon, MapPin, ShieldCheck, Sparkles, User } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ImageIcon, Lock, MapPin, ShieldCheck, Sparkles, User } from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '../../../../utils/supabase/server';
 import { findMatchById, getMatchesForUser } from '@/lib/matches';
@@ -48,9 +48,11 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
       : 'Profile completeness still updating',
     match.matchedProfile.isVerified ? 'Verified profile' : 'Verification pending',
     `Intent: ${match.matchedProfile.relationshipIntent}`,
-    match.matchedProfile.photos.length > 0
-      ? `${match.matchedProfile.photos.length} profile photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
-      : 'Profile ready for photos',
+    match.canViewPhotos
+      ? match.matchedProfile.photos.length > 0
+        ? `${match.matchedProfile.photos.length} profile photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
+        : 'Profile ready for photos'
+      : 'Photos unlock after mutual match',
     match.compatibilityReasons.length >= 3 ? 'Strong compatibility coverage' : 'Early compatibility snapshot',
     `Matched on ${createdAtLabel}`,
   ];
@@ -81,7 +83,7 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
 
         <section className="overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-900/70 shadow-[0_36px_120px_rgba(2,6,23,0.55)] backdrop-blur">
           <div className="relative h-64 sm:h-80">
-            {match.matchedProfile.photoUrl ? (
+            {match.canViewPhotos && match.matchedProfile.photoUrl ? (
               <img
                 src={match.matchedProfile.photoUrl}
                 alt={match.matchedProfile.firstName}
@@ -92,6 +94,11 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
                 <div className="rounded-full border border-slate-600/50 bg-slate-800/60 p-6 backdrop-blur">
                   <User size={52} className="text-slate-400" />
                 </div>
+                {!match.canViewPhotos ? (
+                  <div className="absolute inset-x-0 bottom-20 mx-auto w-fit rounded-full border border-violet-300/35 bg-slate-900/75 px-3 py-1.5 text-xs text-violet-100 backdrop-blur">
+                    Photos unlock after mutual match
+                  </div>
+                ) : null}
               </div>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent" />
@@ -132,19 +139,28 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
             <ImageIcon size={17} className="text-slate-300" />
             Photos
           </h2>
-          {match.matchedProfile.photos.length > 0 ? (
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {match.matchedProfile.photos.map(photo => (
-                <div
-                  key={photo}
-                  className="group aspect-square overflow-hidden rounded-2xl border border-slate-800/90 bg-slate-950"
-                >
-                  <img src={photo} alt={match.matchedProfile.firstName} className="h-full w-full object-cover" />
-                </div>
-              ))}
-            </div>
+          {match.canViewPhotos ? (
+            match.matchedProfile.photos.length > 0 ? (
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {match.matchedProfile.photos.map(photo => (
+                  <div
+                    key={photo}
+                    className="group aspect-square overflow-hidden rounded-2xl border border-slate-800/90 bg-slate-950"
+                  >
+                    <img src={photo} alt={match.matchedProfile.firstName} className="h-full w-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-3 text-sm text-slate-400">No photos uploaded yet.</p>
+            )
           ) : (
-            <p className="mt-3 text-sm text-slate-400">No photos uploaded yet.</p>
+            <div className="mt-4 rounded-2xl border border-dashed border-slate-600/80 bg-slate-900/60 p-5 text-center">
+              <p className="inline-flex items-center gap-2 text-sm font-medium text-slate-200">
+                <Lock size={14} className="text-violet-300" />
+                {match.photosLockedReason || 'Photos unlock after mutual match'}
+              </p>
+            </div>
           )}
         </section>
 
