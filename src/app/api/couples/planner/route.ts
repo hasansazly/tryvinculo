@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../utils/supabase/server';
 import { getCoupleModeState } from '@/server/couples/mode';
-import { generateDatePlan } from '@/server/couples/planner';
+import { generateDatePlanWithAI } from '@/server/couples/planner';
 
 type PlannerPayload = {
   vibe?: string;
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const duration = typeof payload.duration === 'string' && payload.duration.trim() ? payload.duration.trim() : '2-3h';
     const locationHint = typeof payload.locationHint === 'string' ? payload.locationHint.trim() : '';
 
-    const plan = generateDatePlan({
+    const { plan, source } = await generateDatePlanWithAI({
       vibe,
       budget,
       duration,
@@ -73,6 +73,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
+      source,
       plan: {
         id: inserted.id,
         title: inserted.title,

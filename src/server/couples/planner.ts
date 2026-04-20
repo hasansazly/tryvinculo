@@ -5,6 +5,12 @@ type PlannerInput = {
   locationHint: string;
 };
 
+type PlanResult = {
+  title: string;
+  summary: string;
+  steps: string[];
+};
+
 type PlannerTemplate = {
   key: string;
   title: string;
@@ -52,7 +58,7 @@ function budgetNudge(budget: string) {
   return 'Balance comfort and novelty for a date that feels thoughtful, not forced.';
 }
 
-export function generateDatePlan(input: PlannerInput) {
+export function generateDatePlan(input: PlannerInput): PlanResult {
   const vibeKey = normalizeVibe(input.vibe);
   const template = VIBE_TEMPLATES[vibeKey];
   const locationPhrase = input.locationHint.trim()
@@ -67,4 +73,125 @@ export function generateDatePlan(input: PlannerInput) {
     summary: `${template.summary} Planned ${locationPhrase} with a ${budgetPhrase} budget. ${nudge}`,
     steps: template.steps,
   };
+}
+
+function parsePlanJson(raw: string): PlanResult | null {
+  try {
+    const parsed = JSON.parse(raw) as {
+      title?: unknown;
+      summary?: unknown;
+      steps?: unknown;
+    };
+    if (typeof parsed.title !== 'string' || typeof parsed.summary !== 'string' || !Array.isArray(parsed.steps)) {
+      return null;
+    }
+    const steps = parsed.steps
+      .filter(item => typeof item === 'string')
+      .map(item => item.trim())
+      .filter(Boolean)
+      .slice(0, 5) as string[];
+    if (!steps.length) return null;
+    return {
+      title: parsed.title.trim().slice(0, 120),
+      summary: parsed.summary.trim().slice(0, 360),
+      steps,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function callOpenAI(apiKey: string, input: PlannerInput): Promise<PlanResult | null> {
+  const model = process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini';
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0.7,
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a premium dating planner. Return strict JSON only: {"title":"...","summary":"...","steps":["..."]}. Keep steps practical and safe.',
+        },
+        {
+          role: 'user',
+          content: `Create one date plan with this context:
+- vibe: ${input.vibe}
+- budget: ${input.budget}
+- duration: ${input.duration}
+- location hint: ${input.locationHint || 'not provided'}
+
+Rules:
+- Focus on emotional connection and practical logistics.
+- No explicit content.
+- 3 to 5 steps max.
+- Mention budget fit in summary.
+- Return strict JSON only.`,
+        },
+      ],
+    }),
+  });
+
+  if (!res.ok) return null;
+  const data = (await res.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  const text = data.choices?.[0]?.message?.content?.trim() ?? '';
+  return parsePlanJson(text);
+}
+
+async function callAnthropic(apiKey: string, input: PlannerInput): Promise<PlanResult | null> {
+  const Anthropic = (await import('@anthropic-ai/sdk')).default;
+  const client = new Anthropic({ apiKey });
+  const message = await client.messages.create({
+    model: process.env.ANTHROPIC_MODEL?.trim() || 'claude-sonnet-4-6',
+    max_tokens: 360,
+    messages: [
+      {
+        role: 'user',
+        content: `Create one premium date plan.
+Context:
+- vibe: ${input.vibe}
+- budget: ${input.budget}
+- duration: ${input.duration}
+- location hint: ${input.locationHint || 'not provided'}
+
+Return strict JSON only:
+{"title":"...","summary":"...","steps":["step1","step2","step3"]}`,
+      },
+    ],
+  });
+  const text = message.content[0]?.type === 'text' ? message.content[0].text : '';
+  return parsePlanJson(text);
+}
+
+export async function generateDatePlanWithAI(input: PlannerInput): Promise<{ plan: PlanResult; source: 'ai' | 'fallback' }> {
+  const openAIKey = process.env.OPENAI_API_KEY;
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+
+  if (!openAIKey && !anthropicKey) {
+    return { plan: generateDatePlan(input), source: 'fallback' };
+  }
+
+  try {
+    let aiPlan: PlanResult | null = null;
+    if (openAIKey) {
+      aiPlan = await callOpenAI(openAIKey, input);
+    } else if (anthropicKey) {
+      aiPlan = await callAnthropic(anthropicKey, input);
+    }
+
+    if (aiPlan) {
+      return { plan: aiPlan, source: 'ai' };
+    }
+  } catch {
+    // fall through to deterministic fallback
+  }
+
+  return { plan: generateDatePlan(input), source: 'fallback' };
 }
