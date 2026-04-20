@@ -312,7 +312,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ height: '100dvh', background: '#07070f', display: 'flex', overflow: 'hidden' }}>
       {/* Content column */}
-      <div className="app-shell-content">
+      <div
+        className="app-shell-content"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          minWidth: 0,
+          minHeight: 0,
+          overflow: 'hidden',
+        }}
+      >
         {/* Mobile top bar */}
         <div
           style={{
