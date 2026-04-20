@@ -16,12 +16,38 @@ function Section({ title, icon, children }: { title: string; icon: ReactNode; ch
   );
 }
 
-function Row({ label, desc, right }: { label: string; desc?: string; right: ReactNode }) {
+function Row({
+  label,
+  desc,
+  right,
+  onClick,
+  labelColor,
+  descColor,
+}: {
+  label: string;
+  desc?: string;
+  right: ReactNode;
+  onClick?: () => void;
+  labelColor?: string;
+  descColor?: string;
+}) {
+  const clickable = typeof onClick === 'function';
   return (
-    <div style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+    <div
+      style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, cursor: clickable ? 'pointer' : 'default' }}
+      onClick={onClick}
+      role={clickable ? 'button' : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onKeyDown={clickable ? (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick?.();
+        }
+      } : undefined}
+    >
       <div>
-        <div style={{ fontSize: 14, fontWeight: 500, color: '#1A1A2E', marginBottom: desc ? 2 : 0 }}>{label}</div>
-        {desc && <div style={{ fontSize: 13, color: '#777671', lineHeight: 1.45 }}>{desc}</div>}
+        <div style={{ fontSize: 14, fontWeight: 500, color: labelColor ?? '#1A1A2E', marginBottom: desc ? 2 : 0 }}>{label}</div>
+        {desc && <div style={{ fontSize: 13, color: descColor ?? '#777671', lineHeight: 1.45 }}>{desc}</div>}
       </div>
       {right}
     </div>
@@ -56,6 +82,20 @@ export default function SettingsPage() {
   }
   function togglePrivacy(key: string) {
     setPrivacy(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
+  }
+
+  function openSupportMail(subject: string) {
+    const body = [
+      'Hi Vinculo Support,',
+      '',
+      'I need help with:',
+      '',
+      'Account email:',
+      'Device:',
+      'Browser/App version:',
+      'Issue details:',
+    ].join('\n');
+    window.location.href = `mailto:support@tryvinculo.app?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
   return (
@@ -189,9 +229,26 @@ export default function SettingsPage() {
 
       {/* ─ Support ─ */}
       <Section title="Support" icon={<HelpCircle size={16} color="#60a5fa" />}>
-        {['Help Center', 'Report a problem', 'Contact us', 'Community Guidelines'].map(item => (
-          <Row key={item} label={item} right={<ChevronRight size={16} color="#888780" />} />
-        ))}
+        <Row
+          label="Help Center"
+          right={<ChevronRight size={16} color="#888780" />}
+          onClick={() => router.push('/safety')}
+        />
+        <Row
+          label="Report a problem"
+          right={<ChevronRight size={16} color="#888780" />}
+          onClick={() => openSupportMail('Report a problem')}
+        />
+        <Row
+          label="Contact us"
+          right={<ChevronRight size={16} color="#888780" />}
+          onClick={() => router.push('/contact')}
+        />
+        <Row
+          label="Community Guidelines"
+          right={<ChevronRight size={16} color="#888780" />}
+          onClick={() => router.push('/safety')}
+        />
       </Section>
 
       {/* Danger zone */}
@@ -201,20 +258,22 @@ export default function SettingsPage() {
           <span style={{ fontSize: 14, fontWeight: 700, color: '#f43f5e' }}>Danger Zone</span>
         </div>
         <div style={{ padding: '8px 0' }}>
-          <div style={{ padding: '13px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 500, color: '#E24B4A', marginBottom: 2 }}>Pause my account</div>
-              <div style={{ fontSize: 13, color: '#A32D2D' }}>Temporarily hide your profile</div>
-            </div>
-            <ChevronRight size={16} color="#A32D2D" />
-          </div>
-          <div style={{ padding: '13px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 500, color: '#E24B4A', marginBottom: 2 }}>Delete account</div>
-              <div style={{ fontSize: 13, color: '#A32D2D' }}>Permanently remove all your data</div>
-            </div>
-            <ChevronRight size={16} color="#A32D2D" />
-          </div>
+          <Row
+            label="Pause my account"
+            desc="Temporarily hide your profile"
+            labelColor="#E24B4A"
+            descColor="#A32D2D"
+            right={<ChevronRight size={16} color="#A32D2D" />}
+            onClick={() => openSupportMail('Pause my account request')}
+          />
+          <Row
+            label="Delete account"
+            desc="Permanently remove all your data"
+            labelColor="#E24B4A"
+            descColor="#A32D2D"
+            right={<ChevronRight size={16} color="#A32D2D" />}
+            onClick={() => openSupportMail('Delete account request')}
+          />
         </div>
       </div>
 
