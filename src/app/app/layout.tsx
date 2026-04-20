@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Heart, Compass, Users, MessageCircle, User, Settings, Bell, Sparkles, LogOut, HeartHandshake } from 'lucide-react';
+import { Heart, Compass, Users, MessageCircle, User, Settings, Sparkles, LogOut, HeartHandshake } from 'lucide-react';
 import AssistantShell from '@/components/ai/AssistantShell';
 import LogoutButton from '@/components/auth/LogoutButton';
 import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
@@ -140,7 +140,9 @@ function Sidebar() {
             <span className="aura-label" style={{ fontSize: 11, color: '#a78bfa', fontWeight: 500 }}>Aura {identity.auraScore}</span>
           </div>
         </div>
-        <Bell size={16} color="rgba(240,240,255,0.35)" />
+        <Link href="/app/settings" aria-label="Settings" style={{ color: 'rgba(240,240,255,0.45)', display: 'inline-flex' }}>
+          <Settings size={16} />
+        </Link>
       </div>
 
       <nav style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
@@ -341,14 +343,41 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Link href="/app/settings" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Settings</Link>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ position: 'relative', cursor: 'pointer' }}>
-              <Bell size={20} color="rgba(240,240,255,0.55)" strokeWidth={1.8} />
-              <div style={{ position: 'absolute', top: -1, right: -1, width: 8, height: 8, borderRadius: '50%', background: '#f43f5e', border: '1.5px solid #07070f' }} />
-            </div>
-            <div style={{ width: 30, height: 30, borderRadius: '50%', overflow: 'hidden', border: '1.5px solid rgba(139,92,246,0.5)', cursor: 'pointer' }}>
-              <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Link
+              href="/app/settings"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 999,
+                border: '1px solid rgba(255,255,255,0.12)',
+                color: 'rgba(240,240,255,0.72)',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label="Settings"
+            >
+              <Settings size={16} />
+            </Link>
+            <Link
+              href="/app/profile"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 999,
+                border: '1px solid rgba(139,92,246,0.45)',
+                color: 'rgba(240,240,255,0.86)',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label="Profile"
+            >
+              <User size={16} />
+            </Link>
           </div>
         </div>
 
