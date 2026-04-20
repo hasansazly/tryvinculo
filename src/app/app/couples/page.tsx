@@ -57,6 +57,33 @@ type CoupleState = {
     summary: string;
     createdAt: string;
   }>;
+  datePlans?: Array<{
+    id: string;
+    title: string;
+    summary: string;
+    steps: string[];
+    createdAt: string;
+  }>;
+  reminders?: Array<{
+    id: string;
+    title: string;
+    note: string;
+    dueAt: string;
+    completed: boolean;
+    completedAt: string | null;
+    createdAt: string;
+  }>;
+  dashboard?: {
+    openReminderCount: number;
+    nextReminder: {
+      id: string;
+      title: string;
+      dueAt: string;
+    } | null;
+    memoryCount: number;
+    completedCheckins: number;
+    lastDatePlanTitle: string | null;
+  };
   mode?: {
     selfEnabled: boolean;
     partnerEnabled: boolean | null;
@@ -96,7 +123,16 @@ export default function CouplesPage() {
   const [weeklyMore, setWeeklyMore] = useState('');
   const [loveNoteDraft, setLoveNoteDraft] = useState('');
   const [saving, setSaving] = useState<'daily' | 'weekly' | 'note' | null>(null);
+  const [plannerSaving, setPlannerSaving] = useState(false);
+  const [reminderSaving, setReminderSaving] = useState(false);
   const [modeSaving, setModeSaving] = useState(false);
+  const [plannerVibe, setPlannerVibe] = useState('cozy');
+  const [plannerBudget, setPlannerBudget] = useState('$$');
+  const [plannerDuration, setPlannerDuration] = useState('2-3h');
+  const [plannerLocation, setPlannerLocation] = useState('');
+  const [reminderTitle, setReminderTitle] = useState('');
+  const [reminderNote, setReminderNote] = useState('');
+  const [reminderDate, setReminderDate] = useState('');
 
   const loadState = useCallback(async () => {
     setLoading(true);
@@ -203,6 +239,84 @@ export default function CouplesPage() {
     }
   };
 
+  const generateDatePlan = async (event: FormEvent) => {
+    event.preventDefault();
+    setPlannerSaving(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/couples/planner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vibe: plannerVibe,
+          budget: plannerBudget,
+          duration: plannerDuration,
+          locationHint: plannerLocation.trim(),
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Failed to generate date plan');
+      }
+      await loadState();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to generate date plan');
+    } finally {
+      setPlannerSaving(false);
+    }
+  };
+
+  const submitReminder = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!reminderTitle.trim() || !reminderDate) return;
+    setReminderSaving(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/couples/reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: reminderTitle.trim(),
+          note: reminderNote.trim(),
+          dueAt: reminderDate,
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Failed to add reminder');
+      }
+      setReminderTitle('');
+      setReminderNote('');
+      setReminderDate('');
+      await loadState();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to add reminder');
+    } finally {
+      setReminderSaving(false);
+    }
+  };
+
+  const completeReminder = async (id: string) => {
+    setReminderSaving(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/couples/reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completeId: id }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Failed to complete reminder');
+      }
+      await loadState();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to complete reminder');
+    } finally {
+      setReminderSaving(false);
+    }
+  };
+
   const toggleMode = async (nextEnabled: boolean) => {
     setModeSaving(true);
     setError(null);
@@ -228,6 +342,10 @@ export default function CouplesPage() {
   const weekly = state?.modules?.weekly;
   const notes = state?.loveNotes ?? [];
   const timeline = state?.timeline ?? [];
+  const datePlans = state?.datePlans ?? [];
+  const reminders = state?.reminders ?? [];
+  const openReminders = reminders.filter(item => !item.completed);
+  const dashboard = state?.dashboard;
   const partnerName = state?.couple?.partnerName ?? 'Partner';
   const confirmedLabel = state?.couple?.confirmedAt ? formatDate(state.couple.confirmedAt) : '';
   const selfModeOn = Boolean(state?.mode?.selfEnabled);
@@ -354,8 +472,97 @@ export default function CouplesPage() {
               </div>
             </section>
 
+            <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-4">
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Next Reminder</p>
+                <p className="mt-2 text-sm font-medium text-white">
+                  {dashboard?.nextReminder?.title ?? 'No pending reminders'}
+                </p>
+                {dashboard?.nextReminder?.dueAt ? (
+                  <p className="mt-1 text-xs text-[#A9B0D0]">{formatDateTime(dashboard.nextReminder.dueAt)}</p>
+                ) : null}
+              </article>
+              <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-4">
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Open Reminders</p>
+                <p className="mt-2 text-2xl font-semibold text-white">{dashboard?.openReminderCount ?? 0}</p>
+                <p className="mt-1 text-xs text-[#A9B0D0]">Shared responsibilities at a glance.</p>
+              </article>
+              <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-4">
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Memory Timeline</p>
+                <p className="mt-2 text-2xl font-semibold text-white">{dashboard?.memoryCount ?? 0}</p>
+                <p className="mt-1 text-xs text-[#A9B0D0]">Moments saved together.</p>
+              </article>
+              <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-4">
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Latest Date Plan</p>
+                <p className="mt-2 text-sm font-medium text-white">{dashboard?.lastDatePlanTitle ?? 'Not planned yet'}</p>
+                <p className="mt-1 text-xs text-[#A9B0D0]">{dashboard?.completedCheckins ?? 0} completed weekly check-ins</p>
+              </article>
+            </section>
+
             <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
               <section className="space-y-4">
+                <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Date Concierge</p>
+                  <h3 className="mt-1 text-lg font-medium text-white">Generate your next date plan</h3>
+                  <p className="mt-1 text-xs text-[#A9B0D0]">
+                    Quick planning based on your vibe, budget, and time.
+                  </p>
+                  <form className="mt-4 grid gap-2 sm:grid-cols-2" onSubmit={generateDatePlan}>
+                    <select
+                      value={plannerVibe}
+                      onChange={event => setPlannerVibe(event.target.value)}
+                      className="rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    >
+                      <option value="cozy">Cozy</option>
+                      <option value="playful">Playful</option>
+                      <option value="romantic">Romantic</option>
+                      <option value="creative">Creative</option>
+                    </select>
+                    <select
+                      value={plannerBudget}
+                      onChange={event => setPlannerBudget(event.target.value)}
+                      className="rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    >
+                      <option value="$">$</option>
+                      <option value="$$">$$</option>
+                      <option value="$$$">$$$</option>
+                    </select>
+                    <input
+                      value={plannerDuration}
+                      onChange={event => setPlannerDuration(event.target.value)}
+                      placeholder="Duration (e.g. 2-3h)"
+                      className="rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    />
+                    <input
+                      value={plannerLocation}
+                      onChange={event => setPlannerLocation(event.target.value)}
+                      placeholder="Area or city"
+                      className="rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    />
+                    <button
+                      type="submit"
+                      disabled={plannerSaving}
+                      className="inline-flex items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60 sm:col-span-2"
+                    >
+                      {plannerSaving ? 'Generating...' : 'Generate date plan'}
+                    </button>
+                  </form>
+
+                  {datePlans.length > 0 ? (
+                    <div className="mt-4 space-y-2">
+                      {datePlans.slice(0, 3).map(plan => (
+                        <div key={plan.id} className="rounded-xl border border-[#36416D] bg-[#121A3A] p-3">
+                          <p className="text-sm font-medium text-[#E8ECFF]">{plan.title}</p>
+                          <p className="mt-1 text-xs text-[#D6DDFB]">{plan.summary}</p>
+                          {plan.steps.length > 0 ? (
+                            <p className="mt-1 text-[11px] text-[#A6AED0]">{plan.steps.join(' · ')}</p>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </article>
+
                 <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -468,6 +675,60 @@ export default function CouplesPage() {
               </section>
 
               <section className="space-y-4">
+                <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Shared Reminders</p>
+                  <form className="mt-3 space-y-2" onSubmit={submitReminder}>
+                    <input
+                      value={reminderTitle}
+                      onChange={event => setReminderTitle(event.target.value)}
+                      placeholder="Reminder title"
+                      className="w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    />
+                    <textarea
+                      value={reminderNote}
+                      onChange={event => setReminderNote(event.target.value)}
+                      placeholder="Optional note..."
+                      className="min-h-[64px] w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    />
+                    <input
+                      type="datetime-local"
+                      value={reminderDate}
+                      onChange={event => setReminderDate(event.target.value)}
+                      className="w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    />
+                    <button
+                      type="submit"
+                      disabled={reminderSaving || !reminderTitle.trim() || !reminderDate}
+                      className="inline-flex items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                    >
+                      {reminderSaving ? 'Saving...' : 'Add reminder'}
+                    </button>
+                  </form>
+                  {openReminders.length > 0 ? (
+                    <div className="mt-4 space-y-2">
+                      {openReminders.slice(0, 5).map(reminder => (
+                        <div key={reminder.id} className="rounded-xl border border-[#36416D] bg-[#121A3A] p-3">
+                          <p className="text-sm text-[#E8ECFF]">{reminder.title}</p>
+                          {reminder.note ? <p className="mt-1 text-xs text-[#D6DDFB]">{reminder.note}</p> : null}
+                          <div className="mt-2 flex items-center justify-between gap-2">
+                            <p className="text-[11px] text-[#A6AED0]">{formatDateTime(reminder.dueAt)}</p>
+                            <button
+                              type="button"
+                              onClick={() => void completeReminder(reminder.id)}
+                              disabled={reminderSaving}
+                              className="rounded-md border border-[#4E5A92] px-2 py-1 text-[11px] text-[#D6DDFB] disabled:opacity-60"
+                            >
+                              Mark done
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-3 text-sm text-[#A9B0D0]">No open reminders yet.</p>
+                  )}
+                </article>
+
                 <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
                   <div className="flex items-center gap-2">
                     <MessageCircleHeart size={16} className="text-[#C9C0FF]" />

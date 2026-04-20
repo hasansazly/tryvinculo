@@ -27,6 +27,24 @@ type LoveNoteRow = {
   created_at: string;
 };
 
+type DatePlanRow = {
+  id: string;
+  title: string;
+  summary: string;
+  plan_steps: string[] | null;
+  created_at: string;
+};
+
+type ReminderRow = {
+  id: string;
+  title: string;
+  note: string;
+  due_at: string;
+  completed: boolean;
+  completed_at: string | null;
+  created_at: string;
+};
+
 type ProfileRow = {
   id: string;
   full_name?: string | null;
@@ -304,18 +322,50 @@ export async function GET() {
     const partnerPhotoUrl = getPhoto(context.partnerUserId, byCategory);
 
     let loveNotes: LoveNoteRow[] = [];
-    const { data: noteRows, error: notesError } = await supabase
-      .from('couple_love_notes')
-      .select('id,sender_user_id,body,created_at')
-      .eq('couple_id', context.couple.id)
-      .order('created_at', { ascending: false })
-      .limit(30)
-      .returns<LoveNoteRow[]>();
+    let datePlans: DatePlanRow[] = [];
+    let reminders: ReminderRow[] = [];
+
+    const [
+      { data: noteRows, error: notesError },
+      { data: datePlanRows, error: datePlansError },
+      { data: reminderRows, error: remindersError },
+    ] = await Promise.all([
+      supabase
+        .from('couple_love_notes')
+        .select('id,sender_user_id,body,created_at')
+        .eq('couple_id', context.couple.id)
+        .order('created_at', { ascending: false })
+        .limit(30)
+        .returns<LoveNoteRow[]>(),
+      supabase
+        .from('couple_date_plans')
+        .select('id,title,summary,plan_steps,created_at')
+        .eq('couple_id', context.couple.id)
+        .order('created_at', { ascending: false })
+        .limit(10)
+        .returns<DatePlanRow[]>(),
+      supabase
+        .from('couple_reminders')
+        .select('id,title,note,due_at,completed,completed_at,created_at')
+        .eq('couple_id', context.couple.id)
+        .order('due_at', { ascending: true })
+        .limit(30)
+        .returns<ReminderRow[]>(),
+    ]);
 
     if (notesError && !looksLikeMissingTable(notesError, 'couple_love_notes')) {
       return NextResponse.json({ error: notesError.message }, { status: 500 });
     }
+    if (datePlansError && !looksLikeMissingTable(datePlansError, 'couple_date_plans')) {
+      return NextResponse.json({ error: datePlansError.message }, { status: 500 });
+    }
+    if (remindersError && !looksLikeMissingTable(remindersError, 'couple_reminders')) {
+      return NextResponse.json({ error: remindersError.message }, { status: 500 });
+    }
+
     loveNotes = noteRows ?? [];
+    datePlans = datePlanRows ?? [];
+    reminders = reminderRows ?? [];
 
     const questionById = new Map(questions.map(question => [question.id, question]));
     const grouped = new Map<string, CoupleResponseRow[]>();
@@ -364,6 +414,14 @@ export async function GET() {
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 40);
 
+    const openReminders = reminders.filter(item => !item.completed);
+    const nowTs = Date.now();
+    const nextReminder =
+      openReminders.find(item => new Date(item.due_at).getTime() >= nowTs) ?? openReminders[0] ?? null;
+    const completedCheckins = timeline.filter(item => item.type === 'checkin').length;
+    const memoryCount = timeline.length;
+    const recentDatePlan = datePlans[0] ?? null;
+
     return NextResponse.json({
       enabled: true,
       hasCouple: true,
@@ -392,6 +450,35 @@ export async function GET() {
         senderUserId: note.sender_user_id,
         isMine: note.sender_user_id === context.viewerUserId,
       })),
+      datePlans: datePlans.map(plan => ({
+        id: plan.id,
+        title: plan.title,
+        summary: plan.summary,
+        steps: Array.isArray(plan.plan_steps) ? plan.plan_steps : [],
+        createdAt: plan.created_at,
+      })),
+      reminders: reminders.map(reminder => ({
+        id: reminder.id,
+        title: reminder.title,
+        note: reminder.note,
+        dueAt: reminder.due_at,
+        completed: reminder.completed,
+        completedAt: reminder.completed_at,
+        createdAt: reminder.created_at,
+      })),
+      dashboard: {
+        openReminderCount: openReminders.length,
+        nextReminder: nextReminder
+          ? {
+              id: nextReminder.id,
+              title: nextReminder.title,
+              dueAt: nextReminder.due_at,
+            }
+          : null,
+        memoryCount,
+        completedCheckins,
+        lastDatePlanTitle: recentDatePlan?.title ?? null,
+      },
       timeline,
     });
   } catch (error) {
