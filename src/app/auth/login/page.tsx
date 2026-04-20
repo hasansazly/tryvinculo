@@ -38,17 +38,30 @@ export default function LoginPage() {
     if (!isTempleEmail(email)) { setError('Only .edu email addresses are allowed.'); return; }
     setLoading(true);
     try {
-      const supabase = getSupabaseBrowserClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password,
+      const requestedNext =
+        typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search).get('next') ?? ''
+          : '';
+
+      const response = await fetch('/api/auth/password-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+          next: requestedNext,
+        }),
       });
 
-      if (signInError) {
-        setError(signInError.message);
+      if (!response.ok) {
+        const message = await readResponseError(response);
+        setError(message);
         return;
       }
-      router.push('/dashboard');
+
+      const payload = (await response.json().catch(() => ({}))) as { next?: string };
+      const target = typeof payload.next === 'string' && payload.next.trim() ? payload.next : '/dashboard';
+      window.location.assign(target);
     } catch (signinFailure) {
       const message = signinFailure instanceof Error ? signinFailure.message : 'Sign in failed.';
       setError(message);
