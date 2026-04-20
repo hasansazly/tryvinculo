@@ -5,7 +5,7 @@ import {
   getCycleKeyForModule,
   isCoupleModeEnabled,
   pairIsDisabled,
-  pickDeterministicQuestion,
+  pickRotatingQuestion,
   resolveCoupleContext,
   type CoupleQuestionRow,
   type CoupleResponseRow,
@@ -270,8 +270,23 @@ export async function GET() {
       return NextResponse.json({ error: 'Daily/weekly couple prompts are not configured.' }, { status: 500 });
     }
 
-    const dailyQuestion = pickDeterministicQuestion(track.id, dailyKey, dailyPool, 'couple-daily');
-    const weeklyQuestion = pickDeterministicQuestion(track.id, weeklyKey, weeklyPool, 'couple-weekly');
+    const history = timelineResponses ?? [];
+    const dailyQuestion = pickRotatingQuestion(
+      track.id,
+      dailyKey,
+      dailyPool,
+      'couple-daily',
+      history,
+      { lookbackDays: 30, avoidRepeatCategory: true }
+    );
+    const weeklyQuestion = pickRotatingQuestion(
+      track.id,
+      weeklyKey,
+      weeklyPool,
+      'couple-weekly',
+      history,
+      { lookbackDays: 60, avoidRepeatCategory: true }
+    );
     if (!dailyQuestion || !weeklyQuestion) {
       return NextResponse.json({ error: 'Unable to select couple prompts.' }, { status: 500 });
     }

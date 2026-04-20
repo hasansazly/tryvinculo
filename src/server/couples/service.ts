@@ -60,6 +60,68 @@ export function pickDeterministicQuestion(
   return questions[index] ?? null;
 }
 
+function recentQuestionIds(
+  responses: Array<Pick<CoupleResponseRow, 'question_id' | 'created_at'>>,
+  lookbackDays: number
+) {
+  const cutoff = Date.now() - lookbackDays * 24 * 60 * 60 * 1000;
+  return new Set(
+    responses
+      .filter(item => {
+        const ts = new Date(item.created_at).getTime();
+        return Number.isFinite(ts) && ts >= cutoff;
+      })
+      .map(item => item.question_id)
+  );
+}
+
+function latestQuestionCategory(
+  responses: Array<Pick<CoupleResponseRow, 'question_id' | 'created_at'>>,
+  questionById: Map<string, CoupleQuestionRow>
+) {
+  const latest = responses
+    .filter(item => questionById.has(item.question_id))
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+  if (!latest) return null;
+  return questionById.get(latest.question_id)?.category ?? null;
+}
+
+export function pickRotatingQuestion(
+  trackId: string,
+  cycleKey: string,
+  questions: CoupleQuestionRow[],
+  salt: string,
+  history: Array<Pick<CoupleResponseRow, 'question_id' | 'created_at'>>,
+  opts?: {
+    lookbackDays?: number;
+    avoidRepeatCategory?: boolean;
+  }
+) {
+  if (questions.length === 0) return null;
+
+  const lookbackDays = opts?.lookbackDays ?? 30;
+  const avoidRepeatCategory = opts?.avoidRepeatCategory ?? true;
+  const questionById = new Map(questions.map(question => [question.id, question]));
+  const recentIds = recentQuestionIds(history, lookbackDays);
+
+  let pool = questions.filter(question => !recentIds.has(question.id));
+  if (pool.length === 0) {
+    pool = [...questions];
+  }
+
+  if (avoidRepeatCategory && pool.length > 1) {
+    const latestCategory = latestQuestionCategory(history, questionById);
+    if (latestCategory) {
+      const categoryRotated = pool.filter(question => question.category !== latestCategory);
+      if (categoryRotated.length > 0) {
+        pool = categoryRotated;
+      }
+    }
+  }
+
+  return pickDeterministicQuestion(trackId, cycleKey, pool, salt);
+}
+
 export async function findConfirmedCoupleForUser(supabase: SupabaseClient, userId: string): Promise<CoupleRow | null> {
   const { data, error } = await supabase
     .from('couples')

@@ -47,6 +47,48 @@ function pickDeterministicQuestion(trackId: string, cycleKey: string, bucket: Qu
   return bucket[index] ?? null;
 }
 
+function pickRotatingQuestion(
+  trackId: string,
+  cycleKey: string,
+  bucket: QuestionRow[],
+  salt: string,
+  history: Array<Pick<ResponseRow, 'question_id' | 'created_at'>>,
+  opts?: { lookbackDays?: number; avoidRepeatCategory?: boolean }
+) {
+  if (bucket.length === 0) return null;
+
+  const lookbackDays = opts?.lookbackDays ?? 30;
+  const avoidRepeatCategory = opts?.avoidRepeatCategory ?? true;
+  const cutoff = Date.now() - lookbackDays * 24 * 60 * 60 * 1000;
+  const questionById = new Map(bucket.map(question => [question.id, question]));
+  const recentQuestionIds = new Set(
+    history
+      .filter(item => {
+        const ts = new Date(item.created_at).getTime();
+        return Number.isFinite(ts) && ts >= cutoff;
+      })
+      .map(item => item.question_id)
+  );
+
+  let pool = bucket.filter(question => !recentQuestionIds.has(question.id));
+  if (pool.length === 0) pool = [...bucket];
+
+  if (avoidRepeatCategory && pool.length > 1) {
+    const latest = history
+      .filter(item => questionById.has(item.question_id))
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+    const latestCategory = latest ? questionById.get(latest.question_id)?.category ?? null : null;
+    if (latestCategory) {
+      const categoryRotated = pool.filter(question => question.category !== latestCategory);
+      if (categoryRotated.length > 0) {
+        pool = categoryRotated;
+      }
+    }
+  }
+
+  return pickDeterministicQuestion(trackId, cycleKey, pool, salt);
+}
+
 function normalizeResponses(responses: ResponseRow[]) {
   return responses.map(response => ({
     id: response.id,
@@ -231,8 +273,23 @@ export async function GET(req: NextRequest) {
 
     const todayKey = getTodayKey();
     const weekKey = getWeekKey();
-    const dailyQuestion = pickDeterministicQuestion(track.id, todayKey, dailyPool, 'daily');
-    const weeklyQuestion = pickDeterministicQuestion(track.id, weekKey, weeklyPool, 'weekly');
+    const { data: historyRows } = await supabase
+      .from('connection_track_responses')
+      .select('question_id,created_at')
+      .eq('connection_track_id', track.id)
+      .order('created_at', { ascending: false })
+      .limit(240)
+      .returns<Array<Pick<ResponseRow, 'question_id' | 'created_at'>>>();
+
+    const history = historyRows ?? [];
+    const dailyQuestion = pickRotatingQuestion(track.id, todayKey, dailyPool, 'daily', history, {
+      lookbackDays: 30,
+      avoidRepeatCategory: true,
+    });
+    const weeklyQuestion = pickRotatingQuestion(track.id, weekKey, weeklyPool, 'weekly', history, {
+      lookbackDays: 60,
+      avoidRepeatCategory: true,
+    });
 
     if (!dailyQuestion || !weeklyQuestion) {
       return NextResponse.json({ error: 'Unable to select active questions.' }, { status: 500 });

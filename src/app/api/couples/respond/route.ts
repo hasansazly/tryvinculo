@@ -5,9 +5,10 @@ import {
   getCycleKeyForModule,
   isCoupleModeEnabled,
   pairIsDisabled,
-  pickDeterministicQuestion,
+  pickRotatingQuestion,
   resolveCoupleContext,
   type CoupleQuestionRow,
+  type CoupleResponseRow,
 } from '@/server/couples/service';
 import { getCoupleModeState } from '@/server/couples/mode';
 
@@ -88,11 +89,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: questionError?.message ?? 'Prompt pool unavailable' }, { status: 500 });
     }
 
-    const question = pickDeterministicQuestion(
+    const { data: historyRows } = await supabase
+      .from('connection_track_responses')
+      .select('id,question_id,user_id,cycle_key,response_text,response_value,created_at')
+      .eq('connection_track_id', track.id)
+      .order('created_at', { ascending: false })
+      .limit(240)
+      .returns<CoupleResponseRow[]>();
+
+    const question = pickRotatingQuestion(
       track.id,
       cycleKey,
       questions,
-      moduleKey === 'daily' ? 'couple-daily' : 'couple-weekly'
+      moduleKey === 'daily' ? 'couple-daily' : 'couple-weekly',
+      historyRows ?? [],
+      {
+        lookbackDays: moduleKey === 'daily' ? 30 : 60,
+        avoidRepeatCategory: true,
+      }
     );
 
     if (!question) {
