@@ -231,7 +231,8 @@ export default function SettingsPage() {
         ))}
         <Row
           label="Blocked users"
-          right={<button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#5F5E5A', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontFamily: 'inherit' }}>Manage <ChevronRight size={14} /></button>}
+          right={<span style={{ color: '#5F5E5A', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontFamily: 'inherit' }}>Manage <ChevronRight size={14} /></span>}
+          onClick={() => router.push('/app/settings/blocked-users')}
         />
       </Section>
 

@@ -95,3 +95,38 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const payload = await req.json().catch(() => ({}));
+    const targetUserId = typeof payload?.targetUserId === 'string' ? payload.targetUserId.trim() : '';
+
+    if (!targetUserId) {
+      return NextResponse.json({ error: 'targetUserId is required' }, { status: 400 });
+    }
+
+    const { error } = await supabase
+      .from('blocks')
+      .delete()
+      .eq('blocker_user_id', user.id)
+      .eq('blocked_user_id', targetUserId);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unexpected error';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
