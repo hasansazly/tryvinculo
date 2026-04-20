@@ -46,7 +46,27 @@ export async function getCoupleModeState(
     };
   }
 
-  const context = await resolveCoupleContext(supabase, viewerUserId);
+  let context = null;
+  try {
+    context = await resolveCoupleContext(supabase, viewerUserId);
+  } catch (error) {
+    if (looksLikeMissingTable(error as { code?: string; message?: string }, 'couples')) {
+      return {
+        featureEnabled: true,
+        migrationRequired: true,
+        hasCouple: false,
+        pairUnavailable: false,
+        coupleId: null,
+        viewerUserId,
+        partnerUserId: null,
+        selfEnabled: false,
+        partnerEnabled: null,
+        effectiveOn: false,
+        updatedAt: null,
+      };
+    }
+    throw error;
+  }
   if (!context) {
     return {
       featureEnabled: true,
@@ -128,6 +148,11 @@ export async function getCoupleModeState(
 }
 
 export async function isDatingLockedForUser(supabase: SupabaseClient, viewerUserId: string) {
-  const state = await getCoupleModeState(supabase, viewerUserId);
-  return state.featureEnabled && state.hasCouple && state.selfEnabled;
+  try {
+    const state = await getCoupleModeState(supabase, viewerUserId);
+    return state.featureEnabled && state.hasCouple && state.selfEnabled;
+  } catch {
+    // Never block/redirect if optional couple-mode tables are not ready.
+    return false;
+  }
 }
