@@ -92,6 +92,16 @@ type CoupleState = {
   };
 };
 
+type InviteMeta = {
+  id: string;
+  partnerEmail: string;
+  code: string;
+  status: 'pending' | 'accepted' | 'cancelled' | 'expired';
+  createdAt: string;
+  expiresAt: string;
+  inviteLink: string;
+};
+
 function formatDate(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
@@ -133,6 +143,14 @@ export default function CouplesPage() {
   const [reminderTitle, setReminderTitle] = useState('');
   const [reminderNote, setReminderNote] = useState('');
   const [reminderDate, setReminderDate] = useState('');
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
+  const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
+  const [canCreateInvite, setCanCreateInvite] = useState(false);
+  const [inviteReason, setInviteReason] = useState<string | null>(null);
+  const [pendingInvite, setPendingInvite] = useState<InviteMeta | null>(null);
+  const [inviteCodeFromUrl, setInviteCodeFromUrl] = useState('');
 
   const loadState = useCallback(async () => {
     setLoading(true);
@@ -155,6 +173,104 @@ export default function CouplesPage() {
   useEffect(() => {
     void loadState();
   }, [loadState]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const code = new URLSearchParams(window.location.search).get('invite') ?? '';
+    setInviteCodeFromUrl(code.trim());
+  }, []);
+
+  const loadInviteMeta = useCallback(async () => {
+    setInviteError(null);
+    setInviteSuccess(null);
+    try {
+      const res = await fetch('/api/couples/invite', { method: 'GET' });
+      const payload = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        canCreateInvite?: boolean;
+        reason?: string | null;
+        pendingInvite?: InviteMeta | null;
+      };
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Unable to load invite settings');
+      }
+      setCanCreateInvite(Boolean(payload.canCreateInvite));
+      setInviteReason(typeof payload.reason === 'string' ? payload.reason : null);
+      setPendingInvite(payload.pendingInvite ?? null);
+    } catch (err) {
+      setInviteError(err instanceof Error ? err.message : 'Unable to load invite settings');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading && state?.enabled && !state.hasCouple) {
+      void loadInviteMeta();
+    }
+  }, [loadInviteMeta, loading, state]);
+
+  const createInvite = async (event: FormEvent) => {
+    event.preventDefault();
+    const normalized = inviteEmail.trim().toLowerCase();
+    if (!normalized) {
+      setInviteError('Partner email is required.');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(normalized)) {
+      setInviteError('Enter a valid partner email.');
+      return;
+    }
+
+    setInviteLoading(true);
+    setInviteError(null);
+    setInviteSuccess(null);
+    try {
+      const res = await fetch('/api/couples/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ partnerEmail: normalized }),
+      });
+      const payload = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        invite?: InviteMeta;
+      };
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Unable to create invite');
+      }
+      setPendingInvite(payload.invite ?? null);
+      setInviteSuccess('Invite link created. Share it with your partner.');
+    } catch (err) {
+      setInviteError(err instanceof Error ? err.message : 'Unable to create invite');
+    } finally {
+      setInviteLoading(false);
+    }
+  };
+
+  const acceptInvite = async () => {
+    if (!inviteCodeFromUrl) {
+      setInviteError('Invite code is missing from this URL.');
+      return;
+    }
+    setInviteLoading(true);
+    setInviteError(null);
+    setInviteSuccess(null);
+    try {
+      const res = await fetch('/api/couples/invite/accept', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: inviteCodeFromUrl }),
+      });
+      const payload = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Unable to accept invite');
+      }
+      setInviteSuccess('Invite accepted. Loading your Couple Mode...');
+      await loadState();
+    } catch (err) {
+      setInviteError(err instanceof Error ? err.message : 'Unable to accept invite');
+    } finally {
+      setInviteLoading(false);
+    }
+  };
 
   const submitDaily = async (event: FormEvent) => {
     event.preventDefault();
@@ -440,6 +556,59 @@ export default function CouplesPage() {
                 This pair is currently unavailable because of a safety or unmatch state.
               </p>
             ) : null}
+            {inviteCodeFromUrl ? (
+              <div className="mt-4 rounded-xl border border-[#3A4474] bg-[#11183A] p-4">
+                <p className="text-sm font-medium text-white">You were invited to join as a partner</p>
+                <p className="mt-1 text-xs text-[#A9B0D0]">
+                  This invite is email-locked. Sign in with the invited email to accept.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void acceptInvite()}
+                  disabled={inviteLoading}
+                  className="mt-3 rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                >
+                  {inviteLoading ? 'Accepting...' : 'Accept Invite'}
+                </button>
+              </div>
+            ) : null}
+            <div className="mt-4 rounded-xl border border-[#3A4474] bg-[#11183A] p-4">
+              <p className="text-sm font-medium text-white">Invite your partner</p>
+              <p className="mt-1 text-xs text-[#A9B0D0]">
+                Only Temple users can send invites. Your partner can join from any school.
+              </p>
+              {canCreateInvite ? (
+                <form className="mt-3 space-y-2" onSubmit={createInvite}>
+                  <input
+                    className="w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                    type="email"
+                    placeholder="partner@example.edu"
+                    value={inviteEmail}
+                    onChange={event => setInviteEmail(event.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    disabled={inviteLoading}
+                    className="rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                  >
+                    {inviteLoading ? 'Creating...' : 'Create Invite Link'}
+                  </button>
+                </form>
+              ) : (
+                <p className="mt-3 text-xs text-amber-200">{inviteReason ?? 'Invites are unavailable right now.'}</p>
+              )}
+              {pendingInvite ? (
+                <div className="mt-3 rounded-lg border border-[#3B4B88] bg-[#0E1633] p-3">
+                  <p className="text-xs text-[#C9D2FF]">Invite link</p>
+                  <p className="mt-1 break-all text-xs text-[#AFC0FF]">{pendingInvite.inviteLink}</p>
+                  <p className="mt-2 text-[11px] text-[#A9B0D0]">
+                    For: {pendingInvite.partnerEmail} · Expires {formatDateTime(pendingInvite.expiresAt)}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+            {inviteError ? <p className="mt-3 text-xs text-rose-300">{inviteError}</p> : null}
+            {inviteSuccess ? <p className="mt-3 text-xs text-emerald-300">{inviteSuccess}</p> : null}
           </section>
         ) : null}
 

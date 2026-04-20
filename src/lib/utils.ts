@@ -62,6 +62,11 @@ export function isTempleEmail(email: string): boolean {
   return normalized.endsWith('.edu');
 }
 
+export function isTempleUniversityEmail(email: string): boolean {
+  const normalized = normalizeEmail(email);
+  return normalized.endsWith('@temple.edu');
+}
+
 export const INTERESTS = [
   'Hiking', 'Photography', 'Cooking', 'Travel', 'Music', 'Art', 'Reading',
   'Fitness', 'Gaming', 'Film', 'Coffee', 'Wine', 'Yoga', 'Meditation',
