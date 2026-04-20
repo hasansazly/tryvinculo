@@ -227,10 +227,10 @@ function MobileBottomNav() {
         right: 0,
         bottom: 0,
         zIndex: 'var(--z-bottom-nav)',
-        background: 'rgba(7,7,15,0.97)',
+        background: '#1A0A1E',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderTop: '1px solid rgba(255,255,255,0.07)',
+        borderTop: '1px solid rgba(255, 88, 100, 0.2)',
         display: 'flex',
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 6px)',
       }}
@@ -254,7 +254,7 @@ function MobileBottomNav() {
               gap: 3,
               textDecoration: 'none',
               padding: '8px 0 6px',
-              color: isActive ? activeColor : inactiveColor,
+              color: isActive ? '#FF5864' : 'rgb(184, 158, 196)',
               position: 'relative',
               transition: 'color var(--dur-fast) var(--ease-standard)',
               WebkitTapHighlightColor: 'transparent',
@@ -270,7 +270,7 @@ function MobileBottomNav() {
                 width: 28,
                 height: 2.5,
                 borderRadius: '0 0 3px 3px',
-                background: activeColor,
+                background: '#FF5864',
               }} />
             )}
 
@@ -286,7 +286,7 @@ function MobileBottomNav() {
                   height: 15,
                   background: item.isSpark ? '#fb923c' : 'linear-gradient(135deg, #7c3aed, #db2777)',
                   borderRadius: 999,
-                  border: '1.5px solid #07070f',
+                  border: '1.5px solid #1A0A1E',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -312,7 +312,7 @@ function MobileBottomNav() {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ height: '100dvh', background: '#07070f', display: 'flex', overflow: 'hidden' }}>
+    <div style={{ height: '100dvh', background: '#FAF8F5', display: 'flex', overflow: 'hidden' }}>
       {/* Content column */}
       <div
         className="app-shell-content"
@@ -329,10 +329,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div
           style={{
             flexShrink: 0,
-            background: 'rgba(7,7,15,0.95)',
+            background: '#1A0A1E',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            borderBottom: '1px solid rgba(255, 88, 100, 0.2)',
             padding: '0 16px',
             paddingTop: 'env(safe-area-inset-top, 0px)',
             minHeight: 'calc(52px + env(safe-area-inset-top, 0px))',
@@ -346,12 +346,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </Link>
 
           <div className="desktop-top-links" style={{ alignItems: 'center', gap: 16 }}>
-            <Link href="/app/discover" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Discover</Link>
-            <Link href="/app/matches" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Matches</Link>
-            <Link href="/app/messages" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Messages</Link>
-            <Link href="/app/profile" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Profile</Link>
-            <Link href="/app/couples" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Couples</Link>
-            <Link href="/app/settings" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Settings</Link>
+            <Link href="/app/discover" style={{ color: 'rgb(245, 238, 248)', textDecoration: 'none', fontSize: 13 }}>Discover</Link>
+            <Link href="/app/matches" style={{ color: 'rgb(245, 238, 248)', textDecoration: 'none', fontSize: 13 }}>Matches</Link>
+            <Link href="/app/messages" style={{ color: 'rgb(245, 238, 248)', textDecoration: 'none', fontSize: 13 }}>Messages</Link>
+            <Link href="/app/profile" style={{ color: 'rgb(245, 238, 248)', textDecoration: 'none', fontSize: 13 }}>Profile</Link>
+            <Link href="/app/couples" style={{ color: 'rgb(245, 238, 248)', textDecoration: 'none', fontSize: 13 }}>Couples</Link>
+            <Link href="/app/settings" style={{ color: 'rgb(245, 238, 248)', textDecoration: 'none', fontSize: 13 }}>Settings</Link>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -361,8 +361,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 width: 32,
                 height: 32,
                 borderRadius: 999,
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: 'rgba(240,240,255,0.72)',
+                border: '1px solid rgba(255, 88, 100, 0.2)',
+                color: 'rgb(184, 158, 196)',
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
@@ -378,8 +378,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 width: 32,
                 height: 32,
                 borderRadius: 999,
-                border: '1px solid rgba(139,92,246,0.45)',
-                color: 'rgba(240,240,255,0.86)',
+                border: '1px solid rgba(255, 88, 100, 0.35)',
+                color: 'rgb(245, 238, 248)',
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',

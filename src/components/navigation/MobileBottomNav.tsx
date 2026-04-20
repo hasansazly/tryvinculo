@@ -54,10 +54,10 @@ export default function MobileBottomNav() {
         right: 0,
         bottom: 0,
         zIndex: 'var(--z-bottom-nav)',
-        background: 'rgba(7,7,15,0.97)',
+        background: '#1A0A1E',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderTop: '1px solid rgba(255,255,255,0.07)',
+        borderTop: '1px solid rgba(255, 88, 100, 0.2)',
         display: 'flex',
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 6px)',
       }}
@@ -79,7 +79,7 @@ export default function MobileBottomNav() {
               gap: 3,
               textDecoration: 'none',
               padding: '8px 0 6px',
-              color: isActive ? '#a78bfa' : 'rgba(240,240,255,0.28)',
+              color: isActive ? '#FF5864' : 'rgb(184, 158, 196)',
               position: 'relative',
               transition: 'color var(--dur-fast) var(--ease-standard)',
               WebkitTapHighlightColor: 'transparent',
@@ -95,7 +95,7 @@ export default function MobileBottomNav() {
                   width: 28,
                   height: 2.5,
                   borderRadius: '0 0 3px 3px',
-                  background: '#a78bfa',
+                  background: '#FF5864',
                 }}
               />
             ) : null}
@@ -112,7 +112,7 @@ export default function MobileBottomNav() {
                     height: 15,
                     background: 'linear-gradient(135deg, #7c3aed, #db2777)',
                     borderRadius: 999,
-                    border: '1.5px solid #07070f',
+                    border: '1.5px solid #1A0A1E',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

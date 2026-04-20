@@ -179,16 +179,16 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="landing-theme landing-shell" style={{ background: '#FDF0F5', minHeight: '100vh', color: '#1A1A2E' }}>
+    <div className="landing-theme landing-shell" style={{ background: '#FFF0F1', minHeight: '100vh', color: '#1A0A1E' }}>
       {/* ── Nav ── */}
       <nav
         className="landing-nav"
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
           transition: 'all 0.3s ease',
-          background: scrolled ? 'rgba(253, 240, 245, 0.85)' : 'transparent',
+          background: '#1A0A1E',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: scrolled ? '1px solid #F4C0D1' : '1px solid transparent',
+          borderBottom: '1px solid rgba(255, 88, 100, 0.2)',
         }}
       >
         <div className="landing-nav-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -206,11 +206,11 @@ export default function LandingPage() {
           <div style={{ alignItems: 'center', gap: 32 }} className="nav-desktop-links">
             {NAV_LINKS.map(l => (
               <a key={l.label} href={l.href} style={{
-                color: '#534AB7', fontSize: 14, fontWeight: 500,
+                color: 'rgb(245, 238, 248)', fontSize: 14, fontWeight: 500,
                 textDecoration: 'none', transition: 'color 0.2s',
               }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#1A1A2E')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#534AB7')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#FF5864')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgb(245, 238, 248)')}
               >
                 {l.label}
               </a>
@@ -226,7 +226,7 @@ export default function LandingPage() {
             <button
               className="hamburger-btn"
               onClick={() => setMenuOpen(o => !o)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#534AB7', padding: 4, display: 'none' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgb(245, 238, 248)', padding: 4, display: 'none' }}
             >
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -236,9 +236,9 @@ export default function LandingPage() {
         {/* Mobile nav menu */}
         {menuOpen && (
           <div className="mobile-menu" style={{
-            background: 'rgba(253,240,245,0.96)',
+            background: '#1A0A1E',
             backdropFilter: 'blur(20px)',
-            borderTop: '1px solid #F4C0D1',
+            borderTop: '1px solid rgba(255, 88, 100, 0.2)',
             padding: '12px 24px 20px',
             display: 'none',
             flexDirection: 'column',
@@ -249,7 +249,7 @@ export default function LandingPage() {
                 key={l.label}
                 href={l.href}
                 onClick={() => setMenuOpen(false)}
-                style={{ color: '#534AB7', fontSize: 15, fontWeight: 500, textDecoration: 'none', padding: '12px 4px', borderBottom: '1px solid #F4C0D1', display: 'block' }}
+                style={{ color: 'rgb(245, 238, 248)', fontSize: 15, fontWeight: 500, textDecoration: 'none', padding: '12px 4px', borderBottom: '1px solid rgba(255, 88, 100, 0.2)', display: 'block' }}
               >
                 {l.label}
               </a>
@@ -259,7 +259,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="fade-in-up landing-hero" style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', paddingTop: 100, background: 'linear-gradient(135deg, #FDF0F5 0%, #EEEDFE 100%)' }}>
+      <section className="fade-in-up landing-hero" style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', paddingTop: 100, background: 'linear-gradient(135deg, #FFF0F1 0%, #FAF8F5 100%)' }}>
         {/* Orbs */}
         <div className="orb" style={{ width: 600, height: 600, background: 'rgba(212,83,126,0.18)', top: -200, left: -200 }} />
         <div className="orb" style={{ width: 500, height: 500, background: 'rgba(127,119,221,0.15)', bottom: -100, right: -100 }} />
@@ -282,7 +282,7 @@ export default function LandingPage() {
                 <br /> <span className="gradient-text">understand it.</span>
               </h1>
 
-              <p style={{ fontSize: 18, lineHeight: 1.65, color: '#534AB7', marginBottom: 36, maxWidth: 460 }}>
+              <p style={{ fontSize: 18, lineHeight: 1.65, color: '#6B4B5E', marginBottom: 36, maxWidth: 460 }}>
                 Date with less guesswork: fewer, better matches, clearer reasons to connect, and less emotional burnout.
               </p>
 
@@ -291,12 +291,12 @@ export default function LandingPage() {
                   Start Dating with Clarity
                   <ArrowRight size={18} />
                 </Link>
-                <a href="#how-it-works" style={{ fontSize: 14, fontWeight: 500, color: '#534AB7', textDecoration: 'none' }}>
+                <a href="#how-it-works" style={{ fontSize: 14, fontWeight: 500, color: '#FF3B5C', textDecoration: 'none' }}>
                   See a Sample Match Breakdown
                 </a>
               </div>
 
-              <div style={{ marginTop: 20, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', fontSize: 12, color: '#534AB7', fontWeight: 500 }}>
+              <div style={{ marginTop: 20, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', fontSize: 12, color: '#6B4B5E', fontWeight: 500 }}>
                 <span>Privacy first</span>
                 <span>·</span>
                 <span>Verified profiles</span>
@@ -544,23 +544,23 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: '1px solid #2E2A49', padding: '48px 24px', background: '#1A1A2E' }}>
+      <footer style={{ borderTop: '1px solid rgba(255, 88, 100, 0.2)', padding: '48px 24px', background: '#1A0A1E' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <img src="/vinculo-logo.svg" alt="Vinculo" style={{ width: 30, height: 30, borderRadius: 8, display: 'block' }} />
-            <span style={{ fontWeight: 500, fontSize: 21, letterSpacing: '-0.02em', color: '#CECBF6', fontFamily: "'Playfair Display', Georgia, serif" }}>vinculo</span>
+            <span style={{ fontWeight: 500, fontSize: 21, letterSpacing: '-0.02em', color: 'rgb(245, 238, 248)', fontFamily: "'Playfair Display', Georgia, serif" }}>vinculo</span>
           </div>
           <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
             {FOOTER_LINKS.map(l => (
-              <Link key={l.label} href={l.href} style={{ fontSize: 13, color: '#CECBF6', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#D4537E')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#CECBF6')}
+              <Link key={l.label} href={l.href} style={{ fontSize: 13, color: 'rgb(184, 158, 196)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#FF5864')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgb(184, 158, 196)')}
               >
                 {l.label}
               </Link>
             ))}
           </div>
-          <div style={{ fontSize: 12, color: '#CECBF6' }}>© 2026 Vinculo. Made with ♥</div>
+          <div style={{ fontSize: 12, color: 'rgb(184, 158, 196)' }}>© 2026 Vinculo. Made with ♥</div>
         </div>
       </footer>
 
@@ -654,9 +654,9 @@ export default function LandingPage() {
             border-radius: 16px;
             margin: 0 8px;
             padding: 0 14px !important;
-            background: rgba(255,255,255,0.74);
-            border: 1px solid rgba(244,192,209,0.9);
-            box-shadow: 0 10px 28px rgba(83,74,183,0.14);
+            background: #1A0A1E;
+            border: 1px solid rgba(255, 88, 100, 0.2);
+            box-shadow: 0 10px 28px rgba(255, 88, 100, 0.16);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
           }
@@ -742,8 +742,8 @@ export default function LandingPage() {
             align-items: center;
             justify-content: center;
             border-radius: 10px;
-            border: 1px solid rgba(83,74,183,0.22) !important;
-            background: rgba(255,255,255,0.72) !important;
+            border: 1px solid rgba(255, 88, 100, 0.2) !important;
+            background: #2D1B2E !important;
           }
           .nav-login-link { display: none !important; }
           .mobile-menu { display: flex !important; }

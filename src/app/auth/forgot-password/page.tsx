@@ -143,20 +143,20 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#07070f', display: 'flex' }}>
+    <div className="auth-page" style={{ minHeight: '100vh', background: '#FFF0F1', display: 'flex' }}>
       <div className="auth-form-shell" style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '32px 16px' }}>
         <div style={{ width: '100%', maxWidth: 520, marginTop: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 40 }} className="auth-mobile-logo">
             <img src="/vinculo-logo.svg" alt="Vinculo" style={{ width: 34, height: 34, borderRadius: 9, display: 'block' }} />
-            <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em', color: '#F8F7FF' }}>vinculo</span>
+            <span style={{ fontWeight: 700, fontSize: 20, letterSpacing: '-0.03em', color: '#1A0A1E' }}>vinculo</span>
           </div>
 
-          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 8, color: '#F8F7FF' }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 8, color: '#1A0A1E' }}>
             Reset your password
           </h1>
-          <p style={{ fontSize: 15, color: 'rgba(240,240,255,0.45)', marginBottom: 32 }}>
+          <p style={{ fontSize: 15, color: '#6B4B5E', marginBottom: 32 }}>
             Remembered it?{' '}
-            <Link href="/auth/login" style={{ color: '#a78bfa', textDecoration: 'none', fontWeight: 500 }}>
+            <Link href="/auth/login" style={{ color: '#FF3B5C', textDecoration: 'none', fontWeight: 500 }}>
               Back to sign in
             </Link>
           </p>

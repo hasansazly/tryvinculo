@@ -53,14 +53,14 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl">
+    <main className="min-h-screen bg-[#FFF0F1] text-[#1A0A1E] flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md rounded-2xl border border-[rgba(255,88,100,0.2)] bg-[#FAF8F5] p-6 shadow-xl">
         <h1 className="text-2xl font-semibold tracking-tight mb-2">Create your account</h1>
-        <p className="text-sm text-slate-400 mb-6">Sign up with your email and password.</p>
+        <p className="text-sm text-[#6B4B5E] mb-6">Sign up with your email and password.</p>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm text-slate-300 mb-1">
+            <label htmlFor="email" className="block text-sm text-[#6B4B5E] mb-1">
               Email
             </label>
             <input
@@ -69,13 +69,13 @@ export default function SignupPage() {
               required
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-slate-100 outline-none focus:border-slate-500"
+              className="w-full rounded-lg border border-[rgba(255,88,100,0.25)] bg-white px-3 py-2 text-[#1A0A1E] outline-none focus:border-[#FF5864]"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm text-slate-300 mb-1">
+            <label htmlFor="password" className="block text-sm text-[#6B4B5E] mb-1">
               Password
             </label>
             <input
@@ -85,18 +85,18 @@ export default function SignupPage() {
               minLength={6}
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-slate-100 outline-none focus:border-slate-500"
+              className="w-full rounded-lg border border-[rgba(255,88,100,0.25)] bg-white px-3 py-2 text-[#1A0A1E] outline-none focus:border-[#FF5864]"
               placeholder="Minimum 6 characters"
             />
           </div>
 
-          {error && <p className="text-sm text-rose-400">{error}</p>}
+          {error && <p className="text-sm text-[#FF3B5C]">{error}</p>}
           {success && <p className="text-sm text-emerald-400">{success}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-lg bg-[#FF5864] px-4 py-2.5 text-sm font-medium text-[rgb(245,238,248)] hover:bg-[#FF3B5C] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Creating account...' : 'Sign up'}
           </button>
