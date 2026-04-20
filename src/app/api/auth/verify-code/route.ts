@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     if (!isTempleEmail(email)) {
       return NextResponse.json(
-        { error: 'Only Temple University emails (@temple.edu) are allowed.' },
+        { error: 'Only .edu email addresses are allowed.' },
         { status: 403 }
       );
     }

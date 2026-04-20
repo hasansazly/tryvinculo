@@ -6,7 +6,7 @@ import { ArrowRight, Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseBrowserClient } from '../../../../utils/supabase/client';
 
-const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('@temple.edu');
+const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('.edu');
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
       return;
     }
     if (!isTempleEmail(email)) {
-      setError('Only Temple University emails (@temple.edu) are allowed.');
+      setError('Only .edu email addresses are allowed.');
       return;
     }
     if (newPassword.length < 8) {
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
       return;
     }
     if (!isTempleEmail(email)) {
-      setError('Only Temple University emails (@temple.edu) are allowed.');
+      setError('Only .edu email addresses are allowed.');
       return;
     }
     if (newPassword.length < 8) {
@@ -177,7 +177,7 @@ export default function ForgotPasswordPage() {
 
             <div>
               <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.82)', display: 'block', marginBottom: 8 }}>Email</label>
-              <input className="input-field" type="email" placeholder="you@temple.edu" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
+              <input className="input-field" type="email" placeholder="you@school.edu" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
             </div>
 
             <div>

@@ -59,7 +59,7 @@ export function normalizeEmail(email: string): string {
 
 export function isTempleEmail(email: string): boolean {
   const normalized = normalizeEmail(email);
-  return normalized.endsWith('@temple.edu');
+  return normalized.endsWith('.edu');
 }
 
 export const INTERESTS = [

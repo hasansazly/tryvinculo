@@ -6,7 +6,7 @@ import { Heart, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseBrowserClient } from '../../../../utils/supabase/client';
 
-const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('@temple.edu');
+const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('.edu');
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function LoginPage() {
     setError('');
     setSuccess('');
     if (!email || !password) { setError('Please fill in all fields.'); return; }
-    if (!isTempleEmail(email)) { setError('Only Temple University emails (@temple.edu) are allowed.'); return; }
+    if (!isTempleEmail(email)) { setError('Only .edu email addresses are allowed.'); return; }
     setLoading(true);
     try {
       const supabase = getSupabaseBrowserClient();
@@ -66,7 +66,7 @@ export default function LoginPage() {
       return;
     }
     if (!isTempleEmail(email)) {
-      setError('Only Temple University emails (@temple.edu) are allowed.');
+      setError('Only .edu email addresses are allowed.');
       return;
     }
 
@@ -107,7 +107,7 @@ export default function LoginPage() {
       return;
     }
     if (!isTempleEmail(email)) {
-      setError('Only Temple University emails (@temple.edu) are allowed.');
+      setError('Only .edu email addresses are allowed.');
       return;
     }
 
