@@ -19,24 +19,17 @@ type SectionProps = {
 function Section({ title, desc, matches, emptyMain, emptySub, emptyIcon, statusLabel }: SectionProps) {
   const badge =
     statusLabel === 'new'
-      ? { label: 'NEW', bg: '#FF5864', color: 'rgb(245, 238, 248)' }
+      ? { label: 'NEW', bg: 'rgba(168, 85, 247, 0.95)', color: 'rgb(245, 238, 248)' }
       : statusLabel === 'active'
-        ? { label: 'ACTIVE', bg: '#1D9E75', color: 'rgb(245, 238, 248)' }
-        : { label: '50–64%', bg: '#BA7517', color: 'rgb(245, 238, 248)' };
+        ? { label: 'ACTIVE', bg: 'rgba(39, 185, 118, 0.92)', color: 'rgb(245, 238, 248)' }
+        : { label: '50–64%', bg: 'rgba(198, 131, 30, 0.95)', color: 'rgb(245, 238, 248)' };
 
   return (
-    <section
-      className="mb-3 rounded-[16px] border p-4"
-      style={{
-        background: '#FFFFFF',
-        borderColor: 'rgba(255, 88, 100, 0.2)',
-        boxShadow: '0 8px 22px rgba(26, 10, 30, 0.05)',
-      }}
-    >
+    <section className="mb-5">
       <div className="mb-2.5 flex items-center justify-between">
         <h2
-          className="text-[17px] font-semibold"
-          style={{ color: '#1A0A1E', fontFamily: 'Inter, sans-serif', letterSpacing: '-0.01em' }}
+          className="text-[34px] font-semibold leading-[1.05]"
+          style={{ color: '#F5EEF8', fontFamily: 'Playfair Display, Georgia, serif', letterSpacing: '-0.02em' }}
         >
           {title}
         </h2>
@@ -48,22 +41,22 @@ function Section({ title, desc, matches, emptyMain, emptySub, emptyIcon, statusL
         </span>
       </div>
 
-      <p className="mb-3 text-[12px] leading-[1.55]" style={{ color: '#6B4B5E' }}>{desc}</p>
+      <p className="mb-3 text-[12px] leading-[1.55]" style={{ color: 'rgba(245, 238, 248, 0.56)' }}>{desc}</p>
 
       {matches.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {matches.map(match => (
             <MatchCard key={match.id} match={match} />
           ))}
         </div>
       ) : (
         <div
-          className="rounded-[12px] border border-dashed p-4 text-center"
-          style={{ borderColor: 'rgba(255, 88, 100, 0.2)', background: '#FAF8F5' }}
+          className="rounded-[18px] border border-dashed p-4 text-center"
+          style={{ borderColor: 'rgba(255, 255, 255, 0.18)', background: '#1E1A2C' }}
         >
-          <div className="mb-1.5 text-[20px] opacity-60" style={{ color: '#9B7099' }}>{emptyIcon}</div>
-          <p className="text-[13px] font-medium" style={{ color: '#1A0A1E' }}>{emptyMain}</p>
-          <p className="mt-1 text-[11px]" style={{ color: '#6B4B5E' }}>{emptySub}</p>
+          <div className="mb-1.5 text-[20px] opacity-70" style={{ color: 'rgba(245, 238, 248, 0.55)' }}>{emptyIcon}</div>
+          <p className="text-[13px] font-medium" style={{ color: '#F5EEF8' }}>{emptyMain}</p>
+          <p className="mt-1 text-[11px]" style={{ color: 'rgba(184, 158, 196, 0.92)' }}>{emptySub}</p>
         </div>
       )}
     </section>
@@ -98,27 +91,27 @@ export default async function AppDiscoverPage() {
   const sections = getDiscoverSections(matches, tier);
 
   return (
-    <div className="app-interior-page min-h-full bg-[#FAF8F5] px-4 pt-6 pb-8 text-[#1A0A1E]">
+    <div className="app-interior-page min-h-full bg-[#12101A] px-4 pt-4 pb-8 text-[#F5EEF8]">
       {/* Page meta */}
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="mb-1 text-[10px] tracking-[0.1em]" style={{ color: '#9B7099', fontFamily: 'Inter, sans-serif' }}>DISCOVER</p>
+          <p className="mb-1 text-[10px] tracking-[0.1em]" style={{ color: 'rgba(184, 158, 196, 0.86)', fontFamily: 'DM Sans, Inter, sans-serif' }}>DISCOVER</p>
           <h1
-            className="text-[26px] font-bold leading-[1.1]"
-            style={{ color: '#1A0A1E', fontFamily: 'Inter, sans-serif', letterSpacing: '-0.02em' }}
+            className="text-[46px] font-semibold leading-[0.9]"
+            style={{ color: '#F5EEF8', fontFamily: 'Playfair Display, Georgia, serif', letterSpacing: '-0.02em' }}
           >
-            Curated<br />Matches
+            Vínculo
           </h1>
-          <p className="mt-1 text-[12px] leading-[1.55]" style={{ color: '#6B4B5E' }}>
-            Focused browsing · no old history
+          <p className="mt-1 text-[12px] leading-[1.55]" style={{ color: 'rgba(184, 158, 196, 0.86)' }}>
+            Focused browsing with clear intent
           </p>
         </div>
         <Link
           href="/dashboard"
           className="mt-1 shrink-0 rounded-full border px-3 py-1.5 text-[12px]"
-          style={{ borderColor: 'rgba(255, 88, 100, 0.35)', color: '#FF3B5C', background: '#FFF0F1' }}
+          style={{ borderColor: 'rgba(255,255,255,0.22)', color: '#F5EEF8', background: 'rgba(255,255,255,0.04)' }}
         >
-          ← Dashboard
+          ⚙ Dashboard
         </Link>
       </div>
 
