@@ -92,6 +92,18 @@ type CoupleState = {
   };
 };
 
+type CoupleIntelligence = {
+  source: 'ai' | 'fallback';
+  summary: string;
+  highlights: string[];
+  nextActions: string[];
+  suggestions: Array<{
+    title: string;
+    note: string;
+    dueAt: string;
+  }>;
+};
+
 function formatDate(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
@@ -126,6 +138,8 @@ export default function CouplesPage() {
   const [plannerSaving, setPlannerSaving] = useState(false);
   const [reminderSaving, setReminderSaving] = useState(false);
   const [modeSaving, setModeSaving] = useState(false);
+  const [insightsLoading, setInsightsLoading] = useState(false);
+  const [insights, setInsights] = useState<CoupleIntelligence | null>(null);
   const [plannerVibe, setPlannerVibe] = useState('cozy');
   const [plannerBudget, setPlannerBudget] = useState('$$');
   const [plannerDuration, setPlannerDuration] = useState('2-3h');
@@ -152,9 +166,32 @@ export default function CouplesPage() {
     }
   }, []);
 
+  const loadInsights = useCallback(async () => {
+    setInsightsLoading(true);
+    try {
+      const res = await fetch('/api/couples/intelligence', { method: 'GET' });
+      const payload = (await res.json().catch(() => ({}))) as CoupleIntelligence & { error?: string };
+      if (!res.ok) {
+        setInsights(null);
+        return;
+      }
+      setInsights(payload);
+    } finally {
+      setInsightsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     void loadState();
   }, [loadState]);
+
+  useEffect(() => {
+    if (!state?.hasCouple || !state?.mode?.selfEnabled) {
+      setInsights(null);
+      return;
+    }
+    void loadInsights();
+  }, [state?.hasCouple, state?.mode?.selfEnabled, loadInsights]);
 
   const submitDaily = async (event: FormEvent) => {
     event.preventDefault();
@@ -173,6 +210,7 @@ export default function CouplesPage() {
       }
       setDailyDraft('');
       await loadState();
+      await loadInsights();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit response');
     } finally {
@@ -207,6 +245,7 @@ export default function CouplesPage() {
       setWeeklyGood('');
       setWeeklyMore('');
       await loadState();
+      await loadInsights();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit check-in');
     } finally {
@@ -232,6 +271,7 @@ export default function CouplesPage() {
       }
       setLoveNoteDraft('');
       await loadState();
+      await loadInsights();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send love note');
     } finally {
@@ -259,6 +299,7 @@ export default function CouplesPage() {
         throw new Error(typeof payload.error === 'string' ? payload.error : 'Failed to generate date plan');
       }
       await loadState();
+      await loadInsights();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate date plan');
     } finally {
@@ -289,6 +330,7 @@ export default function CouplesPage() {
       setReminderNote('');
       setReminderDate('');
       await loadState();
+      await loadInsights();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add reminder');
     } finally {
@@ -310,8 +352,35 @@ export default function CouplesPage() {
         throw new Error(typeof payload.error === 'string' ? payload.error : 'Failed to complete reminder');
       }
       await loadState();
+      await loadInsights();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to complete reminder');
+    } finally {
+      setReminderSaving(false);
+    }
+  };
+
+  const addSuggestedReminder = async (suggestion: { title: string; note: string; dueAt: string }) => {
+    setReminderSaving(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/couples/reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: suggestion.title,
+          note: suggestion.note,
+          dueAt: suggestion.dueAt,
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Failed to add suggested reminder');
+      }
+      await loadState();
+      await loadInsights();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to add suggested reminder');
     } finally {
       setReminderSaving(false);
     }
@@ -501,6 +570,38 @@ export default function CouplesPage() {
 
             <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
               <section className="space-y-4">
+                <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Relationship Insights</p>
+                  {insightsLoading ? (
+                    <p className="mt-2 text-sm text-[#A9B0D0]">Analyzing your couple rhythm...</p>
+                  ) : insights ? (
+                    <div className="mt-3 space-y-3">
+                      <p className="text-sm text-[#E8ECFF]">{insights.summary}</p>
+                      <div className="rounded-xl border border-[#36416D] bg-[#121A3A] p-3">
+                        <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">Highlights</p>
+                        <div className="mt-2 space-y-1">
+                          {insights.highlights.slice(0, 3).map((item, idx) => (
+                            <p key={`${item}-${idx}`} className="text-xs text-[#D6DDFB]">- {item}</p>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-[#36416D] bg-[#121A3A] p-3">
+                        <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">Next Best Actions</p>
+                        <div className="mt-2 space-y-1">
+                          {insights.nextActions.slice(0, 3).map((item, idx) => (
+                            <p key={`${item}-${idx}`} className="text-xs text-[#D6DDFB]">- {item}</p>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-[#8F98C0]">
+                        Source: {insights.source === 'ai' ? 'AI' : 'fallback'}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-[#A9B0D0]">Insights are available when Couple Mode is ON.</p>
+                  )}
+                </article>
+
                 <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
                   <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Date Concierge</p>
                   <h3 className="mt-1 text-lg font-medium text-white">Generate your next date plan</h3>
@@ -727,6 +828,30 @@ export default function CouplesPage() {
                   ) : (
                     <p className="mt-3 text-sm text-[#A9B0D0]">No open reminders yet.</p>
                   )}
+                  {insights?.suggestions && insights.suggestions.length > 0 ? (
+                    <div className="mt-4 rounded-xl border border-[#36416D] bg-[#121A3A] p-3">
+                      <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">Smart Suggestions</p>
+                      <div className="mt-2 space-y-2">
+                        {insights.suggestions.slice(0, 3).map((suggestion, idx) => (
+                          <div key={`${suggestion.title}-${idx}`} className="rounded-lg border border-[#2E3860] p-2">
+                            <p className="text-xs text-[#E8ECFF]">{suggestion.title}</p>
+                            {suggestion.note ? <p className="mt-1 text-[11px] text-[#A6AED0]">{suggestion.note}</p> : null}
+                            <div className="mt-2 flex items-center justify-between gap-2">
+                              <p className="text-[11px] text-[#8F98C0]">{formatDateTime(suggestion.dueAt)}</p>
+                              <button
+                                type="button"
+                                onClick={() => void addSuggestedReminder(suggestion)}
+                                disabled={reminderSaving}
+                                className="rounded-md border border-[#4E5A92] px-2 py-1 text-[11px] text-[#D6DDFB] disabled:opacity-60"
+                              >
+                                Add
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                 </article>
 
                 <article className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
