@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../utils/supabase/server';
 import { isCoupleModeEnabled, pairIsDisabled, resolveCoupleContext } from '@/server/couples/service';
+import { getCoupleModeState } from '@/server/couples/mode';
 
 type LoveNoteRow = {
   id: string;
@@ -26,6 +27,11 @@ export async function GET() {
     }
 
     if (!isCoupleModeEnabled()) {
+      return NextResponse.json({ notes: [] });
+    }
+
+    const mode = await getCoupleModeState(supabase, user.id);
+    if (!mode.selfEnabled) {
       return NextResponse.json({ notes: [] });
     }
 
@@ -81,6 +87,11 @@ export async function POST(req: NextRequest) {
 
     if (!isCoupleModeEnabled()) {
       return NextResponse.json({ error: 'Couple mode disabled' }, { status: 403 });
+    }
+
+    const mode = await getCoupleModeState(supabase, user.id);
+    if (!mode.selfEnabled) {
+      return NextResponse.json({ error: 'Turn on Couple Mode to use love notes.' }, { status: 403 });
     }
 
     const body = (await req.json().catch(() => ({}))) as { body?: string };

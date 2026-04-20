@@ -9,6 +9,7 @@ import {
   resolveCoupleContext,
   type CoupleQuestionRow,
 } from '@/server/couples/service';
+import { getCoupleModeState } from '@/server/couples/mode';
 
 type SubmitPayload = {
   module?: 'daily' | 'weekly';
@@ -35,6 +36,14 @@ export async function POST(req: NextRequest) {
 
     if (!isCoupleModeEnabled()) {
       return NextResponse.json({ error: 'Couple mode is disabled' }, { status: 403 });
+    }
+
+    const mode = await getCoupleModeState(supabase, user.id);
+    if (!mode.selfEnabled) {
+      return NextResponse.json(
+        { error: 'Turn on Couple Mode for yourself before submitting rituals.' },
+        { status: 403 }
+      );
     }
 
     const payload = (await req.json().catch(() => ({}))) as SubmitPayload;

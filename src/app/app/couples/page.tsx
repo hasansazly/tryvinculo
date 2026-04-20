@@ -57,6 +57,12 @@ type CoupleState = {
     summary: string;
     createdAt: string;
   }>;
+  mode?: {
+    selfEnabled: boolean;
+    partnerEnabled: boolean | null;
+    effectiveOn: boolean;
+    migrationRequired?: boolean;
+  };
 };
 
 function formatDate(value: string) {
@@ -90,6 +96,7 @@ export default function CouplesPage() {
   const [weeklyMore, setWeeklyMore] = useState('');
   const [loveNoteDraft, setLoveNoteDraft] = useState('');
   const [saving, setSaving] = useState<'daily' | 'weekly' | 'note' | null>(null);
+  const [modeSaving, setModeSaving] = useState(false);
 
   const loadState = useCallback(async () => {
     setLoading(true);
@@ -196,12 +203,36 @@ export default function CouplesPage() {
     }
   };
 
+  const toggleMode = async (nextEnabled: boolean) => {
+    setModeSaving(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/couples/mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: nextEnabled }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(typeof payload.error === 'string' ? payload.error : 'Failed to update Couple Mode');
+      }
+      await loadState();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update Couple Mode');
+    } finally {
+      setModeSaving(false);
+    }
+  };
+
   const daily = state?.modules?.daily;
   const weekly = state?.modules?.weekly;
   const notes = state?.loveNotes ?? [];
   const timeline = state?.timeline ?? [];
   const partnerName = state?.couple?.partnerName ?? 'Partner';
   const confirmedLabel = state?.couple?.confirmedAt ? formatDate(state.couple.confirmedAt) : '';
+  const selfModeOn = Boolean(state?.mode?.selfEnabled);
+  const partnerModeOn = Boolean(state?.mode?.partnerEnabled);
+  const effectiveModeOn = Boolean(state?.mode?.effectiveOn);
 
   const statusText = useMemo(() => {
     if (!daily) return '';
@@ -228,6 +259,36 @@ export default function CouplesPage() {
             A calm shared space for rituals, check-ins, memories, and appreciation.
           </p>
         </header>
+
+        {!loading && state?.hasCouple ? (
+          <section className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Couple Mode Status</p>
+                <p className="mt-1 text-sm text-[#E8ECFF]">
+                  You: <span className={selfModeOn ? 'text-emerald-300' : 'text-[#A9B0D0]'}>{selfModeOn ? 'ON' : 'OFF'}</span>
+                  {' · '}
+                  {partnerName}: <span className={partnerModeOn ? 'text-emerald-300' : 'text-[#A9B0D0]'}>{partnerModeOn ? 'ON' : 'OFF'}</span>
+                </p>
+                <p className="mt-1 text-xs text-[#A9B0D0]">
+                  {effectiveModeOn
+                    ? 'Both partners are ON. Dating sections are hidden and only your couple connection is visible.'
+                    : 'Turn this ON so your partner can see your commitment status.'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => void toggleMode(!selfModeOn)}
+                disabled={modeSaving}
+                className={`inline-flex min-w-[120px] items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-white ${
+                  selfModeOn ? 'bg-rose-600/90' : 'bg-[#4B3FA0]'
+                } disabled:opacity-60`}
+              >
+                {modeSaving ? 'Updating...' : selfModeOn ? 'Turn OFF' : 'Turn ON'}
+              </button>
+            </div>
+          </section>
+        ) : null}
 
         {loading ? (
           <section className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-6">
@@ -264,7 +325,7 @@ export default function CouplesPage() {
           </section>
         ) : null}
 
-        {!loading && state?.enabled && state.hasCouple && daily && weekly ? (
+        {!loading && state?.enabled && state.hasCouple && selfModeOn && daily && weekly ? (
           <>
             <section className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-5">
               <div className="flex flex-wrap items-center gap-3">
@@ -466,6 +527,15 @@ export default function CouplesPage() {
               </section>
             </div>
           </>
+        ) : null}
+
+        {!loading && state?.enabled && state.hasCouple && !selfModeOn ? (
+          <section className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-6">
+            <h2 className="text-lg font-medium text-white">Couple Mode is OFF for you</h2>
+            <p className="mt-2 text-sm text-[#A9B0D0]">
+              Turn it ON above to enter your private couple space. Your partner can already see your ON/OFF status.
+            </p>
+          </section>
         ) : null}
       </div>
     </div>

@@ -4,6 +4,7 @@ import MatchCard from '@/components/matches/MatchCard';
 import MobileBottomNav from '@/components/navigation/MobileBottomNav';
 import { getMatchesForUser } from '@/lib/matches';
 import { createSupabaseServerClient } from '../../../utils/supabase/server';
+import { isDatingLockedForUser } from '@/server/couples/mode';
 
 export default async function MatchesPage() {
   const supabase = await createSupabaseServerClient();
@@ -23,6 +24,10 @@ export default async function MatchesPage() {
 
   if (!preferenceRow) {
     redirect('/onboarding');
+  }
+
+  if (await isDatingLockedForUser(supabase, user.id)) {
+    redirect('/app/couples');
   }
 
   const matches = await getMatchesForUser(supabase, user.id);

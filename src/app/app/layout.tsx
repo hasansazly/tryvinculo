@@ -3,20 +3,20 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Heart, Compass, Users, MessageCircle, User, Settings, Bell, Sparkles, LogOut, Brain, BookOpen } from 'lucide-react';
+import { Heart, Compass, Users, MessageCircle, User, Settings, Bell, Sparkles, LogOut, Brain, BookOpen, HeartHandshake } from 'lucide-react';
 import AssistantShell from '@/components/ai/AssistantShell';
 import LogoutButton from '@/components/auth/LogoutButton';
 import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
 
-const NAV = [
-  { href: '/app/discover', icon: Compass,       label: 'Discover',  notif: 0, isSpark: false },
-  { href: '/app/matches',  icon: Users,          label: 'Matches',   notif: 3, isSpark: false },
-  { href: '/app/messages', icon: MessageCircle,  label: 'Messages',  notif: 2, isSpark: false },
-  { href: '/app/profile',  icon: User,           label: 'Profile',   notif: 0, isSpark: false },
-];
+const NAV_DISCOVER = { href: '/app/discover', icon: Compass, label: 'Discover', notif: 0, isSpark: false };
+const NAV_MATCHES = { href: '/app/matches', icon: Users, label: 'Matches', notif: 3, isSpark: false };
+const NAV_MESSAGES = { href: '/app/messages', icon: MessageCircle, label: 'Messages', notif: 2, isSpark: false };
+const NAV_PROFILE = { href: '/app/profile', icon: User, label: 'Profile', notif: 0, isSpark: false };
+const BASE_NAV = [NAV_DISCOVER, NAV_MATCHES, NAV_MESSAGES, NAV_PROFILE];
 
-const SIDEBAR_NAV = [
-  ...NAV,
+const COUPLES_NAV_ITEM = { href: '/app/couples', icon: HeartHandshake, label: 'Couples', notif: 0, isSpark: false };
+
+const SIDE_EXTRA = [
   { href: '/app/coach',    icon: Brain,    label: 'AI Coach',  notif: 1, isSpark: false },
   { href: '/app/academy',  icon: BookOpen, label: 'Guidance',  notif: 0, isSpark: false },
   { href: '/app/settings', icon: Settings, label: 'Settings',  notif: 0, isSpark: false },
@@ -31,6 +31,7 @@ type SidebarIdentity = {
 function Sidebar() {
   const pathname = usePathname();
   const [identity, setIdentity] = useState<SidebarIdentity>({ name: 'You', auraScore: 65, photoUrl: null });
+  const [coupleModeOn, setCoupleModeOn] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -94,6 +95,29 @@ function Sidebar() {
     };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    const loadMode = async () => {
+      try {
+        const response = await fetch('/api/couples/mode', { method: 'GET' });
+        if (!response.ok) return;
+        const payload = (await response.json()) as { selfEnabled?: boolean };
+        if (active) setCoupleModeOn(Boolean(payload.selfEnabled));
+      } catch {
+        // Keep default nav if mode cannot be fetched.
+      }
+    };
+    void loadMode();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const mainNav = coupleModeOn
+    ? [NAV_MESSAGES, NAV_PROFILE, COUPLES_NAV_ITEM]
+    : [...BASE_NAV, COUPLES_NAV_ITEM];
+  const sidebarNav = [...mainNav, ...SIDE_EXTRA];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '24px 16px' }}>
       <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 32, paddingLeft: 4 }}>
@@ -122,7 +146,7 @@ function Sidebar() {
       </div>
 
       <nav style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
-        {SIDEBAR_NAV.map(item => {
+        {sidebarNav.map(item => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
           return (
@@ -145,15 +169,17 @@ function Sidebar() {
         })}
       </nav>
 
-      <div className="daily-matches-panel" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.18)', borderRadius: 14, padding: '14px 16px', marginBottom: 16 }}>
-        <div className="daily-label" style={{ fontSize: 11, fontWeight: 600, color: '#fde68a', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Daily Matches</div>
-        <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
-          {[1,2,3,4,5].map(i => (
-            <div key={i} style={{ flex: 1, height: 5, borderRadius: 3, background: i <= 3 ? 'linear-gradient(90deg, #fbbf24, #f59e0b)' : 'rgba(255,255,255,0.08)' }} />
-          ))}
+      {!coupleModeOn ? (
+        <div className="daily-matches-panel" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.18)', borderRadius: 14, padding: '14px 16px', marginBottom: 16 }}>
+          <div className="daily-label" style={{ fontSize: 11, fontWeight: 600, color: '#fde68a', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Daily Matches</div>
+          <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
+            {[1,2,3,4,5].map(i => (
+              <div key={i} style={{ flex: 1, height: 5, borderRadius: 3, background: i <= 3 ? 'linear-gradient(90deg, #fbbf24, #f59e0b)' : 'rgba(255,255,255,0.08)' }} />
+            ))}
+          </div>
+          <div className="daily-sub" style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>3 of 5 viewed · Resets in 6h</div>
         </div>
-        <div className="daily-sub" style={{ fontSize: 12, color: 'rgba(240,240,255,0.4)' }}>3 of 5 viewed · Resets in 6h</div>
-      </div>
+      ) : null}
 
       <LogoutButton className="nav-item" style={{ color: 'rgba(244,63,94,0.6)' }}>
         <LogOut size={16} />
@@ -165,6 +191,30 @@ function Sidebar() {
 
 function MobileBottomNav() {
   const pathname = usePathname();
+  const [coupleModeOn, setCoupleModeOn] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    const loadMode = async () => {
+      try {
+        const response = await fetch('/api/couples/mode', { method: 'GET' });
+        if (!response.ok) return;
+        const payload = (await response.json()) as { selfEnabled?: boolean };
+        if (active) setCoupleModeOn(Boolean(payload.selfEnabled));
+      } catch {
+        // Fall back to normal nav.
+      }
+    };
+    void loadMode();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const navItems = coupleModeOn
+    ? [BASE_NAV[2], BASE_NAV[3], COUPLES_NAV_ITEM]
+    : [...BASE_NAV];
+
   return (
     <div
       className="mobile-only"
@@ -183,7 +233,7 @@ function MobileBottomNav() {
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 6px)',
       }}
     >
-      {NAV.map(item => {
+      {navItems.map(item => {
         const Icon = item.icon;
         const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
         const activeColor = item.isSpark ? '#fb923c' : '#a78bfa';

@@ -7,6 +7,7 @@ import StartConversationButton from '@/components/messages/StartConversationButt
 import ConnectionSafetyActions from '@/components/safety/ConnectionSafetyActions';
 import TrustSignals from '@/components/matches/TrustSignals';
 import PreDateBriefingCard from '@/components/matches/PreDateBriefingCard';
+import { isDatingLockedForUser } from '@/server/couples/mode';
 
 type MatchDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -31,6 +32,10 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
 
   if (!preferenceRow) {
     redirect('/onboarding');
+  }
+
+  if (await isDatingLockedForUser(supabase, user.id)) {
+    redirect('/app/couples');
   }
 
   const matches = await getMatchesForUser(supabase, user.id);

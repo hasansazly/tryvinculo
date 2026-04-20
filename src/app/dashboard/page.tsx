@@ -5,6 +5,7 @@ import LogoutButton from '@/components/auth/LogoutButton';
 import { getDashboardPreviewLimit, getDashboardTodayPreview, resolveViewerTier } from '@/lib/curatedMatches';
 import { getMatchesForUser } from '@/lib/matches';
 import { createSupabaseServerClient } from '../../../utils/supabase/server';
+import { isDatingLockedForUser } from '@/server/couples/mode';
 
 type ParticipantRow = {
   conversation_id: string;
@@ -151,6 +152,10 @@ export default async function DashboardPage() {
 
     if (!preferenceRow) {
       redirect('/onboarding');
+    }
+
+    if (await isDatingLockedForUser(supabase, user.id)) {
+      redirect('/app/couples');
     }
 
     const [{ data: profile }, { count: rawResponsesCount, error: responsesCountError }, { data: demographicsRow }, { data: profileMetaRow }, matches] = await Promise.all([

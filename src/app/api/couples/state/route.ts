@@ -10,6 +10,7 @@ import {
   type CoupleQuestionRow,
   type CoupleResponseRow,
 } from '@/server/couples/service';
+import { getCoupleModeState } from '@/server/couples/mode';
 
 type TimelineEntry = {
   id: string;
@@ -146,8 +147,19 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const mode = await getCoupleModeState(supabase, user.id);
+
     if (!isCoupleModeEnabled()) {
-      return NextResponse.json({ enabled: false, hasCouple: false });
+      return NextResponse.json({
+        enabled: false,
+        hasCouple: false,
+        mode: {
+          selfEnabled: mode.selfEnabled,
+          partnerEnabled: mode.partnerEnabled,
+          effectiveOn: mode.effectiveOn,
+          migrationRequired: mode.migrationRequired,
+        },
+      });
     }
 
     let context;
@@ -155,17 +167,46 @@ export async function GET() {
       context = await resolveCoupleContext(supabase, user.id);
     } catch (error) {
       if (looksLikeMissingTable(error as { code?: string; message?: string }, 'couples')) {
-        return NextResponse.json({ enabled: true, hasCouple: false, unavailableReason: 'migration_required' });
+        return NextResponse.json({
+          enabled: true,
+          hasCouple: false,
+          unavailableReason: 'migration_required',
+          mode: {
+            selfEnabled: mode.selfEnabled,
+            partnerEnabled: mode.partnerEnabled,
+            effectiveOn: mode.effectiveOn,
+            migrationRequired: mode.migrationRequired,
+          },
+        });
       }
       throw error;
     }
 
     if (!context) {
-      return NextResponse.json({ enabled: true, hasCouple: false });
+      return NextResponse.json({
+        enabled: true,
+        hasCouple: false,
+        mode: {
+          selfEnabled: mode.selfEnabled,
+          partnerEnabled: mode.partnerEnabled,
+          effectiveOn: mode.effectiveOn,
+          migrationRequired: mode.migrationRequired,
+        },
+      });
     }
 
     if (await pairIsDisabled(supabase, user.id, context.partnerUserId)) {
-      return NextResponse.json({ enabled: true, hasCouple: false, unavailableReason: 'pair_unavailable' });
+      return NextResponse.json({
+        enabled: true,
+        hasCouple: false,
+        unavailableReason: 'pair_unavailable',
+        mode: {
+          selfEnabled: mode.selfEnabled,
+          partnerEnabled: mode.partnerEnabled,
+          effectiveOn: mode.effectiveOn,
+          migrationRequired: mode.migrationRequired,
+        },
+      });
     }
 
     const track = await ensureCoupleTrack(supabase, context);
@@ -326,6 +367,12 @@ export async function GET() {
     return NextResponse.json({
       enabled: true,
       hasCouple: true,
+      mode: {
+        selfEnabled: mode.selfEnabled,
+        partnerEnabled: mode.partnerEnabled,
+        effectiveOn: mode.effectiveOn,
+        migrationRequired: mode.migrationRequired,
+      },
       viewerUserId: context.viewerUserId,
       couple: {
         id: context.couple.id,

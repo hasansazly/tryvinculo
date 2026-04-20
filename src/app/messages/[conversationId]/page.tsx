@@ -85,6 +85,7 @@ export default function ConversationPage() {
   const [trustSignals, setTrustSignals] = useState<string[]>([]);
   const [potentialFit, setPotentialFit] = useState(false);
   const [messagingDisabledReason, setMessagingDisabledReason] = useState<string | null>(null);
+  const [couplePartnerId, setCouplePartnerId] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -122,6 +123,20 @@ export default function ConversationPage() {
 
         const otherId = participantIds.find((id: string) => id !== user.id) ?? null;
         setOtherUserId(otherId);
+
+        const modeResponse = await fetch('/api/couples/mode', { method: 'GET' });
+        const modePayload = await modeResponse.json().catch(() => ({} as Record<string, unknown>));
+        const lockToPartner = Boolean(modeResponse.ok && (modePayload as { selfEnabled?: boolean }).selfEnabled);
+        const partnerId =
+          typeof (modePayload as { partnerUserId?: unknown }).partnerUserId === 'string'
+            ? ((modePayload as { partnerUserId?: string }).partnerUserId ?? null)
+            : null;
+        setCouplePartnerId(partnerId);
+
+        if (lockToPartner && partnerId && otherId && otherId !== partnerId) {
+          router.push('/messages');
+          return;
+        }
 
         if (otherId) {
           const [{ data: profile }, { data: demographics }, { data: matchRowRaw }, { data: blockRows }, { data: unmatchRows }] = await Promise.all([
@@ -432,6 +447,9 @@ export default function ConversationPage() {
                 <ShieldCheck size={12} />
                 {messagingDisabledReason}
               </p>
+            ) : null}
+            {couplePartnerId && otherUserId && couplePartnerId === otherUserId ? (
+              <p className="mt-2 text-[11px] text-[#B7C1F0]">Couple Mode ON: this is your confirmed partner chat.</p>
             ) : null}
             {error && !error.toLowerCase().includes('connection track') ? (
               <p className="mt-2 text-xs text-[#FF8A8A]">{error}</p>

@@ -4,6 +4,7 @@ import MatchCard from '@/components/matches/MatchCard';
 import { getDiscoverSections, resolveViewerTier } from '@/lib/curatedMatches';
 import { getMatchesForUser } from '@/lib/matches';
 import { createSupabaseServerClient } from '../../../../utils/supabase/server';
+import { isDatingLockedForUser } from '@/server/couples/mode';
 
 type SectionProps = {
   title: string;
@@ -75,6 +76,10 @@ export default async function AppDiscoverPage() {
 
   if (!preferenceRow) {
     redirect('/onboarding');
+  }
+
+  if (await isDatingLockedForUser(supabase, user.id)) {
+    redirect('/app/couples');
   }
 
   const tier = resolveViewerTier((profile ?? null) as Record<string, unknown> | null);

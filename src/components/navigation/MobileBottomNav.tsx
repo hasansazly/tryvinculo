@@ -1,15 +1,17 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, MessageCircle, User, Users } from 'lucide-react';
+import { Compass, MessageCircle, User, Users, HeartHandshake } from 'lucide-react';
 
-const NAV = [
-  { href: '/app/discover', icon: Compass, label: 'Discover', notif: 0 },
-  { href: '/matches', icon: Users, label: 'Matches', notif: 3 },
-  { href: '/messages', icon: MessageCircle, label: 'Messages', notif: 2 },
-  { href: '/app/profile', icon: User, label: 'Profile', notif: 0 },
-];
+const NAV_DISCOVER = { href: '/app/discover', icon: Compass, label: 'Discover', notif: 0 };
+const NAV_MATCHES = { href: '/matches', icon: Users, label: 'Matches', notif: 3 };
+const NAV_MESSAGES = { href: '/messages', icon: MessageCircle, label: 'Messages', notif: 2 };
+const NAV_PROFILE = { href: '/app/profile', icon: User, label: 'Profile', notif: 0 };
+const NAV = [NAV_DISCOVER, NAV_MATCHES, NAV_MESSAGES, NAV_PROFILE];
+
+const COUPLES_ITEM = { href: '/app/couples', icon: HeartHandshake, label: 'Couples', notif: 0 };
 
 function isActivePath(pathname: string, href: string) {
   if (href === '/messages') return pathname === '/messages' || pathname.startsWith('/messages/');
@@ -19,6 +21,29 @@ function isActivePath(pathname: string, href: string) {
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
+  const [coupleModeOn, setCoupleModeOn] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    const loadMode = async () => {
+      try {
+        const response = await fetch('/api/couples/mode', { method: 'GET' });
+        if (!response.ok) return;
+        const payload = (await response.json()) as { selfEnabled?: boolean };
+        if (active) setCoupleModeOn(Boolean(payload.selfEnabled));
+      } catch {
+        // Keep baseline nav when mode state cannot be fetched.
+      }
+    };
+    void loadMode();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const navItems = coupleModeOn
+    ? [NAV_MESSAGES, NAV_PROFILE, COUPLES_ITEM]
+    : [...NAV];
 
   return (
     <div
@@ -37,7 +62,7 @@ export default function MobileBottomNav() {
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 6px)',
       }}
     >
-      {NAV.map(item => {
+      {navItems.map(item => {
         const Icon = item.icon;
         const isActive = isActivePath(pathname, item.href);
         return (

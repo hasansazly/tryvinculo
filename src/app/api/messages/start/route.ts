@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../utils/supabase/server';
 import { ensureConnectionTrackForPair } from '@/server/connectionTrack/service';
+import { getCoupleModeState } from '@/server/couples/mode';
 
 function toInClause(ids: string[]): string {
   return `(${ids.map(id => `'${id.replace(/'/g, "''")}'`).join(',')})`;
@@ -26,6 +27,20 @@ export async function POST(req: NextRequest) {
 
     if (matchUserId === user.id) {
       return NextResponse.json({ error: 'Cannot start conversation with yourself' }, { status: 400 });
+    }
+
+    const coupleMode = await getCoupleModeState(supabase, user.id);
+    if (
+      coupleMode.featureEnabled &&
+      coupleMode.hasCouple &&
+      coupleMode.selfEnabled &&
+      coupleMode.partnerUserId &&
+      matchUserId !== coupleMode.partnerUserId
+    ) {
+      return NextResponse.json(
+        { error: 'Couple Mode is ON. You can only message your confirmed partner.' },
+        { status: 403 }
+      );
     }
 
     const { data: matchRow, error: matchCheckError } = await supabase

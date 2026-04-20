@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { MessageCircle } from 'lucide-react';
 import MobileBottomNav from '@/components/navigation/MobileBottomNav';
 import { createSupabaseServerClient } from '../../../utils/supabase/server';
+import { getCoupleModeState } from '@/server/couples/mode';
 
 type ParticipantRow = {
   conversation_id: string;
@@ -61,6 +62,10 @@ export default async function MessagesInboxPage() {
   if (!user) {
     redirect('/auth/login?next=/messages');
   }
+
+  const coupleMode = await getCoupleModeState(supabase, user.id);
+  const lockToPartner = coupleMode.featureEnabled && coupleMode.hasCouple && coupleMode.selfEnabled;
+  const couplePartnerId = lockToPartner ? coupleMode.partnerUserId : null;
 
   const { data: myParticipantsRowsRaw, error: myParticipantsError } = await supabase
     .from('conversation_participants')
@@ -202,7 +207,8 @@ export default async function MessagesInboxPage() {
     .map(conversationId => {
       const otherUserId = otherParticipantByConversation.get(conversationId) ?? null;
       if (!otherUserId) return null;
-      if (!allowedByMatch.has(otherUserId)) return null;
+      if (couplePartnerId && otherUserId !== couplePartnerId) return null;
+      if (!couplePartnerId && !allowedByMatch.has(otherUserId)) return null;
       if (blockedIds.has(otherUserId)) return null;
       if (unmatchedIds.has(otherUserId)) return null;
 
@@ -264,7 +270,9 @@ export default async function MessagesInboxPage() {
             ))
           ) : (
             <div className="rounded-xl border border-white/10 bg-[#1E1E35] p-6 text-sm text-white/70">
-              No active conversations. Blocked or unmatched chats are hidden here.
+              {couplePartnerId
+                ? 'Couple Mode is ON. Only your confirmed partner conversation appears here.'
+                : 'No active conversations. Blocked or unmatched chats are hidden here.'}
             </div>
           )}
         </section>
