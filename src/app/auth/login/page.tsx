@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { getSupabaseBrowserClient } from '../../../../utils/supabase/client';
 
 const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('.edu');
@@ -17,6 +18,7 @@ export default function LoginPage() {
   const [codeMode, setCodeMode] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpSent, setOtpSent] = useState(false);
+  const redirectedRef = useRef(false);
 
   const readResponseError = async (response: Response) => {
     const raw = await response.text();
@@ -42,6 +44,21 @@ export default function LoginPage() {
     }
     return candidate || '/dashboard';
   };
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+      if (!session || redirectedRef.current) return;
+      redirectedRef.current = true;
+      window.location.assign(getPostLoginTarget());
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -72,6 +89,16 @@ export default function LoginPage() {
         setError(signInError.message);
         return;
       }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session && !redirectedRef.current) {
+        redirectedRef.current = true;
+        window.location.assign(getPostLoginTarget());
+        return;
+      }
+
       const target = getPostLoginTarget();
       window.location.assign(target);
     } catch (signinFailure) {
