@@ -1144,12 +1144,28 @@ input[type="range"]::-webkit-slider-thumb {
   --app-surface-elevated: rgba(11, 16, 36, 0.9);
   --app-border-soft: rgba(255, 255, 255, 0.08);
   --app-border-strong: rgba(129, 120, 222, 0.38);
+  --app-text-high: rgba(245, 245, 255, 0.95);
+  --app-text-mid: rgba(220, 220, 240, 0.78);
+  --app-text-low: rgba(200, 200, 225, 0.58);
+  --app-space-1: 4px;
+  --app-space-2: 8px;
+  --app-space-3: 12px;
+  --app-space-4: 16px;
+  --app-space-5: 20px;
+  --app-space-6: 24px;
+  --app-space-7: 28px;
   --app-radius-card: 22px;
   --app-radius-panel: 16px;
+  --app-radius-pill: 999px;
+  --app-radius-control: 12px;
   --app-shadow-card: 0 24px 80px rgba(5, 10, 30, 0.6);
   --app-shadow-fab: 0 10px 28px rgba(124, 58, 237, 0.35);
+  --app-shadow-nav: 0 -10px 28px rgba(0, 0, 0, 0.28);
   --app-blur-soft: blur(20px);
   --app-blur-strong: blur(24px);
+  --app-dur-fast: 0.18s;
+  --app-dur-mid: 0.24s;
+  --app-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --app-z-nav: 1000;
   --app-z-fab: 1100;
   --app-z-overlay: 1200;
@@ -1197,8 +1213,8 @@ input[type="range"]::-webkit-slider-thumb {
   flex-shrink: 0;
   height: var(--app-mobile-topbar-height);
   padding-top: env(safe-area-inset-top, 0px);
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: var(--app-space-4);
+  padding-right: var(--app-space-4);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1214,17 +1230,19 @@ input[type="range"]::-webkit-slider-thumb {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  scroll-padding-top: var(--app-space-4);
+  scroll-padding-bottom: calc(var(--app-mobile-navbar-height) + var(--app-space-4));
 }
 
 .app-page-shell {
   width: 100%;
   max-width: var(--app-content-max);
   margin: 0 auto;
-  padding: 24px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  padding: var(--app-space-6) var(--app-space-4) calc(var(--app-space-6) + env(safe-area-inset-bottom, 0px));
 }
 
 .app-page-shell.with-mobile-nav {
-  padding-bottom: calc(var(--app-mobile-navbar-height) + 18px);
+  padding-bottom: calc(var(--app-mobile-navbar-height) + var(--app-space-5));
 }
 
 .app-mobile-bottom-nav {
@@ -1238,13 +1256,14 @@ input[type="range"]::-webkit-slider-thumb {
   background: rgba(7, 7, 15, 0.97);
   backdrop-filter: var(--app-blur-strong);
   -webkit-backdrop-filter: var(--app-blur-strong);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: var(--app-shadow-nav);
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 6px);
 }
 
 .app-mobile-bottom-nav-link {
   flex: 1;
-  min-height: 62px;
-  padding: 10px 0 8px;
+  min-height: 64px;
+  padding: 8px 0 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1252,8 +1271,16 @@ input[type="range"]::-webkit-slider-thumb {
   gap: 3px;
   text-decoration: none;
   position: relative;
-  transition: color 0.18s ease;
+  transition: color var(--app-dur-fast) var(--app-ease-standard);
   -webkit-tap-highlight-color: transparent;
+}
+
+.app-mobile-bottom-nav-link:focus-visible,
+.app-shell-topbar a:focus-visible,
+.app-shell-topbar button:focus-visible {
+  outline: 2px solid rgba(167, 139, 250, 0.9);
+  outline-offset: 2px;
+  border-radius: 10px;
 }
 
 .app-floating-panel {
@@ -1288,6 +1315,11 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--app-surface-elevated);
   box-shadow: var(--app-shadow-card);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.app-fixed-safe-bottom {
+  bottom: calc(var(--app-mobile-navbar-height) + var(--app-space-3)) !important;
 }
 
 .app-tab-chip {
@@ -1357,8 +1389,22 @@ input[type="range"]::-webkit-slider-thumb {
   }
 
   .app-page-shell {
+<<<<<<< HEAD
     padding-top: 18px;
     padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px));
 >>>>>>> 1b3d934 (..)
+=======
+    padding-top: var(--app-space-5);
+    padding-bottom: calc(var(--app-space-5) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+>>>>>>> 7048f9d (..)
   }
 }

@@ -357,6 +357,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </Link>
 
+<<<<<<< HEAD
           <div className="desktop-top-links" style={{ alignItems: 'center', gap: 16 }}>
             <Link href="/app/discover" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Discover</Link>
             <Link href="/app/matches" style={{ color: 'rgba(240,240,255,0.72)', textDecoration: 'none', fontSize: 13 }}>Matches</Link>
@@ -381,11 +382,30 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 justifyContent: 'center',
               }}
               aria-label="Settings"
+=======
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Link
+              href="/app/settings"
+              aria-label="Settings"
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 999,
+                border: '1px solid rgba(255,255,255,0.14)',
+                color: 'rgba(240,240,255,0.75)',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(255,255,255,0.04)',
+              }}
+>>>>>>> 7048f9d (..)
             >
               <Settings size={16} />
             </Link>
             <Link
               href="/app/profile"
+<<<<<<< HEAD
               style={{
                 width: 32,
                 height: 32,
@@ -398,6 +418,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 justifyContent: 'center',
               }}
               aria-label="Profile"
+=======
+              aria-label="Profile"
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 999,
+                border: '1px solid rgba(139,92,246,0.5)',
+                color: 'rgba(240,240,255,0.9)',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(139,92,246,0.12)',
+              }}
+>>>>>>> 7048f9d (..)
             >
               <User size={16} />
             </Link>
