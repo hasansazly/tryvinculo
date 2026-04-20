@@ -43,18 +43,29 @@ export default function LoginPage() {
     return candidate || '/dashboard';
   };
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError('');
     setSuccess('');
-    if (!email || !password) { setError('Please fill in all fields.'); return; }
-    if (!isTempleEmail(email)) { setError('Only .edu email addresses are allowed.'); return; }
+
+    // Read from form fields first so browser/password-manager autofill still works.
+    const formData = new FormData(e.currentTarget);
+    const emailValue = String(formData.get('email') ?? email).trim().toLowerCase();
+    const passwordValue = String(formData.get('password') ?? password);
+
+    if (!emailValue || !passwordValue) { setError('Please fill in all fields.'); return; }
+    if (!isTempleEmail(emailValue)) { setError('Only .edu email addresses are allowed.'); return; }
+
+    // Keep state in sync with resolved values.
+    setEmail(emailValue);
+    setPassword(passwordValue);
+
     setLoading(true);
     try {
       const supabase = getSupabaseBrowserClient();
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password,
+        email: emailValue,
+        password: passwordValue,
       });
 
       if (signInError) {
@@ -225,6 +236,7 @@ export default function LoginPage() {
                 <label style={{ fontSize: 13, fontWeight: 500, color: 'rgba(240,240,255,0.55)', display: 'block', marginBottom: 8 }}>Email</label>
                 <input
                   className="input-field"
+                  name="email"
                   type="email"
                   placeholder="you@example.com"
                   value={email}
@@ -241,6 +253,7 @@ export default function LoginPage() {
                 <div style={{ position: 'relative' }}>
                   <input
                     className="input-field"
+                    name="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     value={password}
