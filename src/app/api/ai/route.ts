@@ -1,20 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+async function callOpenAI(prompt: string): Promise<string> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OpenAI API key is missing');
+  }
+
+  const model = process.env.OPENAI_MODEL?.trim() || 'gpt-4o-mini';
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 256,
+      temperature: 0.7,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`OpenAI request failed (${response.status}): ${body}`);
+  }
+
+  const payload = (await response.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  return payload.choices?.[0]?.message?.content?.trim() ?? '';
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { type, context } = body;
 
-    // Dynamic import to avoid build issues if key is not set
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
       // Return mock responses in dev without API key
       return NextResponse.json({ result: getMockResponse(type, context) });
     }
-
-    const Anthropic = (await import('@anthropic-ai/sdk')).default;
-    const client = new Anthropic({ apiKey });
 
     let prompt = '';
 
@@ -83,13 +111,7 @@ Return strict JSON:
       return NextResponse.json({ error: 'Unknown AI task type' }, { status: 400 });
     }
 
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 256,
-      messages: [{ role: 'user', content: prompt }],
-    });
-
-    const text = message.content[0].type === 'text' ? message.content[0].text : '';
+    const text = await callOpenAI(prompt);
     const result = parseJsonIfPossible(text);
     return NextResponse.json({ result });
 
