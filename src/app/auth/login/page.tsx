@@ -3,13 +3,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { getSupabaseBrowserClient } from '../../../../utils/supabase/client';
 
 const isTempleEmail = (email: string) => email.trim().toLowerCase().endsWith('.edu');
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +28,21 @@ export default function LoginPage() {
     }
   };
 
+  const getPostLoginTarget = () => {
+    const requestedNext =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('next') ?? ''
+        : '';
+    const candidate = requestedNext.trim();
+    if (!candidate.startsWith('/') || candidate.startsWith('//')) {
+      return '/dashboard';
+    }
+    if (candidate.startsWith('/auth')) {
+      return '/dashboard';
+    }
+    return candidate || '/dashboard';
+  };
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
@@ -48,8 +61,8 @@ export default function LoginPage() {
         setError(signInError.message);
         return;
       }
-
-      router.push('/dashboard');
+      const target = getPostLoginTarget();
+      window.location.assign(target);
     } catch (signinFailure) {
       const message = signinFailure instanceof Error ? signinFailure.message : 'Sign in failed.';
       setError(message);
@@ -133,7 +146,7 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
-    router.push('/onboarding');
+    window.location.assign('/onboarding');
   }
 
   return (
