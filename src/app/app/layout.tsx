@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Heart, Compass, Users, MessageCircle, User, Settings, Bell, Sparkles, LogOut, Brain, BookOpen, HeartHandshake } from 'lucide-react';
+import { Heart, Compass, Users, MessageCircle, User, Settings, Bell, Sparkles, LogOut, HeartHandshake } from 'lucide-react';
 import AssistantShell from '@/components/ai/AssistantShell';
 import LogoutButton from '@/components/auth/LogoutButton';
 import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
@@ -17,8 +17,6 @@ const BASE_NAV = [NAV_DISCOVER, NAV_MATCHES, NAV_MESSAGES, NAV_PROFILE];
 const COUPLES_NAV_ITEM = { href: '/app/couples', icon: HeartHandshake, label: 'Couples', notif: 0, isSpark: false };
 
 const SIDE_EXTRA = [
-  { href: '/app/coach',    icon: Brain,    label: 'AI Coach',  notif: 1, isSpark: false },
-  { href: '/app/academy',  icon: BookOpen, label: 'Guidance',  notif: 0, isSpark: false },
   { href: '/app/settings', icon: Settings, label: 'Settings',  notif: 0, isSpark: false },
 ];
 
