@@ -83,7 +83,7 @@ export default function ConnectionSafetyActions({
           type="button"
           onClick={() => runAction('report')}
           disabled={Boolean(loading)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-[#1E1E35] px-3 py-1.5 text-xs font-medium text-[#CC3333] hover:border-[#CC3333]/50 hover:bg-[#2A1620] disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-[#252030] px-3 py-1.5 text-xs font-medium text-[#FF8C9C] hover:border-[#FF5864]/60 hover:bg-[#31233A] disabled:opacity-60"
         >
           <AlertTriangle size={14} />
           {loading === 'report' ? 'Reporting...' : 'Report user'}
@@ -93,7 +93,7 @@ export default function ConnectionSafetyActions({
           type="button"
           onClick={() => runAction('unmatch')}
           disabled={Boolean(loading)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-[#1E1E35] px-3 py-1.5 text-xs font-medium text-white/60 hover:border-[#5966A4] hover:text-white disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-[#252030] px-3 py-1.5 text-xs font-medium text-white/65 hover:border-[#A855F7] hover:text-white disabled:opacity-60"
         >
           <UserX size={14} />
           {loading === 'unmatch' ? 'Unmatching...' : 'Unmatch'}
@@ -103,7 +103,7 @@ export default function ConnectionSafetyActions({
           type="button"
           onClick={() => runAction('block')}
           disabled={Boolean(loading)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-[#1E1E35] px-3 py-1.5 text-xs font-medium text-white/60 hover:border-[#5966A4] hover:text-white disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-[#252030] px-3 py-1.5 text-xs font-medium text-white/65 hover:border-[#A855F7] hover:text-white disabled:opacity-60"
         >
           <Ban size={14} />
           {loading === 'block' ? 'Blocking...' : 'Block user'}

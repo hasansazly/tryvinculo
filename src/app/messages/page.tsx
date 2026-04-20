@@ -75,8 +75,8 @@ export default async function MessagesInboxPage() {
 
   if (myParticipantsError) {
     return (
-      <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#060814] px-4 py-8 pb-24 text-white">
-        <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
+      <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#12101A] px-4 py-6 pb-24 text-white">
+        <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1A1624] p-5">
           <h1 className="text-xl font-semibold text-white">Messages</h1>
           <p className="mt-2 text-sm text-rose-300">{myParticipantsError.message}</p>
         </div>
@@ -90,10 +90,10 @@ export default async function MessagesInboxPage() {
 
   if (conversationIds.length === 0) {
     return (
-      <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#060814] px-4 py-8 pb-24 text-white">
-        <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
-          <h1 className="text-xl font-semibold text-white">Messages</h1>
-          <div className="mt-6 rounded-xl border border-white/10 bg-[#1E1E35] p-8 text-center">
+      <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#12101A] px-4 py-6 pb-24 text-white">
+        <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1A1624] p-5">
+          <h1 className="text-2xl font-semibold text-white">Messages</h1>
+          <div className="mt-5 rounded-2xl border border-white/10 bg-[#151220] p-8 text-center">
             <MessageCircle size={34} className="mx-auto text-white/50" />
             <p className="mt-3 text-sm text-white/70">No conversations yet. Open a match and click Message This Match.</p>
           </div>
@@ -244,32 +244,40 @@ export default async function MessagesInboxPage() {
     });
 
   return (
-    <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#060814] px-4 py-8 pb-24 text-white">
+    <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#12101A] px-4 py-6 pb-24 text-white">
       <div className="mx-auto max-w-4xl">
-        <header className="mb-6 rounded-2xl border border-white/10 bg-[#1E1E35] p-6">
+        <header className="mb-4 rounded-2xl border border-white/10 bg-[#1A1624] p-5">
           <h1 className="text-2xl font-semibold tracking-tight text-white">Messages</h1>
           <p className="body-on-dark mt-1 text-sm text-white/70">{conversations.length} active conversation{conversations.length > 1 ? 's' : ''}</p>
         </header>
 
-        <section className="space-y-2">
+        <section className="overflow-hidden rounded-2xl border border-white/10 bg-[#151220]">
           {conversations.length > 0 ? (
-            conversations.map(item => (
+            conversations.map((item, idx) => (
               <Link
                 key={item.conversationId}
                 href={`/messages/${item.conversationId}`}
-                className="block rounded-xl border-b border-white/10 bg-[#1E1E35] p-4 transition hover:bg-[#252540] hover:border-[#6B5CE7]"
+                className={`block p-4 transition hover:bg-white/[0.03] ${idx < conversations.length - 1 ? 'border-b border-white/10' : ''}`}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <p className="truncate text-base font-medium text-white">{item.name}</p>
-                    <p className="mt-1 truncate text-sm text-white/60">{item.lastBody}</p>
+                  <div className="min-w-0 flex items-start gap-3">
+                    <div className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#7C3AED] to-[#DB2777] text-base font-semibold text-white">
+                      {item.name.slice(0, 1).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-base font-medium text-white">{item.name}</p>
+                      <p className="mt-1 truncate text-sm text-white/55">{item.lastBody}</p>
+                    </div>
                   </div>
-                  <p className="shrink-0 text-xs text-white/40">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
+                  <div className="shrink-0 text-right">
+                    <p className="text-xs text-white/40">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
+                    <span className="ml-auto mt-1 block h-2 w-2 rounded-full bg-[#A855F7]" />
+                  </div>
                 </div>
               </Link>
             ))
           ) : (
-            <div className="rounded-xl border border-white/10 bg-[#1E1E35] p-6 text-sm text-white/70">
+            <div className="p-6 text-sm text-white/70">
               {couplePartnerId
                 ? 'Couple Mode is ON. Only your confirmed partner conversation appears here.'
                 : 'No active conversations. Blocked or unmatched chats are hidden here.'}

@@ -312,33 +312,24 @@ export default function ConversationPage() {
   };
 
   return (
-    <main className="app-interior-page mobile-premium-screen conversation-screen min-h-screen bg-[#060814] px-4 py-6 text-[#F3F5FF]">
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 opacity-90"
-        style={{
-          background:
-            'radial-gradient(1100px 540px at 14% -8%, rgba(124,58,237,0.25), transparent 58%), radial-gradient(980px 520px at 92% -2%, rgba(236,72,153,0.2), transparent 55%), radial-gradient(820px 460px at 50% 110%, rgba(59,130,246,0.17), transparent 60%)',
-        }}
-      />
-
-      <div className="app-page-shell relative flex max-w-4xl flex-col gap-4">
-        <header className="rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 p-4 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
+    <main className="app-interior-page mobile-premium-screen conversation-screen min-h-screen bg-[#12101A] px-4 py-4 text-[#F3F5FF]">
+      <div className="app-page-shell relative flex max-w-4xl flex-col gap-3">
+        <header className="rounded-2xl border border-white/10 bg-[#1A1624] p-4">
           <div className="flex items-center justify-between gap-3">
             <Link
               href="/matches"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#3A4270] bg-[#101735] px-3 py-1.5 text-sm text-[#D4D9F4] transition hover:border-[#6B5CE7] hover:text-[#FFFFFF]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-[#12101A] px-3 py-1.5 text-sm text-white/70 transition hover:border-[#A855F7] hover:text-white"
             >
               <ArrowLeft size={14} />
-              Back to matches
+              Back
             </Link>
-            <h1 className="text-sm font-medium text-[#F8F9FF] sm:text-base">Chat with {otherUserName}</h1>
+            <h1 className="text-sm font-medium text-[#F8F9FF] sm:text-base">{otherUserName}</h1>
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {trustSignals.map(signal => (
               <span
                 key={signal}
-                className="rounded-[4px] border border-white/15 bg-white/10 px-2.5 py-1 text-[11px] text-white/80"
+                className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[11px] text-white/75"
               >
                 {signal}
               </span>
@@ -351,11 +342,11 @@ export default function ConversationPage() {
           </div>
         </header>
 
-        <section className="flex min-h-[60vh] flex-col rounded-2xl border border-[#2A3158] bg-[#0B1024]/90 shadow-[0_24px_80px_rgba(5,10,30,0.6)] backdrop-blur">
-          <div className="border-b border-[#2F3760] p-3">
+        <section className="flex min-h-[68vh] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#12101A]">
+          <div className="border-b border-white/10 bg-[#1A1624] p-3">
             <ConnectionTrackPanel conversationId={conversationId} />
           </div>
-          <div className="flex-1 space-y-3 overflow-y-auto p-4">
+          <div className="flex-1 space-y-2 overflow-y-auto bg-[#12101A] p-4">
             {error?.toLowerCase().includes('connection track') ? (
               <div className="rounded-md border border-[#5c2323] bg-[#3C1515] px-3 py-2 text-sm text-[#FF9999]">{error}</div>
             ) : null}
@@ -369,10 +360,10 @@ export default function ConversationPage() {
                   return (
                     <div key={message.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
                       <div
-                        className={`max-w-[85%] rounded-2xl border px-3 py-2 text-sm leading-6 shadow-[0_8px_24px_rgba(8,12,30,0.35)] sm:max-w-[70%] ${
+                        className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-6 sm:max-w-[75%] ${
                           mine
-                            ? 'rounded-br-[4px] border-[#7E62F2]/55 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] text-white'
-                            : 'rounded-bl-[4px] border-[#36416D] bg-[#1E1E35] text-white/90'
+                            ? 'rounded-br-[4px] bg-gradient-to-br from-[#7C3AED] to-[#A855F7] text-white'
+                            : 'rounded-bl-[4px] border border-white/10 bg-[#252030] text-white/90'
                         }`}
                       >
                         <p>{message.body}</p>
@@ -386,7 +377,7 @@ export default function ConversationPage() {
               : null}
           </div>
 
-          <form onSubmit={onSend} className="border-t border-[#2F3760] p-3">
+          <form onSubmit={onSend} className="border-t border-white/10 bg-[#12101A] p-3">
             {otherUserId ? (
               <div className="mb-3">
                 <ConnectionSafetyActions targetUserId={otherUserId} compact />
@@ -403,7 +394,7 @@ export default function ConversationPage() {
             </div>
 
             {showEmojiPicker ? (
-              <div className="mb-3 rounded-xl border border-[#36416D] bg-[#11193A] p-2">
+              <div className="mb-3 rounded-xl border border-white/10 bg-[#1A1624] p-2">
                 <EmojiPicker
                   width="100%"
                   height={340}
@@ -419,8 +410,8 @@ export default function ConversationPage() {
                 onClick={() => setShowEmojiPicker(prev => !prev)}
                 className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border ${
                   showEmojiPicker
-                    ? 'border-[#6B5CE7] bg-[#1B1740] text-[#CFC6FF]'
-                    : 'border-[#36416D] bg-[#151C3C] text-[#A9B0D0] hover:border-[#6B5CE7] hover:text-[#FFFFFF]'
+                    ? 'border-[#A855F7] bg-[#221C32] text-[#E7D8FF]'
+                    : 'border-white/15 bg-[#1E1A2E] text-white/65 hover:border-[#A855F7] hover:text-white'
                 }`}
                 aria-label="Toggle emoji picker"
               >
@@ -431,15 +422,15 @@ export default function ConversationPage() {
                 onChange={event => setInput(event.target.value)}
                 placeholder="Type your message..."
                 disabled={Boolean(messagingDisabledReason)}
-                className="h-11 flex-1 rounded-[24px] border border-[#36416D] bg-[#151C3C] px-3 text-sm text-[#F7F8FF] outline-none transition focus:border-[#6B5CE7] disabled:cursor-not-allowed disabled:opacity-60"
+                className="h-11 flex-1 rounded-[24px] border border-white/15 bg-[#1E1A2E] px-3 text-sm text-[#F7F8FF] outline-none transition placeholder:text-white/35 focus:border-[#A855F7] disabled:cursor-not-allowed disabled:opacity-60"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || sending || loading || Boolean(messagingDisabledReason)}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#7E62F2]/60 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] px-4 text-sm font-medium text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#8A5CF6] bg-gradient-to-br from-[#7C3AED] to-[#A855F7] text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                aria-label="Send message"
               >
                 <Send size={15} />
-                {sending ? 'Sending...' : 'Send'}
               </button>
             </div>
             {messagingDisabledReason ? (
