@@ -751,24 +751,30 @@ export default function LandingPage() {
           .features-grid { grid-template-columns: 1fr !important; }
           .steps-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
           .testimonials-grid { grid-template-columns: 1fr !important; }
-          .landing-section { padding-top: 42px !important; padding-bottom: 42px !important; }
+          .landing-section { padding-top: 28px !important; padding-bottom: 28px !important; }
           .landing-section .glass,
           .features-grid > div,
           .problem-grid > div,
           .testimonials-grid > div {
-            padding: 20px !important;
+            padding: 16px !important;
           }
           .landing-section h2 {
-            margin-bottom: 10px !important;
+            margin-bottom: 8px !important;
           }
           .landing-section p {
             margin-bottom: 0 !important;
           }
           .landing-section > div > div:first-child {
-            margin-bottom: 26px !important;
+            margin-bottom: 16px !important;
           }
           .cta-banner {
-            padding: 36px 22px !important;
+            padding: 28px 18px !important;
+          }
+          .steps-grid > div {
+            margin-bottom: 4px !important;
+          }
+          .testimonials-grid > div {
+            gap: 12px !important;
           }
         }
         @media (max-width: 767px) {
@@ -803,17 +809,17 @@ export default function LandingPage() {
         }
         @media (max-width: 480px) {
           .landing-hero {
-            padding-top: 90px !important;
-            padding-bottom: 20px !important;
+            padding-top: 84px !important;
+            padding-bottom: 14px !important;
           }
           .hero-grid {
-            gap: 18px !important;
+            gap: 14px !important;
           }
           .hero-cta-group {
-            gap: 10px !important;
+            gap: 8px !important;
           }
           .steps-grid {
-            gap: 10px !important;
+            gap: 8px !important;
           }
           .hero-cta-group .btn-primary, .hero-cta-group .btn-ghost {
             width: 100%;
