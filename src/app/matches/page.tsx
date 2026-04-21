@@ -139,13 +139,13 @@ export default async function MatchesPage() {
             <h1 className="text-[52px] font-semibold leading-[0.9] tracking-tight text-[#F5EEF8]" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
               Matches
             </h1>
-            <p className="mt-1 text-[13px] text-[#B89EC4]">
+            <p className="mt-1 text-[13px] text-[#CFB7DA]">
               {matches.length > 0 ? `${matches.length} active match${matches.length > 1 ? 'es' : ''}` : 'No active matches yet'}
             </p>
           </div>
           <Link
             href="/dashboard"
-            className="mt-1 rounded-full border border-white/20 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-white/85 transition hover:border-[#A855F7]"
+            className="mt-1 inline-flex min-h-9 min-w-[96px] items-center justify-center rounded-full border border-white/20 bg-white/[0.03] px-4 py-1.5 text-center text-xs font-medium text-white/85 transition hover:border-[#A855F7]"
           >
             Dashboard
           </Link>
@@ -160,7 +160,7 @@ export default async function MatchesPage() {
               </p>
             </div>
           ) : null}
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/45">New Matches</p>
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/70">New Matches</p>
           {newMatches.length > 0 ? (
             <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {newMatches.map(match => (
@@ -182,7 +182,7 @@ export default async function MatchesPage() {
         </section>
 
         <section className="mb-4">
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/45">Conversations</p>
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/70">Conversations</p>
           {conversationMatches.length > 0 ? (
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#141120]">
               {conversationMatches.map((item, index) => {
@@ -203,7 +203,7 @@ export default async function MatchesPage() {
                       <p className="conversation-preview mt-1 text-sm leading-relaxed text-white/70">{item.latest.body}</p>
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="conversation-time text-sm leading-none text-white/50">
+                      <p className="conversation-time text-sm leading-none text-white/70">
                         {formatTimestamp(item.latest.created_at)}
                       </p>
                       {unread ? <span className="ml-auto mt-1 block h-3 w-3 rounded-full bg-[#A855F7]" /> : null}

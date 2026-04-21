@@ -1451,7 +1451,15 @@ input[type="range"]::-webkit-slider-thumb {
 .matches-screen h3,
 .matches-screen p,
 .matches-screen span {
-  color: #eef3ff;
+  color: #eef3ff !important;
+}
+
+.matches-screen [class*="text-white"] {
+  color: #eef3ff !important;
+}
+
+.matches-screen [class*="text-white/"] {
+  color: rgba(238, 243, 255, 0.86) !important;
 }
 
 .matches-screen .new-match-card {
