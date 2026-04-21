@@ -23,6 +23,14 @@ interface MatchmakingApiResponse {
   generatedAt: string;
   version: string;
   recommendations: MatchmakingRecommendation[];
+  waitlist?: {
+    active: boolean;
+    segment: string;
+    position: number;
+    totalInSegment: number;
+    etaDays: number;
+    minPoolSize: number;
+  } | null;
 }
 
 function profileById(userId: string): UserProfile | undefined {
@@ -41,18 +49,6 @@ function defaultBreakdown(score: number) {
   };
 }
 
-function fallbackRecommendations(limit: number): MatchmakingRecommendation[] {
-  return MATCHES.slice(0, limit).map(match => ({
-    userId: match.profile.id,
-    compatibilityScore: match.compatibilityScore,
-    breakdown: match.compatibilityBreakdown,
-    reasons: [match.aiReason],
-    whySignals: ['Fallback from seeded local matches'],
-    confidence: 'medium',
-    generatedAt: new Date().toISOString(),
-  }));
-}
-
 export async function runAndGetRecommendations(userId = 'user-1', limit = 10): Promise<MatchmakingRecommendation[]> {
   try {
     const post = await fetch('/api/matchmaking/recommendations', {
@@ -64,7 +60,7 @@ export async function runAndGetRecommendations(userId = 'user-1', limit = 10): P
     const data = (await post.json()) as MatchmakingApiResponse;
     return data.recommendations ?? [];
   } catch {
-    return fallbackRecommendations(limit);
+    return [];
   }
 }
 

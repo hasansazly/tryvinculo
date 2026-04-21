@@ -1,4 +1,4 @@
-import { CURRENT_USER, MATCHES, PROFILES } from '@/lib/mockData';
+import { CURRENT_USER, PROFILES } from '@/lib/mockData';
 import type { AttachmentStyle, Gender, LoveLanguage, RelationshipGoal, UserProfile } from '@/lib/types';
 import { createSupabaseServerClient } from '../../../utils/supabase/server';
 import type {
@@ -6,6 +6,7 @@ import type {
   MatchmakingRun,
   MatchmakingSignal,
   MatchmakingStore,
+  MatchmakingWaitlistState,
   MatchShownHistory,
   UserReport,
 } from './types';
@@ -16,6 +17,7 @@ declare global {
         signals: MatchmakingSignal[];
         recs: Map<string, MatchmakingCandidateScore[]>;
         runs: MatchmakingRun[];
+        waitlist: Map<string, { segment: string; status: 'waiting' | 'released'; joinedAt: string }>;
       }
     | undefined;
 }
@@ -68,18 +70,29 @@ type MatchmakingSignalRow = {
   created_at: string;
 };
 
+type WaitlistRow = {
+  user_id: string;
+  segment: string;
+  status: 'waiting' | 'ready' | 'released';
+  joined_at: string;
+};
+
 function getState() {
   if (!globalThis.__vinculoMatchStore) {
     globalThis.__vinculoMatchStore = {
       signals: [],
       recs: new Map<string, MatchmakingCandidateScore[]>(),
       runs: [],
+      waitlist: new Map(),
     };
   }
   return globalThis.__vinculoMatchStore;
 }
 
 const ALL_USERS: UserProfile[] = [CURRENT_USER, ...PROFILES];
+const WAITLIST_MIN_POOL_RAW = Number(process.env.MATCH_WAITLIST_MIN_POOL_SIZE ?? 20);
+const DEFAULT_WAITLIST_MIN_POOL_SIZE =
+  Number.isFinite(WAITLIST_MIN_POOL_RAW) && WAITLIST_MIN_POOL_RAW > 0 ? Math.floor(WAITLIST_MIN_POOL_RAW) : 20;
 
 function toStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -241,31 +254,26 @@ function mapProfileToUser(
   };
 }
 
-function seededRecommendation(match: (typeof MATCHES)[number]): MatchmakingCandidateScore {
-  const breakdown = {
-    ...match.compatibilityBreakdown,
-    datingPace: match.compatibilityBreakdown.goals,
-  };
-  const reasons = [
-    `Intent alignment and communication fit are both strong in this match (${match.compatibilityScore}%).`,
-    `Lifestyle and routine compatibility score high for practical dating momentum.`,
-    `Shared values and emotional alignment suggest lower ambiguity early on.`,
-  ];
+function estimateEtaDays(position: number, minPoolSize: number): number {
+  const remaining = Math.max(0, minPoolSize - position);
+  if (remaining === 0) return 0;
+  const assumedDailyJoinRate = 8;
+  return Math.max(1, Math.ceil(remaining / assumedDailyJoinRate));
+}
 
+function makeWaitlistState(input: {
+  segment: string;
+  position: number;
+  totalInSegment: number;
+  minPoolSize: number;
+}): MatchmakingWaitlistState {
   return {
-    userId: match.profile.id,
-    compatibilityScore: match.compatibilityScore,
-    rankingScore: match.compatibilityScore,
-    breakdown,
-    reasons,
-    explanation: {
-      summary: match.aiReason,
-      reasons,
-    },
-    whySignals: ['Seeded from existing compatibility dataset'],
-    confidence: 'medium',
-    tierLabel: 'core',
-    generatedAt: new Date().toISOString(),
+    active: true,
+    segment: input.segment,
+    position: input.position,
+    totalInSegment: input.totalInSegment,
+    etaDays: estimateEtaDays(input.position, input.minPoolSize),
+    minPoolSize: input.minPoolSize,
   };
 }
 
@@ -670,10 +678,139 @@ export class InMemoryMatchmakingStore implements MatchmakingStore {
     const state = getState();
     const existing = state.recs.get(userId);
     if (existing?.length) return existing.slice(0, limit);
+    return [];
+  }
 
-    const seeded = MATCHES.map(match => seededRecommendation(match));
-    state.recs.set(userId, seeded);
-    return seeded.slice(0, limit);
+  async upsertWaitlistEntry(input: {
+    userId: string;
+    segment: string;
+    minPoolSize: number;
+    scoreSnapshot?: Record<string, unknown>;
+  }): Promise<MatchmakingWaitlistState> {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const now = new Date().toISOString();
+      await supabase.from('matchmaking_waitlist').upsert(
+        {
+          user_id: input.userId,
+          segment: input.segment,
+          status: 'waiting',
+          score_snapshot: input.scoreSnapshot ?? {},
+          joined_at: now,
+          released_at: null,
+        },
+        { onConflict: 'user_id' }
+      );
+
+      const [{ data: entry }, { data: rows }] = await Promise.all([
+        supabase
+          .from('matchmaking_waitlist')
+          .select('user_id,segment,status,joined_at')
+          .eq('user_id', input.userId)
+          .maybeSingle<WaitlistRow>(),
+        supabase
+          .from('matchmaking_waitlist')
+          .select('user_id,segment,status,joined_at')
+          .eq('segment', input.segment)
+          .eq('status', 'waiting')
+          .order('joined_at', { ascending: true })
+          .returns<WaitlistRow[]>(),
+      ]);
+
+      const waitingRows = rows ?? [];
+      const position = Math.max(
+        1,
+        waitingRows.findIndex(row => row.user_id === input.userId) + 1
+      );
+      return makeWaitlistState({
+        segment: entry?.segment ?? input.segment,
+        position,
+        totalInSegment: waitingRows.length,
+        minPoolSize: input.minPoolSize,
+      });
+    } catch {
+      const state = getState();
+      const joinedAt = new Date().toISOString();
+      state.waitlist.set(input.userId, {
+        segment: input.segment,
+        status: 'waiting',
+        joinedAt,
+      });
+      const waiting = [...state.waitlist.entries()]
+        .filter(([, value]) => value.segment === input.segment && value.status === 'waiting')
+        .sort((a, b) => new Date(a[1].joinedAt).getTime() - new Date(b[1].joinedAt).getTime());
+      const position = Math.max(1, waiting.findIndex(([id]) => id === input.userId) + 1);
+      return makeWaitlistState({
+        segment: input.segment,
+        position,
+        totalInSegment: waiting.length,
+        minPoolSize: input.minPoolSize,
+      });
+    }
+  }
+
+  async getWaitlistEntry(userId: string): Promise<MatchmakingWaitlistState | null> {
+    const minPoolSize = DEFAULT_WAITLIST_MIN_POOL_SIZE;
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data: entry } = await supabase
+        .from('matchmaking_waitlist')
+        .select('user_id,segment,status,joined_at')
+        .eq('user_id', userId)
+        .maybeSingle<WaitlistRow>();
+      if (!entry || entry.status !== 'waiting') return null;
+
+      const { data: rows } = await supabase
+        .from('matchmaking_waitlist')
+        .select('user_id,segment,status,joined_at')
+        .eq('segment', entry.segment)
+        .eq('status', 'waiting')
+        .order('joined_at', { ascending: true })
+        .returns<WaitlistRow[]>();
+      const waitingRows = rows ?? [];
+      const position = Math.max(
+        1,
+        waitingRows.findIndex(row => row.user_id === userId) + 1
+      );
+      return makeWaitlistState({
+        segment: entry.segment,
+        position,
+        totalInSegment: waitingRows.length,
+        minPoolSize,
+      });
+    } catch {
+      const state = getState();
+      const entry = state.waitlist.get(userId);
+      if (!entry || entry.status !== 'waiting') return null;
+      const waiting = [...state.waitlist.entries()]
+        .filter(([, value]) => value.segment === entry.segment && value.status === 'waiting')
+        .sort((a, b) => new Date(a[1].joinedAt).getTime() - new Date(b[1].joinedAt).getTime());
+      const position = Math.max(1, waiting.findIndex(([id]) => id === userId) + 1);
+      return makeWaitlistState({
+        segment: entry.segment,
+        position,
+        totalInSegment: waiting.length,
+        minPoolSize,
+      });
+    }
+  }
+
+  async markWaitlistReleased(userId: string): Promise<void> {
+    const state = getState();
+    const existing = state.waitlist.get(userId);
+    if (existing) {
+      state.waitlist.set(userId, { ...existing, status: 'released' });
+    }
+
+    try {
+      const supabase = await createSupabaseServerClient();
+      await supabase
+        .from('matchmaking_waitlist')
+        .update({ status: 'released', released_at: new Date().toISOString() })
+        .eq('user_id', userId);
+    } catch {
+      // Non-blocking fallback.
+    }
   }
 }
 

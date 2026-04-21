@@ -13,9 +13,36 @@ const DEFAULT_LIMIT = 10;
 const DEFAULT_LOOKBACK_DAYS = 45;
 const SUPPRESSION_LOOKBACK_DAYS = 60;
 const DUPLICATE_BLOCK_DAYS = 30;
+const WAITLIST_MIN_POOL_SIZE_RAW = Number(process.env.MATCH_WAITLIST_MIN_POOL_SIZE ?? 20);
+const WAITLIST_MIN_POOL_SIZE = Number.isFinite(WAITLIST_MIN_POOL_SIZE_RAW) && WAITLIST_MIN_POOL_SIZE_RAW > 0
+  ? Math.floor(WAITLIST_MIN_POOL_SIZE_RAW)
+  : 20;
 
 function createId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function normalizeAgeBand(age: number | undefined): string {
+  if (typeof age !== 'number' || Number.isNaN(age)) return 'unknown';
+  if (age < 24) return '18-23';
+  if (age < 30) return '24-29';
+  if (age < 36) return '30-35';
+  if (age < 46) return '36-45';
+  return '46+';
+}
+
+function normalizeLocationBucket(location: string | undefined): string {
+  if (!location) return 'global';
+  const city = location.split(',')[0]?.trim().toLowerCase();
+  return city && city.length > 0 ? city : 'global';
+}
+
+function segmentKeyForUser(user: Record<string, unknown>): string {
+  const location = normalizeLocationBucket(typeof user.location === 'string' ? user.location : undefined);
+  const intent = typeof user.relationshipGoal === 'string' ? user.relationshipGoal.toLowerCase() : 'unsure';
+  const gender = typeof user.gender === 'string' ? user.gender.toLowerCase() : 'other';
+  const age = typeof user.age === 'number' ? user.age : undefined;
+  return [location, intent, gender, normalizeAgeBand(age)].join('|');
 }
 
 function parseTier(input: unknown): MatchmakingTier {
@@ -187,8 +214,23 @@ export async function runMatchmaking(
 
   const recommendations = await getTodayMatches(userId, tier);
   const limited = recommendations.slice(0, Math.max(1, Math.min(50, limit)));
+  let waitlist = null;
 
-  await store.saveRecommendations(userId, limited);
+  if (recommendations.length < dailyLimitForTier(tier)) {
+    waitlist = await store.upsertWaitlistEntry({
+      userId,
+      segment: segmentKeyForUser(user as unknown as Record<string, unknown>),
+      minPoolSize: WAITLIST_MIN_POOL_SIZE,
+      scoreSnapshot: {
+        eligibleMatchesNow: recommendations.length,
+        tier,
+      },
+    });
+    await store.saveRecommendations(userId, []);
+  } else {
+    await store.saveRecommendations(userId, limited);
+    await store.markWaitlistReleased(userId);
+  }
 
   const run: MatchmakingRun = {
     id: createId('run'),
@@ -205,7 +247,8 @@ export async function runMatchmaking(
     tier,
     generatedAt: run.createdAt,
     version: MATCHMAKING_ENGINE_VERSION,
-    recommendations: limited,
+    recommendations: waitlist ? [] : limited,
+    waitlist,
   };
 }
 
@@ -218,11 +261,16 @@ export async function getMatchmakingRecommendations(
   const tier = parseTier(tierInput);
 
   const recommendations = await store.getRecommendations(userId, limit);
+  const waitlist = recommendations.length === 0 ? await store.getWaitlistEntry(userId) : null;
+  if (recommendations.length > 0) {
+    await store.markWaitlistReleased(userId);
+  }
   return {
     userId,
     tier,
     generatedAt: new Date().toISOString(),
     version: MATCHMAKING_ENGINE_VERSION,
     recommendations,
+    waitlist,
   };
 }

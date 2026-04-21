@@ -18,6 +18,13 @@ type MessageRow = {
   created_at: string;
 };
 
+type WaitlistRow = {
+  user_id: string;
+  segment: string;
+  status: 'waiting' | 'ready' | 'released';
+  joined_at: string;
+};
+
 function formatTimestamp(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '';
@@ -53,6 +60,12 @@ export default async function MatchesPage() {
   if (await isDatingLockedForUser(supabase, user.id)) {
     redirect('/app/couples');
   }
+
+  const { data: waitlistEntry } = await supabase
+    .from('matchmaking_waitlist')
+    .select('user_id,segment,status,joined_at')
+    .eq('user_id', user.id)
+    .maybeSingle<WaitlistRow>();
 
   const matches = await getMatchesForUser(supabase, user.id);
   const matchedUserIds = matches.map(match => match.matchedUserId);
@@ -139,6 +152,14 @@ export default async function MatchesPage() {
         </header>
 
         <section className="mb-5">
+          {waitlistEntry?.status === 'waiting' ? (
+            <div className="mb-3 rounded-xl border border-[#A855F7]/40 bg-[#1B1630] p-3 text-sm text-white/80">
+              <p className="font-medium text-white">Priority waitlist active</p>
+              <p className="mt-1 text-xs text-white/65">
+                We&apos;re building a balanced match set for your segment. You&apos;ll be notified as soon as your first curated introductions are ready.
+              </p>
+            </div>
+          ) : null}
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/45">New Matches</p>
           {newMatches.length > 0 ? (
             <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

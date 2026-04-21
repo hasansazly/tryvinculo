@@ -80,6 +80,15 @@ export interface MatchmakingRun {
   version: string;
 }
 
+export interface MatchmakingWaitlistState {
+  active: boolean;
+  segment: string;
+  position: number;
+  totalInSegment: number;
+  etaDays: number;
+  minPoolSize: number;
+}
+
 export interface MatchmakingStore {
   getUserProfile(userId: string): Promise<UserProfile | null>;
   listCandidateProfiles(userId: string): Promise<UserProfile[]>;
@@ -94,6 +103,14 @@ export interface MatchmakingStore {
   saveRun(run: MatchmakingRun): Promise<void>;
   saveRecommendations(userId: string, recommendations: MatchmakingCandidateScore[]): Promise<void>;
   getRecommendations(userId: string, limit: number): Promise<MatchmakingCandidateScore[]>;
+  upsertWaitlistEntry(input: {
+    userId: string;
+    segment: string;
+    minPoolSize: number;
+    scoreSnapshot?: Record<string, unknown>;
+  }): Promise<MatchmakingWaitlistState>;
+  getWaitlistEntry(userId: string): Promise<MatchmakingWaitlistState | null>;
+  markWaitlistReleased(userId: string): Promise<void>;
 }
 
 export interface MatchmakingResponse {
@@ -102,6 +119,7 @@ export interface MatchmakingResponse {
   generatedAt: string;
   version: string;
   recommendations: MatchmakingCandidateScore[];
+  waitlist?: MatchmakingWaitlistState | null;
 }
 
 export interface MatchWithSignals extends Match {
