@@ -487,9 +487,9 @@ export default function CouplesPage() {
       />
       <div className="app-page-shell cm-shell relative flex max-w-[420px] flex-col gap-3 pt-4">
         <header className="cm-card cm-header p-5">
-          <p className="cm-kicker text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Private Couple Space</p>
+          <p className="cm-kicker text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Private Couple Space</p>
           <h1 className="cm-title mt-1 text-3xl font-semibold text-white">Couple Mode</h1>
-          <p className="mt-2 text-sm text-[#BFA9D4]">
+          <p className="mt-2 text-sm text-[#E6D8F4]">
             A calm shared space for rituals, check-ins, memories, and appreciation.
           </p>
         </header>
@@ -498,13 +498,13 @@ export default function CouplesPage() {
           <section className="cm-card p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="cm-kicker text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Couple Mode Status</p>
+                <p className="cm-kicker text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Couple Mode Status</p>
                 <p className="mt-1 text-sm text-[#E8ECFF]">
-                  You: <span className={selfModeOn ? 'text-emerald-300' : 'text-[#A9B0D0]'}>{selfModeOn ? 'ON' : 'OFF'}</span>
+                  You: <span className={selfModeOn ? 'text-emerald-300' : 'text-[#CED6F8]'}>{selfModeOn ? 'ON' : 'OFF'}</span>
                   {' · '}
-                  {partnerName}: <span className={partnerModeOn ? 'text-emerald-300' : 'text-[#A9B0D0]'}>{partnerModeOn ? 'ON' : 'OFF'}</span>
+                  {partnerName}: <span className={partnerModeOn ? 'text-emerald-300' : 'text-[#CED6F8]'}>{partnerModeOn ? 'ON' : 'OFF'}</span>
                 </p>
-                <p className="mt-1 text-xs text-[#A78BFA99]">
+                <p className="mt-1 text-xs text-[#CCB6FF]">
                   {effectiveModeOn
                     ? 'Both partners are ON. Dating sections are hidden and only your couple connection is visible.'
                     : 'Turn this ON so your partner can see your commitment status.'}
@@ -526,7 +526,7 @@ export default function CouplesPage() {
 
         {loading ? (
           <section className="cm-card p-6">
-            <p className="inline-flex items-center gap-2 text-sm text-[#A9B0D0]">
+            <p className="inline-flex items-center gap-2 text-sm text-[#CED6F8]">
               <Loader2 size={16} className="animate-spin" />
               Loading Couple Mode...
             </p>
@@ -541,25 +541,25 @@ export default function CouplesPage() {
 
         {!loading && state && !state.enabled ? (
           <section className="cm-card p-6">
-            <p className="text-sm text-[#A9B0D0]">Couple Mode is currently disabled.</p>
+            <p className="text-sm text-[#CED6F8]">Couple Mode is currently disabled.</p>
           </section>
         ) : null}
 
         {!loading && state?.enabled && !state.hasCouple ? (
           <section className="cm-card p-6">
             <h2 className="text-lg font-medium text-white">Not in Couple Mode yet</h2>
-            <p className="mt-2 text-sm text-[#A9B0D0]">
+            <p className="mt-2 text-sm text-[#CED6F8]">
               Couple Mode unlocks after a confirmed couple status is set for your pair.
             </p>
             {state.unavailableReason === 'pair_unavailable' ? (
-              <p className="mt-2 text-xs text-[#D6DDFB]/75">
+              <p className="mt-2 text-xs text-[#E9EEFF]">
                 This pair is currently unavailable because of a safety or unmatch state.
               </p>
             ) : null}
             {inviteCodeFromUrl ? (
               <div className="mt-4 rounded-xl border border-[#3D2B58] bg-[#120D1E] p-4">
                 <p className="text-sm font-medium text-white">You were invited to join as a partner</p>
-                <p className="mt-1 text-xs text-[#A9B0D0]">
+                <p className="mt-1 text-xs text-[#CED6F8]">
                   This invite is email-locked. Sign in with the invited email to accept.
                 </p>
                 <button
@@ -574,7 +574,7 @@ export default function CouplesPage() {
             ) : null}
             <div className="mt-4 rounded-xl border border-[#3D2B58] bg-[#120D1E] p-4">
               <p className="text-sm font-medium text-white">Invite your partner</p>
-              <p className="mt-1 text-xs text-[#A9B0D0]">
+              <p className="mt-1 text-xs text-[#CED6F8]">
                 Only Temple users can send invites. Your partner can join from any school.
               </p>
               {canCreateInvite ? (
@@ -599,9 +599,9 @@ export default function CouplesPage() {
               )}
               {pendingInvite ? (
                 <div className="mt-3 rounded-lg border border-[#3B2A54] bg-[#0E0A16] p-3">
-                  <p className="text-xs text-[#C9D2FF]">Invite link</p>
-                  <p className="mt-1 break-all text-xs text-[#AFC0FF]">{pendingInvite.inviteLink}</p>
-                  <p className="mt-2 text-[11px] text-[#A9B0D0]">
+                  <p className="text-xs text-[#E4E9FF]">Invite link</p>
+                  <p className="mt-1 break-all text-xs text-[#D9E2FF]">{pendingInvite.inviteLink}</p>
+                  <p className="mt-2 text-[11px] text-[#CED6F8]">
                     For: {pendingInvite.partnerEmail} · Expires {formatDateTime(pendingInvite.expiresAt)}
                   </p>
                 </div>
@@ -624,15 +624,15 @@ export default function CouplesPage() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-lg text-[#A6AED0]">
+                    <div className="flex h-full w-full items-center justify-center text-lg text-[#D5DBFA]">
                       <Heart size={20} />
                     </div>
                   )}
                 </div>
                 <div className="min-w-[180px] flex-1">
-                  <p className="cm-kicker text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Confirmed Couple</p>
+                  <p className="cm-kicker text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Confirmed Couple</p>
                   <h2 className="cm-title text-2xl font-semibold text-white">You & {partnerName}</h2>
-                  {confirmedLabel ? <p className="text-xs text-[#A78BFA99]">Confirmed on {confirmedLabel}</p> : null}
+                  {confirmedLabel ? <p className="text-xs text-[#CCB6FF]">Confirmed on {confirmedLabel}</p> : null}
                 </div>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#7C3AED55] bg-[#2D1A44] px-3 py-1 text-xs text-[#D6D1FF]">
                   <Shield size={13} />
@@ -643,37 +643,37 @@ export default function CouplesPage() {
 
             <section className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
               <article className="cm-card p-4">
-                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Next Reminder</p>
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Next Reminder</p>
                 <p className="mt-2 text-sm font-medium text-white">
                   {dashboard?.nextReminder?.title ?? 'No pending reminders'}
                 </p>
                 {dashboard?.nextReminder?.dueAt ? (
-                  <p className="mt-1 text-xs text-[#A9B0D0]">{formatDateTime(dashboard.nextReminder.dueAt)}</p>
+                  <p className="mt-1 text-xs text-[#CED6F8]">{formatDateTime(dashboard.nextReminder.dueAt)}</p>
                 ) : null}
               </article>
               <article className="cm-card p-4">
-                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Open Reminders</p>
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Open Reminders</p>
                 <p className="mt-2 text-2xl font-semibold text-white">{dashboard?.openReminderCount ?? 0}</p>
-                <p className="mt-1 text-xs text-[#A9B0D0]">Shared responsibilities at a glance.</p>
+                <p className="mt-1 text-xs text-[#CED6F8]">Shared responsibilities at a glance.</p>
               </article>
               <article className="cm-card p-4">
-                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Memory Timeline</p>
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Memory Timeline</p>
                 <p className="mt-2 text-2xl font-semibold text-white">{dashboard?.memoryCount ?? 0}</p>
-                <p className="mt-1 text-xs text-[#A9B0D0]">Moments saved together.</p>
+                <p className="mt-1 text-xs text-[#CED6F8]">Moments saved together.</p>
               </article>
               <article className="cm-card p-4">
-                <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Latest Date Plan</p>
+                <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Latest Date Plan</p>
                 <p className="mt-2 text-sm font-medium text-white">{dashboard?.lastDatePlanTitle ?? 'Not planned yet'}</p>
-                <p className="mt-1 text-xs text-[#A9B0D0]">{dashboard?.completedCheckins ?? 0} completed weekly check-ins</p>
+                <p className="mt-1 text-xs text-[#CED6F8]">{dashboard?.completedCheckins ?? 0} completed weekly check-ins</p>
               </article>
             </section>
 
             <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
               <section className="space-y-4">
                 <article className="cm-card cm-plan-card p-5">
-                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Date Concierge</p>
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Date Concierge</p>
                   <h3 className="cm-title mt-1 text-lg font-medium text-white">Generate your next date plan</h3>
-                  <p className="mt-1 text-xs text-[#A9B0D0]">
+                  <p className="mt-1 text-xs text-[#CED6F8]">
                     Quick planning based on your vibe, budget, and time.
                   </p>
                   <form className="mt-4 grid gap-2 sm:grid-cols-2" onSubmit={generateDatePlan}>
@@ -724,7 +724,7 @@ export default function CouplesPage() {
                           <p className="cm-title text-sm font-medium text-[#E8ECFF]">{plan.title}</p>
                           <p className="mt-1 text-xs text-[#D6DDFB]">{plan.summary}</p>
                           {plan.steps.length > 0 ? (
-                            <p className="mt-1 text-[11px] text-[#A6AED0]">{plan.steps.join(' · ')}</p>
+                            <p className="mt-1 text-[11px] text-[#D5DBFA]">{plan.steps.join(' · ')}</p>
                           ) : null}
                         </div>
                       ))}
@@ -735,7 +735,7 @@ export default function CouplesPage() {
                 <article className="cm-card p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Today&apos;s Prompt</p>
+                      <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Today&apos;s Prompt</p>
                       <h3 className="cm-title mt-1 text-lg font-medium text-white">{daily.question.text}</h3>
                     </div>
                     <span className="rounded-full border border-[#36416D] bg-[#121A3A] px-3 py-1 text-[11px] text-[#D6DDFB]">
@@ -765,7 +765,7 @@ export default function CouplesPage() {
                     <div className="mt-4 grid gap-2 sm:grid-cols-2">
                       {daily.responses.map(response => (
                         <div key={response.id} className="rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
-                          <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">
+                          <p className="text-[11px] uppercase tracking-[0.06em] text-[#D5DBFA]">
                             {response.userId === state.viewerUserId ? 'You' : partnerName}
                           </p>
                           <p className="mt-1 text-sm text-[#E8ECFF]">{response.preview}</p>
@@ -778,10 +778,10 @@ export default function CouplesPage() {
                 <article className="cm-card p-5">
                   <div className="flex items-center gap-2">
                     <CalendarCheck2 size={16} className="text-[#C9C0FF]" />
-                    <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Weekly Check-In</p>
+                    <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Weekly Check-In</p>
                   </div>
                   <h3 className="cm-title mt-1 text-lg font-medium text-white">{weekly.question.text}</h3>
-                  <p className="mt-1 text-xs text-[#A9B0D0]">
+                  <p className="mt-1 text-xs text-[#CED6F8]">
                     Keep it short and honest: how connected, what felt good, and what you want more of.
                   </p>
 
@@ -832,7 +832,7 @@ export default function CouplesPage() {
                     <div className="mt-4 grid gap-2 sm:grid-cols-2">
                       {weekly.responses.map(response => (
                         <div key={response.id} className="rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
-                          <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">
+                          <p className="text-[11px] uppercase tracking-[0.06em] text-[#D5DBFA]">
                             {response.userId === state.viewerUserId ? 'You' : partnerName}
                           </p>
                           <p className="mt-1 text-sm text-[#E8ECFF]">{response.preview}</p>
@@ -845,7 +845,7 @@ export default function CouplesPage() {
 
               <section className="space-y-4">
                 <article className="cm-card p-5">
-                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Shared Reminders</p>
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Shared Reminders</p>
                   <form className="mt-3 space-y-2" onSubmit={submitReminder}>
                     <input
                       value={reminderTitle}
@@ -880,7 +880,7 @@ export default function CouplesPage() {
                           <p className="text-sm text-[#E8ECFF]">{reminder.title}</p>
                           {reminder.note ? <p className="mt-1 text-xs text-[#D6DDFB]">{reminder.note}</p> : null}
                           <div className="mt-2 flex items-center justify-between gap-2">
-                            <p className="text-[11px] text-[#A6AED0]">{formatDateTime(reminder.dueAt)}</p>
+                            <p className="text-[11px] text-[#D5DBFA]">{formatDateTime(reminder.dueAt)}</p>
                             <button
                               type="button"
                               onClick={() => void completeReminder(reminder.id)}
@@ -894,14 +894,14 @@ export default function CouplesPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-3 text-sm text-[#A9B0D0]">No open reminders yet.</p>
+                    <p className="mt-3 text-sm text-[#CED6F8]">No open reminders yet.</p>
                   )}
                 </article>
 
                 <article className="cm-card p-5">
                   <div className="flex items-center gap-2">
                     <MessageCircleHeart size={16} className="text-[#C9C0FF]" />
-                    <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Love Notes</p>
+                    <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Love Notes</p>
                   </div>
                   <form className="mt-3 space-y-2" onSubmit={submitLoveNote}>
                     <textarea
@@ -923,7 +923,7 @@ export default function CouplesPage() {
                       {notes.slice(0, 5).map(note => (
                         <div key={note.id} className="rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
                           <p className="text-xs text-[#D6DDFB]">{note.body}</p>
-                          <p className="mt-1 text-[11px] text-[#A6AED0]">
+                          <p className="mt-1 text-[11px] text-[#D5DBFA]">
                             {note.isMine ? 'You' : partnerName} · {formatDateTime(note.createdAt)}
                           </p>
                         </div>
@@ -935,21 +935,21 @@ export default function CouplesPage() {
                 <article className="cm-card p-5">
                   <div className="flex items-center gap-2">
                     <HeartHandshake size={16} className="text-[#C9C0FF]" />
-                    <p className="text-[11px] uppercase tracking-[0.08em] text-[#A6AED0]">Shared Memory Timeline</p>
+                    <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Shared Memory Timeline</p>
                   </div>
 
                   {timeline.length > 0 ? (
                     <ul className="mt-3 space-y-2">
                       {timeline.map(item => (
                         <li key={item.id} className="rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
-                          <p className="text-xs uppercase tracking-[0.06em] text-[#A6AED0]">{item.title}</p>
+                          <p className="text-xs uppercase tracking-[0.06em] text-[#D5DBFA]">{item.title}</p>
                           <p className="mt-1 text-sm text-[#E8ECFF]">{item.summary}</p>
-                          <p className="mt-1 text-[11px] text-[#A6AED0]">{formatDateTime(item.createdAt)}</p>
+                          <p className="mt-1 text-[11px] text-[#D5DBFA]">{formatDateTime(item.createdAt)}</p>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="mt-3 text-sm text-[#A9B0D0]">
+                    <p className="mt-3 text-sm text-[#CED6F8]">
                       Shared memories will appear here after you both answer prompts/check-ins or send notes.
                     </p>
                   )}
@@ -962,7 +962,7 @@ export default function CouplesPage() {
         {!loading && state?.enabled && state.hasCouple && !selfModeOn ? (
           <section className="cm-card p-6">
             <h2 className="text-lg font-medium text-white">Couple Mode is OFF for you</h2>
-            <p className="mt-2 text-sm text-[#A9B0D0]">
+            <p className="mt-2 text-sm text-[#CED6F8]">
               Turn it ON above to enter your private couple space. Your partner can already see your ON/OFF status.
             </p>
           </section>
@@ -1003,12 +1003,13 @@ export default function CouplesPage() {
           opacity: 0.4;
         }
         .cm-kicker {
-          color: #a78bfa;
+          color: #d7c8ff !important;
         }
         .cm-title {
           font-family: Lora, Georgia, serif;
           font-style: italic;
-          color: #e9d5ff;
+          color: #f5edff !important;
+          text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
         }
         .cm-plan-card {
           background: #200d30;
@@ -1019,7 +1020,7 @@ export default function CouplesPage() {
           border-color: rgba(124, 58, 237, 0.35) !important;
         }
         .cm-input::placeholder {
-          color: rgba(255, 255, 255, 0.24);
+          color: rgba(255, 255, 255, 0.72);
         }
       `}</style>
     </div>
