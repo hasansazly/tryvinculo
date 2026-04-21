@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../utils/supabase/server';
-import { normalizeEmail, isTempleUniversityEmail } from '@/lib/utils';
+import { normalizeEmail, isQaAccessEmail } from '@/lib/utils';
 import { resolveCoupleContext } from '@/server/couples/service';
 
 type InvitePayload = {
@@ -40,13 +40,13 @@ export async function GET(request: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const userEmail = normalizeEmail(user.email ?? '');
-    const templeEligible = isTempleUniversityEmail(userEmail);
+    const inviteEligible = isQaAccessEmail(userEmail);
     const context = await resolveCoupleContext(supabase, user.id);
 
-    if (!templeEligible) {
+    if (!inviteEligible) {
       return NextResponse.json({
         canCreateInvite: false,
-        reason: 'Only Temple users can invite a partner.',
+        reason: 'Only approved tester emails can invite a partner.',
         hasCouple: Boolean(context),
         pendingInvite: null,
       });
@@ -112,14 +112,17 @@ export async function POST(request: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const userEmail = normalizeEmail(user.email ?? '');
-    if (!isTempleUniversityEmail(userEmail)) {
-      return NextResponse.json({ error: 'Only Temple users can invite a partner.' }, { status: 403 });
+    if (!isQaAccessEmail(userEmail)) {
+      return NextResponse.json({ error: 'Only approved tester emails can invite a partner.' }, { status: 403 });
     }
 
     const body = (await request.json().catch(() => ({}))) as InvitePayload;
     const partnerEmail = normalizeEmail(body.partnerEmail ?? '');
     if (!partnerEmail || !/\S+@\S+\.\S+/.test(partnerEmail)) {
       return NextResponse.json({ error: 'Valid partnerEmail is required.' }, { status: 400 });
+    }
+    if (!isQaAccessEmail(partnerEmail)) {
+      return NextResponse.json({ error: 'Only approved tester emails can be invited.' }, { status: 403 });
     }
     if (partnerEmail === userEmail) {
       return NextResponse.json({ error: 'You cannot invite your own email.' }, { status: 400 });

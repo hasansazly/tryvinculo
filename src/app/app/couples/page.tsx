@@ -575,14 +575,14 @@ export default function CouplesPage() {
             <div className="mt-4 rounded-xl border border-[#3D2B58] bg-[#120D1E] p-4">
               <p className="text-sm font-medium text-white">Invite your partner</p>
               <p className="mt-1 text-xs text-[#CED6F8]">
-                Only Temple users can send invites. Your partner can join from any school.
+                Only approved tester emails can send and accept invites.
               </p>
               {canCreateInvite ? (
                 <form className="mt-3 space-y-2" onSubmit={createInvite}>
                   <input
                     className="w-full rounded-lg border border-[#7C3AED44] bg-[#120D1E] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#A855F7]"
                     type="email"
-                    placeholder="partner@example.edu"
+                    placeholder="approved-tester@email.com"
                     value={inviteEmail}
                     onChange={event => setInviteEmail(event.target.value)}
                   />
