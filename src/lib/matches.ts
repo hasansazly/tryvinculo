@@ -87,7 +87,7 @@ export async function getMatchesForUser(
   const { data: matchRows, error: matchError } = await supabase
     .from('matches')
     .select('*')
-    .eq('user_id', userId)
+    .or(`user_id.eq.${userId},matched_user_id.eq.${userId}`)
     .eq('status', 'active')
     .order('created_at', { ascending: false });
 
@@ -99,8 +99,14 @@ export async function getMatchesForUser(
   }
 
   const dedupedRows = (matchRows as MatchRow[]).filter((row, index, all) => {
-    // Keep only the first row per matched user (query is already ordered by created_at desc).
-    return all.findIndex(item => item.matched_user_id === row.matched_user_id) === index;
+    const counterpartId = row.user_id === userId ? row.matched_user_id : row.user_id;
+    // Keep only the first row per counterpart user (query is already ordered by created_at desc).
+    return (
+      all.findIndex(item => {
+        const itemCounterpartId = item.user_id === userId ? item.matched_user_id : item.user_id;
+        return itemCounterpartId === counterpartId;
+      }) === index
+    );
   });
 
   const [{ data: blockRows }, { data: unmatchRows }] = await Promise.all([
@@ -128,14 +134,15 @@ export async function getMatchesForUser(
     if (row.unmatched_user_id === userId) unmatchedIds.add(row.initiated_by_user_id);
   }
 
-  const rows = dedupedRows.filter(
-    row => !blockedIds.has(row.matched_user_id) && !unmatchedIds.has(row.matched_user_id)
-  );
+  const rows = dedupedRows.filter(row => {
+    const counterpartId = row.user_id === userId ? row.matched_user_id : row.user_id;
+    return !blockedIds.has(counterpartId) && !unmatchedIds.has(counterpartId);
+  });
 
   if (rows.length === 0) {
     return [];
   }
-  const matchedUserIds = rows.map(row => row.matched_user_id);
+  const matchedUserIds = rows.map(row => (row.user_id === userId ? row.matched_user_id : row.user_id));
 
   const [{ data: profileRows, error: profileError }, { data: onboardingRows, error: onboardingError }, { data: reciprocalRows }] = await Promise.all([
     supabase.from('profiles').select('*').in('id', matchedUserIds),
@@ -184,8 +191,9 @@ export async function getMatchesForUser(
   });
 
   return rows.map(row => {
-    const snapshot = byUser.get(row.matched_user_id);
-    const profile = profilesById.get(row.matched_user_id);
+    const counterpartId = row.user_id === userId ? row.matched_user_id : row.user_id;
+    const snapshot = byUser.get(counterpartId);
+    const profile = profilesById.get(counterpartId);
     const demographics = snapshot?.demographics ?? {};
     const profileMeta = snapshot?.profileMeta ?? {};
     const relationshipIntentResponse = snapshot?.relationshipIntent ?? {};
@@ -226,10 +234,10 @@ export async function getMatchesForUser(
       (typeof profile?.bio === 'string' ? profile.bio : '') ||
       'Intentional dater on Vinculo.';
     const photos = toStringArray(profileMeta.photos);
-    const isMutualMatch = mutualMatchUserIds.has(row.matched_user_id);
+    const isMutualMatch = mutualMatchUserIds.has(counterpartId);
     const canViewMatchPhotos = canViewPhotos({
       isMutualMatch,
-      isSelf: row.matched_user_id === userId,
+      isSelf: counterpartId === userId,
     });
     const safePhotos = canViewMatchPhotos ? photos : [];
     const interests = toStringArray(demographics.interests).length
@@ -248,7 +256,7 @@ export async function getMatchesForUser(
     return {
       id: row.id,
       userId: row.user_id,
-      matchedUserId: row.matched_user_id,
+      matchedUserId: counterpartId,
       status: row.status,
       explanation: row.explanation || '',
       compatibilityReasons: toStringArray(row.compatibility_reasons),
