@@ -636,6 +636,74 @@ a:active .lucide-heart {
   }
 }
 
+/* Discover screen: force dark visual system and prevent card text collisions on mobile */
+.app-interior-page.discover-screen {
+  background: #12101A !important;
+  color: #F5EEF8 !important;
+}
+
+.discover-screen h1,
+.discover-screen h2,
+.discover-screen h3 {
+  color: #F5EEF8 !important;
+}
+
+.discover-screen p,
+.discover-screen span,
+.discover-screen li {
+  color: inherit;
+}
+
+.discover-screen .discover-match-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.discover-screen .discover-photo-area {
+  overflow: hidden;
+}
+
+.discover-screen .discover-hero-copy {
+  z-index: 2;
+}
+
+.discover-screen .discover-match-name {
+  color: #F7F8FF !important;
+}
+
+.discover-screen .discover-match-location,
+.discover-screen .discover-match-bio {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
+@media (max-width: 767px) {
+  .discover-screen .discover-photo-area {
+    height: 420px !important;
+  }
+
+  .discover-screen .discover-hero-copy {
+    padding: 16px !important;
+  }
+
+  .discover-screen .discover-match-name {
+    margin-top: 4px !important;
+    font-size: 40px !important;
+    line-height: 0.96 !important;
+  }
+
+  .discover-screen .discover-match-location {
+    margin-top: 4px !important;
+    font-size: 22px !important;
+    line-height: 1.1 !important;
+  }
+
+  .discover-screen .discover-match-bio {
+    margin-top: 6px !important;
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+  }
+}
+
 @media (max-width: 480px) {
   .btn-primary, .btn-ghost { width: 100%; }
 }
