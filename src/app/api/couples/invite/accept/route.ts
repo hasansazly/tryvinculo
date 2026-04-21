@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../../utils/supabase/server';
-import { isQaAccessEmail, normalizeEmail } from '@/lib/utils';
+import { isTempleUniversityEmail, normalizeEmail } from '@/lib/utils';
 import { resolveCoupleContext, sortPair } from '@/server/couples/service';
 
 type AcceptPayload = {
@@ -69,8 +69,8 @@ export async function POST(request: NextRequest) {
     }
 
     const currentUserEmail = normalizeEmail(user.email ?? '');
-    if (!isQaAccessEmail(currentUserEmail)) {
-      return NextResponse.json({ error: 'Only approved tester emails can accept invites.' }, { status: 403 });
+    if (!isTempleUniversityEmail(currentUserEmail)) {
+      return NextResponse.json({ error: 'Only @temple.edu emails can accept invites.' }, { status: 403 });
     }
     if (!currentUserEmail || currentUserEmail !== normalizeEmail(invite.partner_email)) {
       return NextResponse.json(
@@ -78,11 +78,11 @@ export async function POST(request: NextRequest) {
         { status: 403 }
       );
     }
-    if (!isQaAccessEmail(invite.partner_email)) {
-      return NextResponse.json({ error: 'Only approved tester emails can accept invites.' }, { status: 403 });
+    if (!isTempleUniversityEmail(invite.partner_email)) {
+      return NextResponse.json({ error: 'Only @temple.edu emails can accept invites.' }, { status: 403 });
     }
 
-    // Invite creation is already restricted to approved tester emails.
+    // Invite creation is already restricted to @temple.edu emails.
     // Keep a best-effort inviter email check, but do not hard-fail when email
     // is unavailable in `profiles` (can happen with RLS/profile hydration gaps).
     const { data: inviterProfile } = await supabase
@@ -91,8 +91,8 @@ export async function POST(request: NextRequest) {
       .eq('id', invite.inviter_user_id)
       .maybeSingle<InviterProfileRow>();
     const inviterEmail = normalizeEmail(inviterProfile?.email ?? '');
-    if (inviterEmail && !isQaAccessEmail(inviterEmail)) {
-      return NextResponse.json({ error: 'Only invites sent by approved tester emails are valid.' }, { status: 403 });
+    if (inviterEmail && !isTempleUniversityEmail(inviterEmail)) {
+      return NextResponse.json({ error: 'Only invites sent by @temple.edu emails are valid.' }, { status: 403 });
     }
 
     const expiresAt = new Date(invite.expires_at).getTime();
