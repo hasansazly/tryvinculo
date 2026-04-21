@@ -1398,16 +1398,23 @@ input[type="range"]::-webkit-slider-thumb {
 .match-detail-screen .match-signal-chip,
 .match-detail-screen .match-reason-item,
 .match-detail-screen .trust-signal-item {
-  min-height: 44px;
+  min-height: 50px;
   white-space: normal;
   word-break: break-word;
   overflow-wrap: anywhere;
+  line-height: 1.45;
 }
 
 .match-detail-screen .match-signal-chip,
 .match-detail-screen .trust-signal-item {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.match-detail-screen .match-reason-item {
+  align-items: flex-start;
 }
 
 .match-detail-screen section.fixed {

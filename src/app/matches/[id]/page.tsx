@@ -101,7 +101,7 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
                   <User size={52} className="text-slate-400" />
                 </div>
                 {!match.canViewPhotos ? (
-                  <div className="absolute left-1/2 top-5 z-10 w-fit -translate-x-1/2 rounded-full border border-violet-300/45 bg-slate-950/85 px-3.5 py-2 text-xs font-medium leading-tight text-violet-100 backdrop-blur">
+                  <div className="absolute right-5 top-5 z-20 inline-flex max-w-[78%] items-center justify-center rounded-full border border-violet-300/50 bg-slate-950/90 px-3.5 py-2 text-center text-[11px] font-medium leading-tight text-violet-100 shadow-[0_8px_24px_rgba(10,14,30,0.45)] backdrop-blur sm:max-w-none sm:text-xs">
                     Photos unlock after mutual match
                   </div>
                 ) : null}
@@ -131,7 +131,7 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
               {trustSignals.map(signal => (
                 <span
                   key={signal}
-                  className="match-signal-chip rounded-2xl border border-slate-700/80 bg-slate-800/75 px-3.5 py-2 text-xs leading-relaxed text-slate-200"
+                  className="match-signal-chip rounded-2xl border border-slate-700/80 bg-slate-800/75 px-3.5 py-2.5 text-sm leading-relaxed text-slate-100"
                 >
                   {signal}
                 </span>
@@ -184,7 +184,7 @@ export default async function MatchDetailPage({ params }: MatchDetailPageProps) 
               {match.compatibilityReasons.map(reason => (
                 <li
                   key={reason}
-                  className="match-reason-item flex min-h-11 items-start gap-2 rounded-xl border border-slate-700/70 bg-slate-800/60 px-3.5 py-3 text-sm leading-relaxed text-slate-100"
+                  className="match-reason-item flex min-h-12 items-start gap-2 rounded-xl border border-slate-700/70 bg-slate-800/60 px-4 py-3.5 text-sm leading-relaxed text-slate-100"
                 >
                   <CheckCircle2 size={14} className="shrink-0 text-violet-300" />
                   {reason}
