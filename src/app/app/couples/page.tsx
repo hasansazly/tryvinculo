@@ -547,7 +547,7 @@ export default function CouplesPage() {
 
         {!loading && state?.enabled && !state.hasCouple ? (
           <section className="cm-card p-6">
-            <h2 className="text-lg font-medium text-white">Not in Couple Mode yet</h2>
+            <h2 className="text-lg font-semibold text-[#F8FAFF]">Not in Couple Mode yet</h2>
             <p className="mt-2 text-sm text-[#CED6F8]">
               Couple Mode unlocks after a confirmed couple status is set for your pair.
             </p>
