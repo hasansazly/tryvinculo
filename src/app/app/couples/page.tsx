@@ -641,7 +641,7 @@ export default function CouplesPage() {
               </div>
             </section>
 
-            <section className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            <section className="cm-metric-grid grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
               <article className="cm-card p-4">
                 <p className="text-[11px] uppercase tracking-[0.08em] text-[#D5DBFA]">Next Reminder</p>
                 <p className="mt-2 text-sm font-medium text-white">
@@ -762,9 +762,9 @@ export default function CouplesPage() {
                   ) : null}
 
                   {daily.responses.length > 0 ? (
-                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    <div className="cm-response-grid mt-4 grid gap-2 sm:grid-cols-2">
                       {daily.responses.map(response => (
-                        <div key={response.id} className="rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
+                        <div key={response.id} className="cm-response-card rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
                           <p className="text-[11px] uppercase tracking-[0.06em] text-[#D5DBFA]">
                             {response.userId === state.viewerUserId ? 'You' : partnerName}
                           </p>
@@ -829,9 +829,9 @@ export default function CouplesPage() {
                   ) : null}
 
                   {weekly.responses.length > 0 ? (
-                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    <div className="cm-response-grid mt-4 grid gap-2 sm:grid-cols-2">
                       {weekly.responses.map(response => (
-                        <div key={response.id} className="rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
+                        <div key={response.id} className="cm-response-card rounded-xl border border-[#7C3AED44] bg-[#120D1E] p-3">
                           <p className="text-[11px] uppercase tracking-[0.06em] text-[#D5DBFA]">
                             {response.userId === state.viewerUserId ? 'You' : partnerName}
                           </p>
@@ -1021,6 +1021,19 @@ export default function CouplesPage() {
         }
         .cm-input::placeholder {
           color: rgba(255, 255, 255, 0.72);
+        }
+        .cm-metric-grid > .cm-card {
+          min-height: 116px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .cm-response-card {
+          min-height: 84px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          line-height: 1.4;
         }
       `}</style>
     </div>
