@@ -1715,3 +1715,8 @@ input[type="range"]::-webkit-slider-thumb {
 .app-interior-page.discover-screen li {
   color: #ffffff !important;
 }
+
+/* Couple mode: preserve white heading for empty-state callout */
+.app-interior-page.couple-mode-v2 .couple-mode-empty-title {
+  color: #ffffff !important;
+}
