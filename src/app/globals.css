@@ -1621,6 +1621,30 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 14px !important;
 }
 
+.conversation-screen .connection-track-panel {
+  padding: 16px !important;
+}
+
+.conversation-screen .connection-track-card {
+  min-height: 192px;
+}
+
+.conversation-screen .connection-track-prompt {
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.conversation-screen .connection-track-response {
+  min-height: 74px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
 .conversation-screen .conversation-messages {
   padding: 12px 14px !important;
   gap: 8px !important;

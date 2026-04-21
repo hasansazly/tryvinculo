@@ -202,8 +202,10 @@ export default function ConnectionTrackPanel({
     return (
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {moduleState.responses.map(response => (
-          <div key={response.id} className="rounded-lg border border-[#36416D] bg-[#151C3C] px-3 py-2">
-            <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">{response.userId === state?.viewerUserId ? 'You' : 'Match'}</p>
+          <div key={response.id} className="connection-track-response rounded-lg border border-[#36416D] bg-[#151C3C] px-3 py-2">
+            <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">
+              {response.userId === state?.viewerUserId ? 'You' : 'Match'}
+            </p>
             <p className="mt-1 text-sm text-[#E8ECFF]">{responsePreview(response)}</p>
           </div>
         ))}
@@ -260,7 +262,7 @@ export default function ConnectionTrackPanel({
     }
   ) => {
     return (
-      <article className="rounded-xl border border-[#36416D] bg-[#101735] p-4">
+      <article className="connection-track-card rounded-xl border border-[#36416D] bg-[#101735] p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">{options.subtitle}</p>
@@ -269,7 +271,7 @@ export default function ConnectionTrackPanel({
           <span className="text-[#C9C0FF]">{options.icon}</span>
         </div>
 
-        <div className="mt-3 rounded-lg border border-[#36416D] bg-[#151C3C] px-3 py-2.5">
+        <div className="connection-track-prompt mt-3 rounded-lg border border-[#36416D] bg-[#151C3C] px-3 py-2.5">
           <p className="text-sm text-[#E8ECFF]">{moduleState.question?.text ?? 'No prompt available right now.'}</p>
           <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">{statusLabel(moduleState.status)}</p>
         </div>
@@ -280,7 +282,7 @@ export default function ConnectionTrackPanel({
 
         {moduleKey === 'daily' && moduleState.status === 'pending_self' ? (
           <form
-            className="mt-3 space-y-2"
+            className="mt-4 space-y-3"
             onSubmit={(event: FormEvent) => {
               event.preventDefault();
               if (!draftDaily.trim()) return;
@@ -291,12 +293,12 @@ export default function ConnectionTrackPanel({
               value={draftDaily}
               onChange={event => setDraftDaily(event.target.value)}
               placeholder="Share a short, honest response"
-              className="min-h-[82px] w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+              className="min-h-[96px] w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
             />
             <button
               type="submit"
               disabled={!draftDaily.trim() || savingModule === 'daily'}
-              className="inline-flex items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              className="inline-flex min-h-10 w-full items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
             >
               {savingModule === 'daily' ? 'Saving...' : 'Submit answer'}
             </button>
@@ -304,9 +306,9 @@ export default function ConnectionTrackPanel({
         ) : null}
 
         {moduleKey === 'weekly' && moduleState.status === 'pending_self' ? (
-          <div className="mt-3 space-y-2">
+          <div className="mt-4 space-y-3">
             {weeklyOptions.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 {weeklyOptions.map(option => (
                   <button
                     key={option}
@@ -325,7 +327,7 @@ export default function ConnectionTrackPanel({
             ) : null}
 
             {weeklyScale ? (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 {Array.from({ length: weeklyScale.max - weeklyScale.min + 1 }, (_, index) => weeklyScale.min + index).map(
                   score => (
                     <button
@@ -350,7 +352,7 @@ export default function ConnectionTrackPanel({
                 value={draftWeeklyText}
                 onChange={event => setDraftWeeklyText(event.target.value)}
                 placeholder="Share your pulse"
-                className="min-h-[82px] w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+                className="min-h-[96px] w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
               />
             ) : null}
 
@@ -369,7 +371,7 @@ export default function ConnectionTrackPanel({
                   responseValue: Object.keys(responseValue).length > 0 ? responseValue : undefined,
                 });
               }}
-              className="inline-flex items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              className="inline-flex min-h-10 w-full items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
             >
               {savingModule === 'weekly' ? 'Saving...' : 'Submit pulse'}
             </button>
@@ -385,7 +387,7 @@ export default function ConnectionTrackPanel({
             type="button"
             onClick={() => void startPreDate()}
             disabled={savingModule === 'preDate'}
-            className="mt-3 inline-flex items-center justify-center rounded-lg border border-[#4B3FA0] px-4 py-2 text-sm font-medium text-[#4B3FA0] disabled:opacity-60"
+            className="mt-4 inline-flex min-h-10 w-full items-center justify-center rounded-lg border border-[#4B3FA0] px-4 py-2 text-sm font-medium text-[#4B3FA0] disabled:opacity-60"
           >
             {savingModule === 'preDate' ? 'Starting...' : 'Start pre-date check'}
           </button>
@@ -393,7 +395,7 @@ export default function ConnectionTrackPanel({
 
         {moduleKey === 'preDate' && moduleState.status === 'pending_self' ? (
           <form
-            className="mt-3 space-y-2"
+            className="mt-4 space-y-3"
             onSubmit={(event: FormEvent) => {
               event.preventDefault();
               if (!draftPreDate.trim()) return;
@@ -404,12 +406,12 @@ export default function ConnectionTrackPanel({
               value={draftPreDate}
               onChange={event => setDraftPreDate(event.target.value)}
               placeholder="Share your pre-date intention"
-              className="min-h-[82px] w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
+              className="min-h-[96px] w-full rounded-lg border border-[#4E5A92] bg-[#121A3A] px-3 py-2 text-sm text-[#F6F8FF] outline-none focus:border-[#6B5CE7]"
             />
             <button
               type="submit"
               disabled={!draftPreDate.trim() || savingModule === 'preDate'}
-              className="inline-flex items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              className="inline-flex min-h-10 w-full items-center justify-center rounded-lg bg-[#4B3FA0] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
             >
               {savingModule === 'preDate' ? 'Saving...' : 'Submit intention'}
             </button>
@@ -420,8 +422,8 @@ export default function ConnectionTrackPanel({
   };
 
   return (
-    <section className="space-y-3 rounded-2xl border border-[#36416D] bg-[#0D1431] p-4">
-      <div>
+    <section className="connection-track-panel space-y-4 rounded-2xl border border-[#36416D] bg-[#0D1431] p-4">
+      <div className="text-center">
         <p className="text-[11px] uppercase tracking-[0.06em] text-[#A6AED0]">Connection Track</p>
         <h2 className="mt-1 text-xl font-medium text-[#F8F9FF]">Keep momentum with clarity</h2>
         <p className="mt-1 text-sm text-[#A9B0D0]">
