@@ -82,7 +82,7 @@ export default function ConversationGuidance({
   };
 
   return (
-    <section className="rounded-xl border border-white/10 bg-[#1A1624] p-3">
+    <section className="conversation-spark-panel rounded-xl border border-white/10 bg-[#1A1624] p-3">
       <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.06em] text-white/50">
         <Flame size={14} />
         Spark prompts
@@ -106,10 +106,10 @@ export default function ConversationGuidance({
                     key={`${kind}-${prompt}`}
                     type="button"
                     onClick={() => onPick(prompt)}
-                    className="rounded-[20px] border border-white/15 bg-[#252030] px-3 py-1.5 text-xs text-white/80 hover:border-[#A855F7] hover:bg-[#2B243C]"
+                    className="conversation-spark-chip rounded-[20px] border border-white/15 bg-[#252030] px-3 py-1.5 text-xs text-white/90 hover:border-[#A855F7] hover:bg-[#2B243C]"
                     title="Insert into message"
                   >
-                    {prompt.length > 56 ? `${prompt.slice(0, 56)}...` : prompt}
+                    {prompt}
                   </button>
                 );
               })}

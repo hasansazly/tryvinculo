@@ -257,7 +257,7 @@ export default async function MessagesInboxPage() {
               <Link
                 key={item.conversationId}
                 href={`/messages/${item.conversationId}`}
-                className={`block p-4 transition hover:bg-white/[0.03] ${idx < conversations.length - 1 ? 'border-b border-white/10' : ''}`}
+                className={`messages-inbox-row block min-h-[92px] p-4 transition hover:bg-white/[0.03] ${idx < conversations.length - 1 ? 'border-b border-white/10' : ''}`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex items-start gap-3">
@@ -265,12 +265,12 @@ export default async function MessagesInboxPage() {
                       {item.name.slice(0, 1).toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-base font-medium text-white">{item.name}</p>
-                      <p className="mt-1 truncate text-sm text-white/55">{item.lastBody}</p>
+                      <p className="messages-inbox-name text-base font-medium leading-snug text-white">{item.name}</p>
+                      <p className="messages-inbox-preview mt-1 text-sm leading-relaxed text-white/80">{item.lastBody}</p>
                     </div>
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="text-xs text-white/40">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
+                    <p className="text-xs text-white/70">{item.lastAt ? formatTimestamp(item.lastAt) : ''}</p>
                     <span className="ml-auto mt-1 block h-2 w-2 rounded-full bg-[#A855F7]" />
                   </div>
                 </div>

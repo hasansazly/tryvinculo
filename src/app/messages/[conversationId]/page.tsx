@@ -61,8 +61,6 @@ function formatTimestamp(iso: string): string {
   return date.toLocaleString(undefined, {
     hour: 'numeric',
     minute: '2-digit',
-    month: 'short',
-    day: 'numeric',
   });
 }
 
@@ -314,7 +312,7 @@ export default function ConversationPage() {
   return (
     <main className="app-interior-page mobile-premium-screen conversation-screen min-h-screen bg-[#12101A] px-4 py-4 text-[#F3F5FF]">
       <div className="app-page-shell relative flex max-w-4xl flex-col gap-3">
-        <header className="rounded-2xl border border-white/10 bg-[#1A1624] p-4">
+        <header className="conversation-topbar rounded-2xl border border-white/10 bg-[#1A1624] p-4">
           <div className="flex items-center justify-between gap-3">
             <Link
               href="/matches"
@@ -329,7 +327,7 @@ export default function ConversationPage() {
             {trustSignals.map(signal => (
               <span
                 key={signal}
-                className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[11px] text-white/75"
+                className="conversation-trust-chip rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-1 text-[11px] text-white/90"
               >
                 {signal}
               </span>
@@ -342,11 +340,13 @@ export default function ConversationPage() {
           </div>
         </header>
 
-        <section className="flex min-h-[68vh] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#12101A]">
+        <section className="conversation-shell flex min-h-[68vh] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#12101A]">
           <div className="border-b border-white/10 bg-[#1A1624] p-3">
-            <ConnectionTrackPanel conversationId={conversationId} />
+            <div className="conversation-track-shell">
+              <ConnectionTrackPanel conversationId={conversationId} />
+            </div>
           </div>
-          <div className="flex-1 space-y-2 overflow-y-auto bg-[#12101A] p-4">
+          <div className="conversation-messages flex-1 space-y-2 overflow-y-auto bg-[#12101A] p-4">
             {error?.toLowerCase().includes('connection track') ? (
               <div className="rounded-md border border-[#5c2323] bg-[#3C1515] px-3 py-2 text-sm text-[#FF9999]">{error}</div>
             ) : null}
@@ -360,10 +360,10 @@ export default function ConversationPage() {
                   return (
                     <div key={message.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
                       <div
-                        className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-6 sm:max-w-[75%] ${
+                        className={`conversation-bubble max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-6 sm:max-w-[75%] ${
                           mine
-                            ? 'rounded-br-[4px] bg-gradient-to-br from-[#7C3AED] to-[#A855F7] text-white'
-                            : 'rounded-bl-[4px] border border-white/10 bg-[#252030] text-white/90'
+                            ? 'conversation-bubble-me rounded-br-[4px] bg-gradient-to-br from-[#7C3AED] to-[#A855F7] text-white'
+                            : 'conversation-bubble-them rounded-bl-[4px] border border-white/10 bg-[#252030] text-white/95'
                         }`}
                       >
                         <p>{message.body}</p>
@@ -377,14 +377,14 @@ export default function ConversationPage() {
               : null}
           </div>
 
-          <form onSubmit={onSend} className="border-t border-white/10 bg-[#12101A] p-3">
+          <form onSubmit={onSend} className="conversation-compose border-t border-white/10 bg-[#12101A] p-3">
             {otherUserId ? (
-              <div className="mb-3">
+              <div className="conversation-safety-wrap mb-3">
                 <ConnectionSafetyActions targetUserId={otherUserId} compact />
               </div>
             ) : null}
 
-            <div className="mb-3">
+            <div className="conversation-guidance-wrap mb-3">
               <ConversationGuidance
                 onPick={insertGuidancePrompt}
                 conversationId={conversationId}
@@ -404,7 +404,7 @@ export default function ConversationPage() {
                 />
               </div>
             ) : null}
-            <div className="flex items-center gap-2">
+            <div className="conversation-input-row flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setShowEmojiPicker(prev => !prev)}
