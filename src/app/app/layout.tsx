@@ -11,10 +11,8 @@ import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
 const NAV_DISCOVER = { href: '/app/discover', icon: Compass, label: 'Discover', notif: 0, isSpark: false };
 const NAV_MATCHES = { href: '/app/matches', icon: Users, label: 'Matches', notif: 3, isSpark: false };
 const NAV_MESSAGES = { href: '/app/messages', icon: MessageCircle, label: 'Messages', notif: 2, isSpark: false };
-const NAV_PROFILE = { href: '/app/profile', icon: User, label: 'Profile', notif: 0, isSpark: false };
-const BASE_NAV = [NAV_DISCOVER, NAV_MATCHES, NAV_MESSAGES, NAV_PROFILE];
-
 const COUPLES_NAV_ITEM = { href: '/app/couples', icon: HeartHandshake, label: 'Couples', notif: 0, isSpark: false };
+const BASE_NAV = [NAV_DISCOVER, NAV_MATCHES, NAV_MESSAGES, COUPLES_NAV_ITEM];
 
 const SIDE_EXTRA = [
   { href: '/app/settings', icon: Settings, label: 'Settings',  notif: 0, isSpark: false },
@@ -179,7 +177,7 @@ function Sidebar() {
   }, []);
 
   const mainNav = coupleModeOn
-    ? [COUPLES_NAV_ITEM, NAV_MATCHES, NAV_MESSAGES, NAV_PROFILE]
+    ? [COUPLES_NAV_ITEM, NAV_MESSAGES]
     : [...BASE_NAV];
   const sidebarNav = [...mainNav, ...SIDE_EXTRA];
 
@@ -349,7 +347,7 @@ function MobileBottomNav() {
   }, []);
 
   const navItems = coupleModeOn
-    ? [COUPLES_NAV_ITEM, BASE_NAV[1], BASE_NAV[2], BASE_NAV[3]]
+    ? [COUPLES_NAV_ITEM, NAV_MESSAGES]
     : [...BASE_NAV];
 
   return (

@@ -3,16 +3,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, MessageCircle, User, Users, HeartHandshake } from 'lucide-react';
+import { Compass, MessageCircle, Users, HeartHandshake } from 'lucide-react';
 import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
 
 const NAV_DISCOVER = { href: '/app/discover', icon: Compass, label: 'Discover', notif: 0 };
 const NAV_MATCHES = { href: '/matches', icon: Users, label: 'Matches', notif: 3 };
 const NAV_MESSAGES = { href: '/messages', icon: MessageCircle, label: 'Messages', notif: 2 };
-const NAV_PROFILE = { href: '/app/profile', icon: User, label: 'Profile', notif: 0 };
-const NAV = [NAV_DISCOVER, NAV_MATCHES, NAV_MESSAGES, NAV_PROFILE];
-
 const COUPLES_ITEM = { href: '/app/couples', icon: HeartHandshake, label: 'Couples', notif: 0 };
+const NAV = [NAV_DISCOVER, NAV_MATCHES, NAV_MESSAGES, COUPLES_ITEM];
 
 type NavCounts = {
   matches: number;
@@ -110,7 +108,7 @@ export default function MobileBottomNav() {
   }, []);
 
   const navItems = coupleModeOn
-    ? [COUPLES_ITEM, NAV_MATCHES, NAV_MESSAGES, NAV_PROFILE]
+    ? [COUPLES_ITEM, NAV_MESSAGES]
     : [...NAV];
 
   return (
