@@ -1725,3 +1725,8 @@ input[type="range"]::-webkit-slider-thumb {
 .app-interior-page.couple-mode-v2 .couple-mode-off-copy {
   color: #ffffff !important;
 }
+
+.app-interior-page.couple-mode-v2 *::selection {
+  background: rgba(168, 85, 247, 0.35);
+  color: #ffffff;
+}
