@@ -41,7 +41,7 @@ function Section({ title, desc, matches, emptyMain, emptySub, emptyIcon, statusL
         </span>
       </div>
 
-      <p className="mb-3 text-[12px] leading-[1.55]" style={{ color: 'rgba(245, 238, 248, 0.56)' }}>{desc}</p>
+      <p className="mb-3 text-[12px] leading-[1.55]" style={{ color: '#FFFFFF' }}>{desc}</p>
 
       {matches.length > 0 ? (
         <div className="space-y-4">
@@ -54,9 +54,9 @@ function Section({ title, desc, matches, emptyMain, emptySub, emptyIcon, statusL
           className="rounded-[18px] border border-dashed p-4 text-center"
           style={{ borderColor: 'rgba(255, 255, 255, 0.18)', background: '#1E1A2C' }}
         >
-          <div className="mb-1.5 text-[20px] opacity-70" style={{ color: 'rgba(245, 238, 248, 0.55)' }}>{emptyIcon}</div>
-          <p className="text-[13px] font-medium" style={{ color: '#F5EEF8' }}>{emptyMain}</p>
-          <p className="mt-1 text-[11px]" style={{ color: 'rgba(184, 158, 196, 0.92)' }}>{emptySub}</p>
+          <div className="mb-1.5 text-[20px] opacity-70" style={{ color: '#FFFFFF' }}>{emptyIcon}</div>
+          <p className="text-[13px] font-medium" style={{ color: '#FFFFFF' }}>{emptyMain}</p>
+          <p className="mt-1 text-[11px]" style={{ color: '#FFFFFF' }}>{emptySub}</p>
         </div>
       )}
     </section>
@@ -95,8 +95,8 @@ export default async function AppDiscoverPage() {
       {/* Page meta */}
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="mb-1 text-[10px] tracking-[0.1em]" style={{ color: 'rgba(184, 158, 196, 0.86)', fontFamily: 'DM Sans, Inter, sans-serif' }}>DISCOVER</p>
-          <p className="mt-1 text-[12px] leading-[1.55]" style={{ color: 'rgba(184, 158, 196, 0.86)' }}>
+          <p className="mb-1 text-[10px] tracking-[0.1em]" style={{ color: '#FFFFFF', fontFamily: 'DM Sans, Inter, sans-serif' }}>DISCOVER</p>
+          <p className="mt-1 text-[12px] leading-[1.55]" style={{ color: '#FFFFFF' }}>
             Focused browsing with clear intent
           </p>
         </div>

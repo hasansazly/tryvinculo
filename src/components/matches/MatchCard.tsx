@@ -64,10 +64,10 @@ export default function MatchCard({ match }: { match: MatchView }) {
         )}
 
         <div className="mt-4 rounded-2xl border border-white/10 bg-[#171327] p-3.5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-[#C7B0D5]">Why this match fits</p>
-          <p className="mt-1.5 text-[14px] leading-6 text-[#F0E6F4]">{summary}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-white">Why this match fits</p>
+          <p className="mt-1.5 text-[14px] leading-6 text-white">{summary}</p>
           {potentialFit ? (
-            <p className="mb-2 rounded-md border border-[#8B6A2E]/55 bg-[#2A2112] px-3 py-1.5 text-xs font-medium text-[#F4C977]">
+            <p className="mb-2 rounded-md border border-[#8B6A2E]/55 bg-[#2A2112] px-3 py-1.5 text-xs font-medium text-white">
               Potential Fit (exploratory compatibility range)
             </p>
           ) : null}
@@ -75,7 +75,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
 
         <div className="discover-action-grid mt-4 grid grid-cols-3 gap-3">
           <span className="inline-flex min-h-14 items-center justify-center rounded-[16px] border border-white/20 bg-transparent text-2xl text-white/90">✕</span>
-          <span className="inline-flex min-h-14 items-center justify-center rounded-[16px] border border-white/20 bg-transparent text-2xl text-[#FFD15C]">★</span>
+          <span className="inline-flex min-h-14 items-center justify-center rounded-[16px] border border-white/20 bg-transparent text-2xl text-white">★</span>
           <Link
             href={`/matches/${match.id}`}
             className="inline-flex min-h-14 w-full items-center justify-center rounded-[16px] border border-[#7E62F2]/60 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] px-4 py-3 text-base font-semibold text-white transition hover:brightness-110"

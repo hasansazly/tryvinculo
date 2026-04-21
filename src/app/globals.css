@@ -661,6 +661,11 @@ a:active .lucide-heart {
   color: #FFFFFF !important;
 }
 
+.discover-screen [class*="text-white"],
+.discover-screen [class*="text-white/"] {
+  color: #FFFFFF !important;
+}
+
 .discover-screen .discover-match-card {
   position: relative;
   isolation: isolate;
