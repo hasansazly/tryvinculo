@@ -961,8 +961,8 @@ export default function CouplesPage() {
 
         {!loading && state?.enabled && state.hasCouple && !selfModeOn ? (
           <section className="cm-card p-6">
-            <h2 className="text-lg font-medium text-white">Couple Mode is OFF for you</h2>
-            <p className="mt-2 text-sm text-[#CED6F8]">
+            <h2 className="couple-mode-off-title text-lg font-medium text-white">Couple Mode is OFF for you</h2>
+            <p className="couple-mode-off-copy mt-2 text-sm text-[#CED6F8]">
               Turn it ON above to enter your private couple space. Your partner can already see your ON/OFF status.
             </p>
           </section>
