@@ -108,7 +108,7 @@ export default async function AppDiscoverPage() {
         </div>
         <Link
           href="/dashboard"
-          className="mt-1 shrink-0 rounded-full border px-3 py-1.5 text-[12px]"
+          className="mt-1 inline-flex min-h-9 min-w-[110px] shrink-0 items-center justify-center rounded-full border px-4 py-1.5 text-center text-[12px]"
           style={{ borderColor: 'rgba(255,255,255,0.22)', color: '#F5EEF8', background: 'rgba(255,255,255,0.04)' }}
         >
           ⚙ Dashboard

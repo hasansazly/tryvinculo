@@ -651,7 +651,14 @@ a:active .lucide-heart {
 .discover-screen p,
 .discover-screen span,
 .discover-screen li {
-  color: inherit;
+  color: #FFFFFF !important;
+}
+
+.discover-screen a,
+.discover-screen label,
+.discover-screen small,
+.discover-screen strong {
+  color: #FFFFFF !important;
 }
 
 .discover-screen .discover-match-card {
@@ -673,16 +680,38 @@ a:active .lucide-heart {
 
 .discover-screen .discover-match-location,
 .discover-screen .discover-match-bio {
-  color: rgba(255, 255, 255, 0.86) !important;
+  color: #FFFFFF !important;
+}
+
+.discover-screen .discover-match-bio,
+.discover-screen .discover-reason-chip,
+.discover-screen .discover-action-grid span {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.discover-screen .discover-reason-chip {
+  min-height: 40px !important;
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+}
+
+.discover-screen .discover-match-card .p-4.pt-3 {
+  padding: 18px 16px 16px !important;
+}
+
+.discover-screen .discover-action-grid {
+  margin-top: 16px !important;
 }
 
 @media (max-width: 767px) {
   .discover-screen .discover-photo-area {
-    height: 420px !important;
+    height: 450px !important;
   }
 
   .discover-screen .discover-hero-copy {
-    padding: 16px !important;
+    padding: 18px !important;
   }
 
   .discover-screen .discover-match-name {
@@ -693,14 +722,23 @@ a:active .lucide-heart {
 
   .discover-screen .discover-match-location {
     margin-top: 4px !important;
-    font-size: 22px !important;
+    font-size: 20px !important;
     line-height: 1.1 !important;
   }
 
   .discover-screen .discover-match-bio {
     margin-top: 6px !important;
     font-size: 15px !important;
-    line-height: 1.35 !important;
+    line-height: 1.45 !important;
+  }
+
+  .discover-screen .discover-reason-chip {
+    min-height: 44px !important;
+    padding: 8px 14px !important;
+  }
+
+  .discover-screen .discover-action-grid {
+    gap: 12px !important;
   }
 }
 
@@ -1451,15 +1489,23 @@ input[type="range"]::-webkit-slider-thumb {
 .matches-screen h3,
 .matches-screen p,
 .matches-screen span {
-  color: #eef3ff !important;
+  color: #ffffff !important;
 }
 
 .matches-screen [class*="text-white"] {
-  color: #eef3ff !important;
+  color: #ffffff !important;
 }
 
 .matches-screen [class*="text-white/"] {
-  color: rgba(238, 243, 255, 0.86) !important;
+  color: #ffffff !important;
+}
+
+.matches-screen a,
+.matches-screen label,
+.matches-screen li,
+.matches-screen small,
+.matches-screen strong {
+  color: #ffffff !important;
 }
 
 .matches-screen .new-match-card {

@@ -2,14 +2,9 @@ import Link from 'next/link';
 import { Lock, User } from 'lucide-react';
 import type { MatchView } from '@/lib/matches';
 
-function truncate(text: string, max = 140) {
-  if (text.length <= max) return text;
-  return `${text.slice(0, max - 1)}…`;
-}
-
 export default function MatchCard({ match }: { match: MatchView }) {
   const reasons = match.compatibilityReasons.slice(0, 3);
-  const summary = truncate(match.explanation || 'Strong intent and value alignment with clear relationship potential.', 108);
+  const summary = match.explanation || 'Strong intent and value alignment with clear relationship potential.';
   const potentialFit =
     typeof match.compatibilityScore === 'number' && match.compatibilityScore >= 50 && match.compatibilityScore < 65;
 
@@ -37,7 +32,7 @@ export default function MatchCard({ match }: { match: MatchView }) {
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        <div className="absolute bottom-4 right-4 z-10 inline-flex items-center rounded-full border border-white/20 bg-black/35 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#F5EEF8]">
+        <div className="absolute right-4 top-4 z-10 inline-flex items-center rounded-full border border-white/25 bg-black/50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#F5EEF8]">
           {match.canViewPhotos
             ? match.matchedProfile.photos.length > 0
               ? `${match.matchedProfile.photos.length} photo${match.matchedProfile.photos.length > 1 ? 's' : ''}`
@@ -50,17 +45,17 @@ export default function MatchCard({ match }: { match: MatchView }) {
             {typeof match.matchedProfile.age === 'number' ? `, ${match.matchedProfile.age}` : ''}
           </h3>
           <p className="mt-1 text-lg text-white/80 discover-match-location">✨ {match.matchedProfile.location || 'Location not shared yet'}</p>
-          <p className="mt-0.5 text-sm text-white/85 discover-match-bio">{truncate(match.matchedProfile.bio || 'Intentional dater on Vinculo.', 82)}</p>
+          <p className="mt-0.5 text-sm text-white/85 discover-match-bio">{match.matchedProfile.bio || 'Intentional dater on Vinculo.'}</p>
         </div>
       </div>
 
       <div className="p-4 pt-3">
         {reasons.length > 0 && (
-          <ul className="flex flex-wrap gap-2">
+          <ul className="discover-reasons-grid flex flex-wrap gap-2">
             {reasons.map(reason => (
               <li
                 key={reason}
-                className="inline-flex items-center rounded-full border border-white/35 bg-white/10 px-3 py-1 text-[12px] text-[#F5EEF8]"
+                className="discover-reason-chip inline-flex min-h-[38px] items-center rounded-full border border-white/35 bg-white/10 px-3.5 py-1.5 text-[12px] leading-relaxed text-[#F5EEF8]"
               >
                 {reason}
               </li>
@@ -78,12 +73,12 @@ export default function MatchCard({ match }: { match: MatchView }) {
           ) : null}
         </div>
 
-        <div className="mt-4 grid grid-cols-3 gap-3">
-          <span className="inline-flex min-h-12 items-center justify-center rounded-[16px] border border-white/20 bg-transparent text-2xl text-white/90">✕</span>
-          <span className="inline-flex min-h-12 items-center justify-center rounded-[16px] border border-white/20 bg-transparent text-2xl text-[#FFD15C]">★</span>
+        <div className="discover-action-grid mt-4 grid grid-cols-3 gap-3">
+          <span className="inline-flex min-h-14 items-center justify-center rounded-[16px] border border-white/20 bg-transparent text-2xl text-white/90">✕</span>
+          <span className="inline-flex min-h-14 items-center justify-center rounded-[16px] border border-white/20 bg-transparent text-2xl text-[#FFD15C]">★</span>
           <Link
             href={`/matches/${match.id}`}
-            className="inline-flex min-h-12 w-full items-center justify-center rounded-[16px] border border-[#7E62F2]/60 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] px-4 py-3 text-base font-semibold text-white transition hover:brightness-110"
+            className="inline-flex min-h-14 w-full items-center justify-center rounded-[16px] border border-[#7E62F2]/60 bg-gradient-to-r from-[#4D5FE6] via-[#7E46DB] to-[#D02E8B] px-4 py-3 text-base font-semibold text-white transition hover:brightness-110"
           >
             ❤
           </Link>
