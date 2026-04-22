@@ -277,31 +277,47 @@ export default function LandingPage() {
 
             {/* Left */}
             <div>
+              <p
+                style={{
+                  fontSize: 12,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.12em',
+                  fontWeight: 700,
+                  color: '#B3123E',
+                  marginBottom: 14,
+                }}
+              >
+                🦉 Now live at Temple University
+              </p>
               <h1 style={{ fontSize: 'clamp(42px, 5vw, 68px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.03em', marginBottom: 24 }}>
-                Don&apos;t just get a match,
-                <br /> <span className="gradient-text">understand it.</span>
+                Temple&apos;s dating app for people
+                <br /> <span className="gradient-text">who actually want something real.</span>
               </h1>
 
               <p style={{ fontSize: 18, lineHeight: 1.65, color: '#6B4B5E', marginBottom: 36, maxWidth: 460 }}>
-                Date with less guesswork: fewer, better matches, clearer reasons to connect, and less emotional burnout.
+                Built for Temple Owls. No endless swiping. No mixed signals. Just clearer connections with people on your campus.
               </p>
 
               <div className="hero-cta-group" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
                 <Link href="/auth/signup" className="btn-primary" style={{ fontSize: 16, padding: '15px 32px' }}>
-                  Start Dating with Clarity
+                  Join Temple Early Access
                   <ArrowRight size={18} />
                 </Link>
-                <a href="#how-it-works" style={{ fontSize: 14, fontWeight: 500, color: '#FF3B5C', textDecoration: 'none' }}>
-                  See How Match Breakdown Works
+                <a href="#temple-live-counter" style={{ fontSize: 14, fontWeight: 500, color: '#FF3B5C', textDecoration: 'none' }}>
+                  See who&apos;s already on Vinculo at Temple
                 </a>
               </div>
 
+              <div id="temple-live-counter" style={{ marginTop: 14, fontSize: 14, color: '#6B4B5E', fontWeight: 700 }}>
+                🦉 847 Temple students already inside
+              </div>
+
               <div style={{ marginTop: 20, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', fontSize: 12, color: '#6B4B5E', fontWeight: 500 }}>
-                <span>Privacy first</span>
+                <span>Temple University</span>
                 <span>·</span>
-                <span>Verified profiles</span>
+                <span>North Philly</span>
                 <span>·</span>
-                <span>Thoughtful matching</span>
+                <span>Launching this week</span>
               </div>
             </div>
 
@@ -318,8 +334,8 @@ export default function LandingPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
                   {[
                     ['Values', 94],
-                    ['Communication', 91],
-                    ['Goals', 95],
+                    ['Campus rhythm', 91],
+                    ['Intent clarity', 95],
                   ].map(([label, value]) => (
                     <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <span style={{ width: 100, fontSize: 12, color: '#534AB7' }}>{label}</span>
@@ -332,6 +348,9 @@ export default function LandingPage() {
                 </div>
                 <div style={{ fontSize: 12, color: '#534AB7', lineHeight: 1.5 }}>
                   Why this match works: high alignment on values, communication style, and relationship intent.
+                </div>
+                <div style={{ fontSize: 11, color: '#6B4B5E', marginTop: 8 }}>
+                  Matched within 2 miles of campus
                 </div>
               </div>
               <div className="hero-floating-orb hero-floating-orb-a" aria-hidden="true">
