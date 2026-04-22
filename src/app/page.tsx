@@ -308,10 +308,6 @@ export default function LandingPage() {
                 </a>
               </div>
 
-              <div id="temple-live-counter" style={{ marginTop: 14, fontSize: 14, color: '#6B4B5E', fontWeight: 700 }}>
-                🦉 847 Temple students already inside
-              </div>
-
               <div style={{ marginTop: 20, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', fontSize: 12, color: '#6B4B5E', fontWeight: 500 }}>
                 <span>Temple University</span>
                 <span>·</span>
