@@ -90,6 +90,7 @@ export default function SignupPage() {
     try {
       const response = await fetch('/api/otp/send-code', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
@@ -132,6 +133,7 @@ export default function SignupPage() {
     try {
       const response = await fetch('/api/otp/verify-code', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
