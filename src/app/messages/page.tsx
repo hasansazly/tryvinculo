@@ -97,7 +97,7 @@ export default async function MessagesInboxPage() {
           <h1 className="messages-title text-2xl font-semibold text-white">Messages</h1>
           <div className="mt-5 rounded-2xl border border-white/10 bg-[#151220] p-8 text-center">
             <MessageCircle size={34} className="mx-auto text-white/50" />
-            <p className="mt-3 text-sm text-white/70">No conversations yet. Open a match and click Message This Match.</p>
+            <p className="empty-conversations-copy mt-3 text-sm text-white/70">No conversations yet. Open a match and click Message This Match.</p>
           </div>
         </div>
         <MobileBottomNav />

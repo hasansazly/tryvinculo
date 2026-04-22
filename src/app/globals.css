@@ -1599,6 +1599,11 @@ input[type="range"]::-webkit-slider-thumb {
   line-height: 1.45;
 }
 
+.messages-screen .empty-conversations-copy[class*="text-white"],
+.messages-screen .empty-conversations-copy[class*="text-white/"] {
+  color: #ffffff !important;
+}
+
 .conversation-screen .conversation-topbar {
   border-radius: 18px !important;
   padding: 12px 14px !important;
