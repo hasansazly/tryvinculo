@@ -90,33 +90,22 @@ export default async function MessagesInboxPage() {
   const myParticipantsRows = (myParticipantsRowsRaw ?? []) as ParticipantRow[];
   const conversationIds = myParticipantsRows.map(row => row.conversation_id);
 
-  if (conversationIds.length === 0) {
-    return (
-      <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#12101A] px-4 py-6 pb-24 text-white">
-        <div className="mx-auto max-w-4xl rounded-2xl border border-white/10 bg-[#1A1624] p-5">
-          <h1 className="messages-title text-2xl font-semibold text-white">Messages</h1>
-          <div className="mt-5 rounded-2xl border border-white/10 bg-[#151220] p-8 text-center">
-            <MessageCircle size={34} className="mx-auto text-white/50" />
-            <p className="empty-conversations-copy mt-3 text-sm text-white">No conversations yet. Open a match and click Message This Match.</p>
-          </div>
-        </div>
-        <MobileBottomNav />
-      </main>
-    );
-  }
-
   const [{ data: allParticipantsRaw }, { data: allMessagesRaw }] = await Promise.all([
-    supabase
-      .from('conversation_participants')
-      .select('conversation_id,user_id')
-      .in('conversation_id', conversationIds)
-      .returns<ParticipantRow[]>(),
-    supabase
-      .from('messages')
-      .select('conversation_id,body,message_type,media_url,created_at')
-      .in('conversation_id', conversationIds)
-      .order('created_at', { ascending: false })
-      .returns<MessageRow[]>(),
+    conversationIds.length > 0
+      ? supabase
+          .from('conversation_participants')
+          .select('conversation_id,user_id')
+          .in('conversation_id', conversationIds)
+          .returns<ParticipantRow[]>()
+      : Promise.resolve({ data: [] as ParticipantRow[] }),
+    conversationIds.length > 0
+      ? supabase
+          .from('messages')
+          .select('conversation_id,body,message_type,media_url,created_at')
+          .in('conversation_id', conversationIds)
+          .order('created_at', { ascending: false })
+          .returns<MessageRow[]>()
+      : Promise.resolve({ data: [] as MessageRow[] }),
   ]);
 
   const allParticipants = (allParticipantsRaw ?? []) as ParticipantRow[];
@@ -129,10 +118,15 @@ export default async function MessagesInboxPage() {
     }
   }
 
-  const otherUserIds = [...new Set([...otherParticipantByConversation.values()])];
+  const otherUserIds = [
+    ...new Set([
+      ...otherParticipantByConversation.values(),
+      ...(couplePartnerId ? [couplePartnerId] : []),
+    ]),
+  ];
 
   const [{ data: activeMatchesRaw }, { data: blockRows }, { data: unmatchRows }] = await Promise.all([
-    otherUserIds.length > 0
+    otherUserIds.length > 0 && !couplePartnerId
       ? supabase
           .from('matches')
           .select('*')
@@ -248,6 +242,31 @@ export default async function MessagesInboxPage() {
       return new Date(b.lastAt).getTime() - new Date(a.lastAt).getTime();
     });
 
+  const resolveName = (targetUserId: string) => {
+    const profile = profileById.get(targetUserId);
+    const demographics = demographicsById.get(targetUserId);
+    const emailPrefix = typeof profile?.email === 'string' ? profile.email.split('@')[0] : '';
+    return (
+      firstNonEmpty([
+        demographics?.fullName,
+        demographics?.full_name,
+        demographics?.firstName,
+        demographics?.first_name,
+        demographics?.name,
+        profile?.first_name,
+        emailPrefix,
+      ]) || 'Partner'
+    );
+  };
+
+  const partnerConversation = couplePartnerId
+    ? conversations.find(item => otherParticipantByConversation.get(item.conversationId) === couplePartnerId) ?? null
+    : null;
+  const partnerIsUnavailable =
+    Boolean(couplePartnerId && (blockedIds.has(couplePartnerId) || unmatchedIds.has(couplePartnerId)));
+  const partnerName = couplePartnerId ? resolveName(couplePartnerId) : 'Partner';
+  const showPartnerStarter = Boolean(couplePartnerId && !partnerConversation && !partnerIsUnavailable);
+
   return (
     <main className="app-interior-page mobile-premium-screen messages-screen min-h-screen bg-[#12101A] px-4 py-6 pb-24 text-white">
       <div className="mx-auto max-w-4xl">
@@ -281,6 +300,25 @@ export default async function MessagesInboxPage() {
                 </div>
               </Link>
             ))
+          ) : showPartnerStarter && couplePartnerId ? (
+            <form action="/api/messages/start" method="post" className="p-5">
+              <input type="hidden" name="matchUserId" value={couplePartnerId} />
+              <button
+                type="submit"
+                className="flex w-full items-center justify-between rounded-xl border border-[#7C3AED55] bg-[#120D1E] px-4 py-4 text-left transition hover:bg-[#181127]"
+              >
+                <span className="inline-flex items-center gap-3">
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#7C3AED] to-[#DB2777] text-base font-semibold text-white">
+                    {partnerName.slice(0, 1).toUpperCase()}
+                  </span>
+                  <span>
+                    <span className="block text-base font-medium text-white">{partnerName}</span>
+                    <span className="mt-1 block text-sm text-white/75">Start to chat with {partnerName}</span>
+                  </span>
+                </span>
+                <span className="text-xs text-[#C084FC]">Open chat</span>
+              </button>
+            </form>
           ) : (
             <div className="p-6 text-sm text-white/70">
               {couplePartnerId

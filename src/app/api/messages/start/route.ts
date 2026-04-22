@@ -10,6 +10,13 @@ function toInClause(ids: string[]): string {
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+function sanitizeNext(next: string | undefined) {
+  const candidate = (next ?? '').trim();
+  if (!candidate.startsWith('/') || candidate.startsWith('//')) return '';
+  if (candidate.startsWith('/auth')) return '';
+  return candidate;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createSupabaseServerClient();
@@ -21,22 +28,52 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json().catch(() => ({}));
+    const contentType = req.headers.get('content-type') ?? '';
+    let body: { matchUserId?: string; next?: string } = {};
+    if (contentType.includes('application/json')) {
+      body = (await req.json().catch(() => ({}))) as { matchUserId?: string; next?: string };
+    } else if (
+      contentType.includes('application/x-www-form-urlencoded') ||
+      contentType.includes('multipart/form-data')
+    ) {
+      const form = await req.formData();
+      body = {
+        matchUserId: typeof form.get('matchUserId') === 'string' ? String(form.get('matchUserId')) : '',
+        next: typeof form.get('next') === 'string' ? String(form.get('next')) : '',
+      };
+    }
+    const wantsRedirect = !contentType.includes('application/json');
+
     const rawMatchUserId = typeof body?.matchUserId === 'string' ? body.matchUserId : '';
     const matchUserId = rawMatchUserId.trim().replace(/^"+|"+$/g, '');
+    const safeNext = sanitizeNext(body.next);
 
     if (!matchUserId) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(new URL('/messages?error=matchUserId%20is%20required', req.url), 303);
+      }
       return NextResponse.json({ error: 'matchUserId is required' }, { status: 400 });
     }
     if (!UUID_RE.test(matchUserId)) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(new URL('/messages?error=Invalid%20matchUserId%20format', req.url), 303);
+      }
       return NextResponse.json({ error: 'Invalid matchUserId format' }, { status: 400 });
     }
 
     if (matchUserId === user.id) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(new URL('/messages?error=Cannot%20start%20conversation%20with%20yourself', req.url), 303);
+      }
       return NextResponse.json({ error: 'Cannot start conversation with yourself' }, { status: 400 });
     }
 
     const coupleMode = await getCoupleModeState(supabase, user.id);
+    const partnerStartAllowed =
+      coupleMode.featureEnabled &&
+      coupleMode.hasCouple &&
+      coupleMode.selfEnabled &&
+      coupleMode.partnerUserId === matchUserId;
     if (
       coupleMode.featureEnabled &&
       coupleMode.hasCouple &&
@@ -44,26 +81,43 @@ export async function POST(req: NextRequest) {
       coupleMode.partnerUserId &&
       matchUserId !== coupleMode.partnerUserId
     ) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(
+          new URL('/messages?error=Couple%20Mode%20is%20ON.%20You%20can%20only%20message%20your%20confirmed%20partner.', req.url),
+          303
+        );
+      }
       return NextResponse.json(
         { error: 'Couple Mode is ON. You can only message your confirmed partner.' },
         { status: 403 }
       );
     }
 
-    const { data: matchRow, error: matchCheckError } = await supabase
-      .from('matches')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('matched_user_id', matchUserId)
-      .eq('status', 'active')
-      .maybeSingle();
+    let matchRow: { id?: string; conversation_disabled?: boolean; conversation_disabled_reason?: string | null } | null = null;
+    if (!partnerStartAllowed) {
+      const { data, error: matchCheckError } = await supabase
+        .from('matches')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('matched_user_id', matchUserId)
+        .eq('status', 'active')
+        .maybeSingle();
 
-    if (matchCheckError) {
-      return NextResponse.json({ error: matchCheckError.message }, { status: 500 });
-    }
+      if (matchCheckError) {
+        if (wantsRedirect) {
+          const encoded = encodeURIComponent(matchCheckError.message);
+          return NextResponse.redirect(new URL(`/messages?error=${encoded}`, req.url), 303);
+        }
+        return NextResponse.json({ error: matchCheckError.message }, { status: 500 });
+      }
 
-    if (!matchRow) {
-      return NextResponse.json({ error: 'No active match found for this user' }, { status: 403 });
+      if (!data) {
+        if (wantsRedirect) {
+          return NextResponse.redirect(new URL('/messages?error=No%20active%20match%20found%20for%20this%20user', req.url), 303);
+        }
+        return NextResponse.json({ error: 'No active match found for this user' }, { status: 403 });
+      }
+      matchRow = data as { id?: string; conversation_disabled?: boolean; conversation_disabled_reason?: string | null };
     }
 
     const [{ data: blockRows }, { data: unmatchRows }] = await Promise.all([
@@ -82,10 +136,16 @@ export async function POST(req: NextRequest) {
     ]);
 
     if ((blockRows ?? []).length > 0) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(new URL('/messages?error=Messaging%20is%20unavailable%20for%20this%20match.', req.url), 303);
+      }
       return NextResponse.json({ error: 'Messaging is unavailable for this match.' }, { status: 403 });
     }
 
     if ((unmatchRows ?? []).length > 0) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(new URL('/messages?error=This%20connection%20was%20unmatched.', req.url), 303);
+      }
       return NextResponse.json({ error: 'This connection was unmatched.' }, { status: 403 });
     }
 
@@ -96,6 +156,12 @@ export async function POST(req: NextRequest) {
     const conversationDisabled = Boolean((matchRow as { conversation_disabled?: unknown }).conversation_disabled);
 
     if (conversationDisabled) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(
+          new URL(`/messages?error=${encodeURIComponent(disabledReason || 'Messaging is disabled for this match.')}`, req.url),
+          303
+        );
+      }
       return NextResponse.json(
         { error: disabledReason || 'Messaging is disabled for this match.' },
         { status: 403 }
@@ -150,6 +216,10 @@ export async function POST(req: NextRequest) {
           .limit(1);
 
         if (directLookupError) {
+          if (wantsRedirect) {
+            const encoded = encodeURIComponent(directLookupError.message);
+            return NextResponse.redirect(new URL(`/messages?error=${encoded}`, req.url), 303);
+          }
           return NextResponse.json({ error: directLookupError.message }, { status: 500 });
         }
 
@@ -158,11 +228,14 @@ export async function POST(req: NextRequest) {
             await ensureConnectionTrackForPair(supabase, {
               userA: user.id,
               userB: matchUserId,
-              matchId: matchRow.id,
+              matchId: matchRow?.id ?? null,
               conversationId: directConversationRows[0].id,
             });
           } catch {
             // Non-blocking: messaging should still work if Connection Track tables are not ready.
+          }
+          if (wantsRedirect) {
+            return NextResponse.redirect(new URL(`/messages/${directConversationRows[0].id}`, req.url), 303);
           }
           return NextResponse.json({ conversationId: directConversationRows[0].id, created: false });
         }
@@ -179,6 +252,9 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (createConversationError || !newConversation) {
+      if (wantsRedirect) {
+        return NextResponse.redirect(new URL('/messages?error=Failed%20to%20create%20conversation', req.url), 303);
+      }
       return NextResponse.json({ error: createConversationError?.message ?? 'Failed to create conversation' }, { status: 500 });
     }
 
@@ -190,6 +266,10 @@ export async function POST(req: NextRequest) {
       ]);
 
     if (participantsInsertError) {
+      if (wantsRedirect) {
+        const encoded = encodeURIComponent(participantsInsertError.message);
+        return NextResponse.redirect(new URL(`/messages?error=${encoded}`, req.url), 303);
+      }
       return NextResponse.json({ error: participantsInsertError.message }, { status: 500 });
     }
 
@@ -197,13 +277,17 @@ export async function POST(req: NextRequest) {
       await ensureConnectionTrackForPair(supabase, {
         userA: user.id,
         userB: matchUserId,
-        matchId: matchRow.id,
+        matchId: matchRow?.id ?? null,
         conversationId: newConversation.id,
       });
     } catch {
       // Non-blocking: messaging should still work if Connection Track tables are not ready.
     }
 
+    if (wantsRedirect) {
+      const redirectTo = safeNext || `/messages/${newConversation.id}`;
+      return NextResponse.redirect(new URL(redirectTo, req.url), 303);
+    }
     return NextResponse.json({ conversationId: newConversation.id, created: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unexpected error';
