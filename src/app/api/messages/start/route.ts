@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../../utils/supabase/server';
-import { createSupabaseAdminClient } from '../../../../../utils/supabase/admin';
 import { ensureConnectionTrackForPair } from '@/server/connectionTrack/service';
 import { getCoupleModeState } from '@/server/couples/mode';
 
@@ -18,26 +17,12 @@ function sanitizeNext(next: string | undefined) {
   return candidate;
 }
 
-function isRlsInsertError(error: { code?: string; message?: string } | null | undefined) {
-  if (!error) return false;
-  if (error.code === '42501') return true;
-  return typeof error.message === 'string' && error.message.toLowerCase().includes('row-level security policy');
-}
-
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createSupabaseServerClient();
-    let {
+    const {
       data: { user },
     } = await supabase.auth.getUser();
-
-    if (!user) {
-      const bearer = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '').trim() ?? '';
-      if (bearer) {
-        const { data } = await supabase.auth.getUser(bearer);
-        user = data.user ?? null;
-      }
-    }
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -257,9 +242,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    let newConversationId: string | null = null;
-    let useAdminForParticipants = false;
-
     const { data: newConversation, error: createConversationError } = await supabase
       .from('conversations')
       .insert({
@@ -267,46 +249,20 @@ export async function POST(req: NextRequest) {
         created_by: user.id,
       })
       .select('id')
-      .single<{ id: string }>();
+      .single();
 
-    if (!createConversationError && newConversation?.id) {
-      newConversationId = newConversation.id;
-    } else if (isRlsInsertError(createConversationError as { code?: string; message?: string })) {
-      try {
-        const admin = createSupabaseAdminClient();
-        const { data: adminConversation, error: adminConversationError } = await admin
-          .from('conversations')
-          .insert({
-            kind: 'direct',
-            created_by: user.id,
-          })
-          .select('id')
-          .single<{ id: string }>();
-        if (adminConversationError || !adminConversation?.id) {
-          throw new Error(adminConversationError?.message ?? 'Admin fallback failed to create conversation');
-        }
-        newConversationId = adminConversation.id;
-        useAdminForParticipants = true;
-      } catch (adminError) {
-        const adminMessage = adminError instanceof Error ? adminError.message : 'Admin fallback failed';
-        if (wantsRedirect) {
-          return NextResponse.redirect(new URL(`/messages?error=${encodeURIComponent(adminMessage)}`, req.url), 303);
-        }
-        return NextResponse.json({ error: adminMessage }, { status: 500 });
-      }
-    } else {
+    if (createConversationError || !newConversation) {
       if (wantsRedirect) {
         return NextResponse.redirect(new URL('/messages?error=Failed%20to%20create%20conversation', req.url), 303);
       }
       return NextResponse.json({ error: createConversationError?.message ?? 'Failed to create conversation' }, { status: 500 });
     }
 
-    const participantsClient = useAdminForParticipants ? createSupabaseAdminClient() : supabase;
-    const { error: participantsInsertError } = await participantsClient
+    const { error: participantsInsertError } = await supabase
       .from('conversation_participants')
       .insert([
-        { conversation_id: newConversationId, user_id: user.id },
-        { conversation_id: newConversationId, user_id: matchUserId },
+        { conversation_id: newConversation.id, user_id: user.id },
+        { conversation_id: newConversation.id, user_id: matchUserId },
       ]);
 
     if (participantsInsertError) {
@@ -322,17 +278,17 @@ export async function POST(req: NextRequest) {
         userA: user.id,
         userB: matchUserId,
         matchId: matchRow?.id ?? null,
-        conversationId: newConversationId,
+        conversationId: newConversation.id,
       });
     } catch {
       // Non-blocking: messaging should still work if Connection Track tables are not ready.
     }
 
     if (wantsRedirect) {
-      const redirectTo = safeNext || `/messages/${newConversationId}`;
+      const redirectTo = safeNext || `/messages/${newConversation.id}`;
       return NextResponse.redirect(new URL(redirectTo, req.url), 303);
     }
-    return NextResponse.json({ conversationId: newConversationId, created: true });
+    return NextResponse.json({ conversationId: newConversation.id, created: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unexpected error';
     return NextResponse.json({ error: message }, { status: 500 });

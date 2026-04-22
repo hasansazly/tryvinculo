@@ -20,10 +20,10 @@ export const getSupabaseUrl = () => {
 
 export const getSupabasePublishableKey = () => {
   const value = pick([
-    'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY',
-    'SUPABASE_PUBLISHABLE_KEY',
     'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+    'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY',
     'SUPABASE_ANON_KEY',
+    'SUPABASE_PUBLISHABLE_KEY',
   ]);
   if (!value) {
     throw new Error(

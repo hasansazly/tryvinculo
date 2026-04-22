@@ -233,7 +233,6 @@ export async function GET() {
     }
 
     const [dailyKey, weeklyKey] = [getCycleKeyForModule('daily'), getCycleKeyForModule('weekly')];
-    const oneDayAgoIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
     const [{ data: questions, error: questionsError }, { data: moduleResponses, error: responsesError }, { data: timelineResponses }] = await Promise.all([
       supabase
@@ -350,7 +349,6 @@ export async function GET() {
         .from('couple_love_notes')
         .select('id,sender_user_id,body,created_at')
         .eq('couple_id', context.couple.id)
-        .gte('created_at', oneDayAgoIso)
         .order('created_at', { ascending: false })
         .limit(30)
         .returns<LoveNoteRow[]>(),
@@ -358,8 +356,6 @@ export async function GET() {
         .from('couple_date_plans')
         .select('id,title,summary,plan_steps,created_at')
         .eq('couple_id', context.couple.id)
-        .eq('created_by_user_id', context.viewerUserId)
-        .gte('created_at', oneDayAgoIso)
         .order('created_at', { ascending: false })
         .limit(10)
         .returns<DatePlanRow[]>(),

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Flame } from 'lucide-react';
 import { CONVERSATION_BUTTON_COPY } from '@/lib/conversationSupportCopy';
-import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
 
 type GuidanceKind = 'startEasy' | 'goDeeper' | 'suggestPlan';
 
@@ -33,18 +32,9 @@ export default function ConversationGuidance({
       setLoading(true);
       setError(null);
       try {
-        const supabase = getSupabaseBrowserClient();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const accessToken = session?.access_token ?? '';
         const res = await fetch('/api/messages/spark-suggestions', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-          },
-          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             conversationId,
             compatibilityReasons,

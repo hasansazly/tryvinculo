@@ -35,7 +35,6 @@ function isLockdownAllowedRoute(pathname: string): boolean {
   if (pathname.startsWith('/onboarding')) return true;
   if (pathname === '/matches') return true;
   if (pathname === '/app/matches') return true;
-  if (pathname === '/app/couples') return true;
   if (pathname.startsWith('/app/profile')) return true;
   if (pathname.startsWith('/app/settings')) return true;
   return false;
@@ -69,7 +68,6 @@ export async function proxy(request: NextRequest) {
     const isOnboardingRoute = pathname.startsWith('/onboarding');
     const isDashboardRoute = pathname.startsWith('/dashboard');
     const isAppRoute = pathname.startsWith('/app');
-    const isCouplesRoute = pathname === '/app/couples';
     const isMatchesRoute = pathname.startsWith('/matches');
     const isMessagesRoute = pathname.startsWith('/messages');
     const isProfileOrSettingsRoute = pathname.startsWith('/app/profile') || pathname.startsWith('/app/settings');
@@ -101,7 +99,7 @@ export async function proxy(request: NextRequest) {
     const lockdownEnabled = isAppLockdownEnabled();
     const shouldRedirectToOnboarding =
       isDashboardRoute ||
-      (isAppRoute && !isProfileOrSettingsRoute && !isCouplesRoute) ||
+      (isAppRoute && !isProfileOrSettingsRoute) ||
       (isMatchesRoute && !lockdownEnabled) ||
       isMessagesRoute;
 

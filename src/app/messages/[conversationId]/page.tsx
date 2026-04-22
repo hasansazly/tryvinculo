@@ -143,7 +143,6 @@ export default function ConversationPage() {
         }
 
         if (otherId) {
-          const isCouplePartnerConversation = Boolean(lockToPartner && partnerId && otherId === partnerId);
           const [{ data: profile }, { data: demographics }, { data: matchRowRaw }, { data: blockRows }, { data: unmatchRows }] = await Promise.all([
             supabase
               .from('profiles')
@@ -156,15 +155,13 @@ export default function ConversationPage() {
               .eq('user_id', otherId)
               .eq('category', 'demographics')
               .maybeSingle(),
-            isCouplePartnerConversation
-              ? Promise.resolve({ data: null })
-              : supabase
-                  .from('matches')
-                  .select('*')
-                  .eq('user_id', user.id)
-                  .eq('matched_user_id', otherId)
-                  .eq('status', 'active')
-                  .maybeSingle(),
+            supabase
+              .from('matches')
+              .select('*')
+              .eq('user_id', user.id)
+              .eq('matched_user_id', otherId)
+              .eq('status', 'active')
+              .maybeSingle(),
             supabase
               .from('blocks')
               .select('blocker_user_id,blocked_user_id')
@@ -213,7 +210,7 @@ export default function ConversationPage() {
             matchRow?.conversation_disabled_reason,
             blocked ? 'This user is blocked. Messaging is disabled.' : '',
             unmatched ? 'This connection was unmatched. Messaging is disabled.' : '',
-            !isCouplePartnerConversation && !matchRow ? 'No active match for this chat.' : '',
+            !matchRow ? 'No active match for this chat.' : '',
           ]);
 
           if (active) {
@@ -224,9 +221,7 @@ export default function ConversationPage() {
             );
             setPotentialFit(Boolean(score !== null && score >= 50 && score < 65));
             setMessagingDisabledReason(
-              disabledFromMatch || blocked || unmatched || (!isCouplePartnerConversation && !matchRow)
-                ? disabledReason || 'Messaging is disabled.'
-                : null
+              disabledFromMatch || blocked || unmatched || !matchRow ? disabledReason || 'Messaging is disabled.' : null
             );
 
             const profileCompleteness =

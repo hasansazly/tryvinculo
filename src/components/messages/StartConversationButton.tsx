@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { Lock, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
-import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
 
 export default function StartConversationButton({
   matchUserId,
@@ -25,24 +24,11 @@ export default function StartConversationButton({
     const safeMatchUserId = matchUserId.trim().replace(/^"+|"+$/g, '');
 
     try {
-      const supabase = getSupabaseBrowserClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const accessToken = session?.access_token ?? '';
       const res = await fetch('/api/messages/start', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ matchUserId: safeMatchUserId }),
       });
-      if (res.status === 401) {
-        router.push('/auth/login?next=/messages');
-        return;
-      }
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
