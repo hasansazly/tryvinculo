@@ -27,9 +27,17 @@ function isRlsInsertError(error: { code?: string; message?: string } | null | un
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createSupabaseServerClient();
-    const {
+    let {
       data: { user },
     } = await supabase.auth.getUser();
+
+    if (!user) {
+      const bearer = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '').trim() ?? '';
+      if (bearer) {
+        const { data } = await supabase.auth.getUser(bearer);
+        user = data.user ?? null;
+      }
+    }
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

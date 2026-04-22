@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { getSupabaseBrowserClient } from '../../../utils/supabase/client';
 
 export default function PartnerStartChatCard({
   partnerUserId,
@@ -19,9 +20,17 @@ export default function PartnerStartChatCard({
     setLoading(true);
     setError(null);
     try {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const accessToken = session?.access_token ?? '';
       const response = await fetch('/api/messages/start', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         credentials: 'include',
         body: JSON.stringify({ matchUserId: partnerUserId }),
       });
