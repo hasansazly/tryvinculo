@@ -6,10 +6,10 @@ function clean(value: string | undefined) {
 
 export function createSupabaseAdminClient() {
   const supabaseUrl = clean(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL);
-  const serviceRoleKey = clean(process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const serviceRoleKey = clean(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY);
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error('Missing SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY for admin client.');
+    throw new Error('Missing SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY/SUPABASE_SECRET_KEY for admin client.');
   }
 
   return createClient(supabaseUrl, serviceRoleKey, {
